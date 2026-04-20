@@ -1,0 +1,1275 @@
+openapi: 3.0.3
+info:
+  title: Blackwood Fine Sales - API
+  description: |
+    API REST para la aplicación móvil de subastas Blackwood Fine Sales.
+    Permite la gestión de usuarios, subastas, lotes, pujas y medios de pago.
+  version: 1.0.0
+
+tags:
+  - name: Auth
+    description: Autenticación y registro de usuarios
+  - name: Usuarios
+    description: Gestión del perfil y datos del usuario
+  - name: Medios de Pago
+    description: Gestión de medios de pago del postor
+  - name: Subastas
+    description: Consulta y gestión de subastas
+  - name: Lotes
+    description: Consulta de lotes dentro de una subasta
+  - name: Pujas
+    description: Participación y consulta de pujas
+  - name: Artículos para subasta
+    description: Solicitud de inclusión de artículos propios en subasta
+
+paths:
+
+  # ─── AUTH ────────────────────────────────────────────────────────────────────
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: usuario@ejemplo.com
+                password:
+                  type: string
+                  format: password
+                  example: "********"
+      responses:
+        "200":
+          description: Login exitoso. Retorna token JWT y datos básicos del usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  usuario:
+                    $ref: '#/components/schemas/UsuarioBasico'
+        "401":
+          description: Credenciales incorrectas.
+        "403":
+          description: Usuario suspendido o con deuda pendiente.
+        "404":
+          description: Usuario no encontrado.
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Cerrar sesión
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sesión cerrada exitosamente.
+        "401":
+          description: Token inválido o expirado.
+
+  /auth/recuperar-password:
+    post:
+      tags: [Auth]
+      summary: Solicitar recuperación de contraseña por email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Email de recuperación enviado.
+        "404":
+          description: Email no registrado.
+
+  /auth/registro/paso1:
+    post:
+      tags: [Auth]
+      summary: "Registro - Paso 1: datos personales y documentación"
+      description: |
+        Primera etapa del registro. El postor ingresa sus datos personales.
+        La empresa verificará la información antes de habilitar el paso 2.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [email, nombre, apellido, domicilio, pais, foto_dni_frente, foto_dni_dorso]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email donde se enviará la confirmación de aprobación.
+                nombre:
+                  type: string
+                apellido:
+                  type: string
+                domicilio:
+                  type: string
+                pais:
+                  type: string
+                foto_dni_frente:
+                  type: string
+                  format: binary
+                foto_dni_dorso:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Solicitud recibida. Pendiente de verificación por la empresa.
+        "400":
+          description: Datos incompletos o inválidos.
+        "409":
+          description: El email ya se encuentra registrado.
+
+  /auth/registro/paso2:
+    post:
+      tags: [Auth]
+      summary: "Registro - Paso 2: generación de clave personal"
+      description: |
+        Segunda etapa del registro. Solo habilitada luego de que la empresa
+        apruebe al postor y le envíe el email de confirmación.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, password_confirmacion]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                password_confirmacion:
+                  type: string
+      responses:
+        "200":
+          description: Registro completado exitosamente.
+        "400":
+          description: Las contraseñas no coinciden o son inválidas.
+        "403":
+          description: El usuario no fue aprobado aún por la empresa.
+
+  # ─── USUARIOS ────────────────────────────────────────────────────────────────
+
+  /usuarios/perfil:
+    get:
+      tags: [Usuarios]
+      summary: Obtener perfil del usuario autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Datos del perfil del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioPerfil'
+        "401":
+          description: No autenticado.
+
+    put:
+      tags: [Usuarios]
+      summary: Actualizar datos del perfil
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                apellido:
+                  type: string
+                domicilio:
+                  type: string
+                pais:
+                  type: string
+      responses:
+        "200":
+          description: Perfil actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioPerfil'
+        "400":
+          description: Datos inválidos.
+        "401":
+          description: No autenticado.
+
+  /usuarios/perfil/metricas:
+    get:
+      tags: [Usuarios]
+      summary: Obtener métricas de participación del usuario
+      description: |
+        Retorna estadísticas del usuario: subastas asistidas, veces que ganó,
+        total pujado, total pagado, etc.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Métricas del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricasUsuario'
+        "401":
+          description: No autenticado.
+
+  /usuarios/perfil/pujas:
+    get:
+      tags: [Usuarios]
+      summary: Historial de pujas del usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: subasta_id
+          in: query
+          description: Filtrar pujas por subasta específica
+          schema:
+            type: integer
+        - name: estado
+          in: query
+          description: "Filtrar por estado: ganada, perdida, en_curso"
+          schema:
+            type: string
+            enum: [ganada, perdida, en_curso]
+      responses:
+        "200":
+          description: Listado de pujas del usuario.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PujaHistorial'
+        "401":
+          description: No autenticado.
+
+  # ─── MEDIOS DE PAGO ──────────────────────────────────────────────────────────
+
+  /medios-pago:
+    get:
+      tags: [Medios de Pago]
+      summary: Listar medios de pago del usuario autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista de medios de pago registrados.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MedioPago'
+        "401":
+          description: No autenticado.
+
+    post:
+      tags: [Medios de Pago]
+      summary: Registrar un nuevo medio de pago
+      description: |
+        Permite registrar cuenta bancaria, tarjeta de crédito (nacional o extranjera)
+        o cheque certificado. El tipo determina los campos requeridos.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedioPagoInput'
+      responses:
+        "201":
+          description: Medio de pago registrado. Pendiente de verificación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedioPago'
+        "400":
+          description: Datos inválidos o tipo no reconocido.
+        "401":
+          description: No autenticado.
+
+  /medios-pago/{id}:
+    delete:
+      tags: [Medios de Pago]
+      summary: Eliminar un medio de pago
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Medio de pago eliminado.
+        "400":
+          description: No se puede eliminar, el medio está vinculado a una subasta activa.
+        "401":
+          description: No autenticado.
+        "404":
+          description: Medio de pago no encontrado.
+
+  # ─── SUBASTAS ────────────────────────────────────────────────────────────────
+
+  /subastas:
+    get:
+      tags: [Subastas]
+      summary: Listar subastas disponibles
+      description: |
+        Retorna subastas filtradas según la categoría del usuario autenticado.
+        Los usuarios no autenticados ven el catálogo pero no el precio base.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: estado
+          in: query
+          description: "Filtrar por estado: proxima, en_sala, finalizada"
+          schema:
+            type: string
+            enum: [proxima, en_sala, finalizada]
+        - name: categoria
+          in: query
+          description: "Filtrar por categoría: comun, especial, plata, oro, platino"
+          schema:
+            type: string
+            enum: [comun, especial, plata, oro, platino]
+        - name: moneda
+          in: query
+          schema:
+            type: string
+            enum: [ARS, USD]
+      responses:
+        "200":
+          description: Listado de subastas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubastaCard'
+        "401":
+          description: No autenticado.
+
+    post:
+      tags: [Subastas]
+      summary: Crear una nueva subasta (solo empleados)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubastaInput'
+      responses:
+        "201":
+          description: Subasta creada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubastaDetalle'
+        "400":
+          description: Datos inválidos.
+        "403":
+          description: Sin permisos. Solo empleados pueden crear subastas.
+
+  /subastas/{id}:
+    get:
+      tags: [Subastas]
+      summary: Obtener detalle de una subasta
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detalle completo de la subasta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubastaDetalle'
+        "401":
+          description: No autenticado.
+        "403":
+          description: Categoría del usuario insuficiente para ver esta subasta.
+        "404":
+          description: Subasta no encontrada.
+
+    put:
+      tags: [Subastas]
+      summary: Actualizar datos de una subasta (solo empleados)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubastaInput'
+      responses:
+        "200":
+          description: Subasta actualizada.
+        "400":
+          description: Datos inválidos.
+        "403":
+          description: Sin permisos.
+        "404":
+          description: Subasta no encontrada.
+
+  /subastas/{id}/unirse:
+    post:
+      tags: [Subastas]
+      summary: Conectarse a una subasta activa
+      description: |
+        El usuario se une a una subasta en curso. Requiere tener al menos
+        un medio de pago verificado y categoría suficiente.
+        Un usuario no puede estar conectado en más de una subasta a la vez.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Conectado a la subasta. Retorna estado actual del lote en curso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubastaEnVivo'
+        "400":
+          description: El usuario ya está conectado a otra subasta.
+        "403":
+          description: Sin medio de pago verificado o categoría insuficiente.
+        "404":
+          description: Subasta no encontrada o no activa.
+
+  # ─── LOTES ───────────────────────────────────────────────────────────────────
+
+  /subastas/{id}/lotes:
+    get:
+      tags: [Lotes]
+      summary: Obtener catálogo de lotes de una subasta
+      description: |
+        El catálogo es público. Los usuarios NO autenticados pueden ver los lotes
+        pero NO el precio_base (se retorna null). Solo usuarios registrados ven el precio base.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lista de lotes del catálogo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lote'
+        "404":
+          description: Subasta no encontrada.
+
+  /subastas/{id}/lotes/{loteId}:
+    get:
+      tags: [Lotes]
+      summary: Obtener detalle de un lote
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: loteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detalle del lote con imágenes e historial.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoteDetalle'
+        "404":
+          description: Lote o subasta no encontrado.
+
+  # ─── PUJAS ───────────────────────────────────────────────────────────────────
+
+  /pujas:
+    post:
+      tags: [Pujas]
+      summary: Realizar una puja en una subasta activa
+      description: |
+        Registra una nueva puja. La app valida que el monto sea:
+        - Mayor a la última oferta
+        - Al menos última oferta + 1% del valor base
+        - No mayor a última oferta + 20% del valor base
+        (Los límites no aplican para subastas oro y platino)
+        No se aceptará una nueva puja hasta confirmar la anterior.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subasta_id, lote_id, monto, medio_pago_id]
+              properties:
+                subasta_id:
+                  type: integer
+                lote_id:
+                  type: integer
+                monto:
+                  type: number
+                  example: 15150.00
+                medio_pago_id:
+                  type: integer
+      responses:
+        "201":
+          description: Puja registrada y confirmada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PujaConfirmada'
+        "400":
+          description: Monto inválido (fuera del rango permitido o menor a la última oferta).
+        "401":
+          description: No autenticado.
+        "403":
+          description: Sin medio de pago verificado o usuario no conectado a la subasta.
+        "409":
+          description: Puja anterior aún pendiente de confirmación.
+
+  /subastas/{id}/pujas:
+    get:
+      tags: [Pujas]
+      summary: Historial de pujas de una subasta (solo empleados)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Historial ordenado de todas las pujas de la subasta.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PujaHistorial'
+        "403":
+          description: Sin permisos.
+        "404":
+          description: Subasta no encontrada.
+
+  # ─── ARTÍCULOS PARA SUBASTA ──────────────────────────────────────────────────
+
+  # ─── CHECKOUT ────────────────────────────────────────────────────────────────
+
+  /compras/{loteId}/confirmar:
+    post:
+      tags: [Pujas]
+      summary: Confirmar compra tras ganar una subasta
+      description: |
+        El usuario ganador confirma el medio de pago y la modalidad de recepción
+        del bien (retiro personal o envío a domicilio).
+        Nota: el retiro personal anula la cobertura del seguro.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: loteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [medio_pago_id, modalidad_recepcion]
+              properties:
+                medio_pago_id:
+                  type: integer
+                modalidad_recepcion:
+                  type: string
+                  enum: [envio_domicilio, retiro_personal]
+                direccion_envio:
+                  type: string
+                  description: Requerido si modalidad_recepcion es envio_domicilio.
+      responses:
+        "200":
+          description: Compra confirmada. Retorna detalle de factura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaCompra'
+        "400":
+          description: Datos inválidos o medio de pago sin fondos suficientes.
+        "401":
+          description: No autenticado.
+        "403":
+          description: El usuario no es el ganador de este lote.
+        "404":
+          description: Lote no encontrado.
+
+  # ─── NOTIFICACIONES ──────────────────────────────────────────────────────────
+
+  /notificaciones:
+    get:
+      tags: [Usuarios]
+      summary: Listar notificaciones y mensajes privados del usuario
+      description: |
+        Incluye mensajes de: ganancia de subasta con detalle de pago,
+        aprobación/rechazo de registro, aceptación/rechazo de artículos de consignación, etc.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: leida
+          in: query
+          schema:
+            type: boolean
+          description: Filtrar por notificaciones leídas o no leídas.
+      responses:
+        "200":
+          description: Lista de notificaciones.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notificacion'
+        "401":
+          description: No autenticado.
+
+  /notificaciones/{id}/leer:
+    patch:
+      tags: [Usuarios]
+      summary: Marcar una notificación como leída
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Notificación marcada como leída.
+        "404":
+          description: Notificación no encontrada.
+
+  # ─── MULTAS ──────────────────────────────────────────────────────────────────
+
+  /multas/pagar:
+    post:
+      tags: [Usuarios]
+      summary: Pagar multa pendiente
+      description: |
+        Si el usuario no cumplió con el pago de una puja ganada, recibe una multa
+        del 10% del valor ofertado. Debe pagarla antes de participar en otra subasta.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [medio_pago_id]
+              properties:
+                medio_pago_id:
+                  type: integer
+      responses:
+        "200":
+          description: Multa pagada. El usuario puede volver a participar.
+        "400":
+          description: No hay multa pendiente o medio de pago inválido.
+        "401":
+          description: No autenticado.
+
+  # ─── CUENTA DESTINO DE VENTAS ─────────────────────────────────────────────────
+
+  /usuarios/cuenta-destino:
+    post:
+      tags: [Usuarios]
+      summary: Declarar cuenta bancaria para recibir fondos de ventas
+      description: |
+        El vendedor debe declarar la cuenta donde quiere recibir el dinero
+        de sus artículos vendidos. Puede ser una cuenta del exterior.
+        Debe declararse ANTES del inicio de la subasta.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [banco, numero_cuenta, pais]
+              properties:
+                banco:
+                  type: string
+                numero_cuenta:
+                  type: string
+                pais:
+                  type: string
+                titular:
+                  type: string
+      responses:
+        "201":
+          description: Cuenta destino registrada.
+        "400":
+          description: Datos inválidos.
+        "401":
+          description: No autenticado.
+
+  # ─── ARTÍCULOS PARA SUBASTA ──────────────────────────────────────────────────
+
+  /articulos-consignacion:
+    post:
+      tags: [Artículos para subasta]
+      summary: Solicitar inclusión de un artículo en futura subasta
+      description: |
+        El usuario solicita que su artículo sea evaluado para incluirse en una subasta.
+        Debe declarar ser el dueño legítimo del bien.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [descripcion, fotos, declara_propiedad]
+              properties:
+                descripcion:
+                  type: string
+                historia:
+                  type: string
+                artista_disenador:
+                  type: string
+                fotos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  minItems: 6
+                  description: Mínimo 6 fotos del artículo.
+                declara_propiedad:
+                  type: boolean
+                  description: El usuario declara ser el dueño legal del bien.
+      responses:
+        "201":
+          description: Solicitud recibida. Pendiente de inspección por la empresa.
+        "400":
+          description: Faltan datos obligatorios o menos de 6 fotos.
+        "401":
+          description: No autenticado.
+
+  /articulos-consignacion/{id}/decision:
+    patch:
+      tags: [Artículos para subasta]
+      summary: Aceptar o rechazar la propuesta de valor base y comisión
+      description: |
+        Cuando la empresa acepta un artículo e informa el valor base y comisión,
+        el usuario puede aceptar o rechazar la propuesta.
+        Si rechaza, la empresa devuelve el bien con cargo al usuario.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [acepta]
+              properties:
+                acepta:
+                  type: boolean
+                  description: true = acepta la propuesta, false = rechaza y solicita devolución.
+      responses:
+        "200":
+          description: Decisión registrada.
+        "400":
+          description: El artículo no tiene una propuesta pendiente de decisión.
+        "401":
+          description: No autenticado.
+        "403":
+          description: El artículo no pertenece al usuario autenticado.
+        "404":
+          description: Artículo no encontrado.
+
+  /articulos-consignacion/{id}/evaluacion:
+    patch:
+      tags: [Artículos para subasta]
+      summary: Aceptar o rechazar un artículo de consignación (solo empleados)
+      description: |
+        El empleado, tras inspeccionar el artículo, lo acepta (asignando valor base,
+        comisión y subasta) o lo rechaza indicando el motivo.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [acepta]
+              properties:
+                acepta:
+                  type: boolean
+                motivo_rechazo:
+                  type: string
+                  description: Requerido si acepta es false.
+                valor_base:
+                  type: number
+                  description: Requerido si acepta es true.
+                comision:
+                  type: number
+                  description: Requerido si acepta es true.
+                subasta_id:
+                  type: integer
+                  description: Subasta en la que se incluirá el artículo.
+      responses:
+        "200":
+          description: Evaluación registrada. Se notifica al usuario.
+        "400":
+          description: Datos incompletos.
+        "403":
+          description: Sin permisos. Solo empleados.
+        "404":
+          description: Artículo no encontrado.
+
+
+  /articulos-consignacion/{id}:
+    get:
+      tags: [Artículos para subasta]
+      summary: Ver estado y detalles de un artículo enviado para consignación
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Estado del artículo (pendiente, aceptado, rechazado) con detalle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticuloConsignacion'
+        "401":
+          description: No autenticado.
+        "403":
+          description: El artículo no pertenece al usuario autenticado.
+        "404":
+          description: Artículo no encontrado.
+
+# ─── COMPONENTES ─────────────────────────────────────────────────────────────
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    UsuarioBasico:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        apellido:
+          type: string
+        email:
+          type: string
+        categoria:
+          type: string
+          enum: [comun, especial, plata, oro, platino]
+        rol:
+          type: string
+          enum: [cliente, empleado]
+
+    UsuarioPerfil:
+      allOf:
+        - $ref: '#/components/schemas/UsuarioBasico'
+        - type: object
+          properties:
+            domicilio:
+              type: string
+            pais:
+              type: string
+            tiene_medio_pago_verificado:
+              type: boolean
+            multa_pendiente:
+              type: number
+              description: Monto de multa pendiente (0 si no hay).
+
+    MetricasUsuario:
+      type: object
+      properties:
+        subastas_asistidas:
+          type: integer
+        subastas_ganadas:
+          type: integer
+        total_pujas_realizadas:
+          type: integer
+        total_pagado:
+          type: number
+        total_ofertado:
+          type: number
+        categorias_participadas:
+          type: array
+          items:
+            type: string
+
+    MedioPago:
+      type: object
+      properties:
+        id:
+          type: integer
+        tipo:
+          type: string
+          enum: [cuenta_bancaria, tarjeta_credito, cheque_certificado]
+        descripcion:
+          type: string
+          example: "Visa terminada en 4242"
+        verificado:
+          type: boolean
+        monto_disponible:
+          type: number
+          description: Solo aplica para cheques certificados.
+
+    MedioPagoInput:
+      type: object
+      required: [tipo]
+      properties:
+        tipo:
+          type: string
+          enum: [cuenta_bancaria, tarjeta_credito, cheque_certificado]
+        banco:
+          type: string
+        numero_cuenta:
+          type: string
+        numero_tarjeta:
+          type: string
+        vencimiento:
+          type: string
+          example: "12/27"
+        monto_cheque:
+          type: number
+          description: Monto del cheque certificado (solo para ese tipo).
+        pais_origen:
+          type: string
+
+    SubastaCard:
+      type: object
+      properties:
+        id:
+          type: integer
+        fecha_hora:
+          type: string
+          format: date-time
+        ubicacion:
+          type: string
+        rematador:
+          type: string
+        categoria:
+          type: string
+          enum: [comun, especial, plata, oro, platino]
+        estado:
+          type: string
+          enum: [proxima, en_sala, finalizada]
+        moneda:
+          type: string
+          enum: [ARS, USD]
+        cantidad_lotes:
+          type: integer
+        estimacion_inicial:
+          type: number
+
+    SubastaDetalle:
+      allOf:
+        - $ref: '#/components/schemas/SubastaCard'
+        - type: object
+          properties:
+            descripcion:
+              type: string
+            lotes_destacados:
+              type: array
+              items:
+                $ref: '#/components/schemas/Lote'
+            incremento_minimo:
+              type: number
+            usuarios_conectados:
+              type: integer
+
+    SubastaInput:
+      type: object
+      required: [fecha_hora, ubicacion, rematador_id, categoria, moneda]
+      properties:
+        fecha_hora:
+          type: string
+          format: date-time
+        ubicacion:
+          type: string
+        rematador_id:
+          type: integer
+        categoria:
+          type: string
+          enum: [comun, especial, plata, oro, platino]
+        moneda:
+          type: string
+          enum: [ARS, USD]
+
+    SubastaEnVivo:
+      type: object
+      properties:
+        subasta_id:
+          type: integer
+        lote_actual:
+          $ref: '#/components/schemas/LoteDetalle'
+        mejor_oferta:
+          type: number
+        mejor_postor:
+          type: string
+        puja_minima:
+          type: number
+        puja_maxima:
+          type: number
+        usuarios_conectados:
+          type: integer
+        historial_pujas:
+          type: array
+          items:
+            $ref: '#/components/schemas/PujaHistorial'
+
+    Lote:
+      type: object
+      properties:
+        id:
+          type: integer
+        numero_pieza:
+          type: string
+        descripcion:
+          type: string
+        precio_base:
+          type: number
+          nullable: true
+          description: Null si el usuario no está autenticado.
+        cantidad_elementos:
+          type: integer
+          default: 1
+          description: Cantidad de piezas que componen el lote (ej. Juego de té de 18 piezas).
+        estado:
+          type: string
+          enum: [disponible, en_subasta, vendido]
+        imagen_principal:
+          type: string
+          format: uri
+
+    LoteDetalle:
+      allOf:
+        - $ref: '#/components/schemas/Lote'
+        - type: object
+          properties:
+            duenio_actual:
+              type: string
+            imagenes:
+              type: array
+              items:
+                type: string
+                format: uri
+              minItems: 1
+              maxItems: 6
+            artista_disenador:
+              type: string
+            fecha_creacion:
+              type: string
+            historia:
+              type: string
+
+    PujaConfirmada:
+      type: object
+      properties:
+        id:
+          type: integer
+        subasta_id:
+          type: integer
+        lote_id:
+          type: integer
+        monto:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+        es_mejor_oferta:
+          type: boolean
+
+    PujaHistorial:
+      type: object
+      properties:
+        id:
+          type: integer
+        usuario:
+          type: string
+        monto:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+        estado:
+          type: string
+          enum: [vigente, superada, ganadora]
+        subasta_id:
+          type: integer
+        lote_id:
+          type: integer
+
+    FacturaCompra:
+      type: object
+      properties:
+        id:
+          type: integer
+        lote_id:
+          type: integer
+        descripcion_lote:
+          type: string
+        monto_pujado:
+          type: number
+        comision:
+          type: number
+        costo_envio:
+          type: number
+        total:
+          type: number
+        moneda:
+          type: string
+          enum: [ARS, USD]
+        modalidad_recepcion:
+          type: string
+          enum: [envio_domicilio, retiro_personal]
+        medio_pago:
+          type: string
+        fecha:
+          type: string
+          format: date-time
+
+    Notificacion:
+      type: object
+      properties:
+        id:
+          type: integer
+        tipo:
+          type: string
+          enum: [ganancia_subasta, registro_aprobado, articulo_aceptado, articulo_rechazado, multa, propuesta_valor_base]
+        titulo:
+          type: string
+        mensaje:
+          type: string
+        leida:
+          type: boolean
+        fecha:
+          type: string
+          format: date-time
+        datos_extra:
+          type: object
+          description: Información adicional según el tipo (monto, lote_id, etc.)
+
+    ArticuloConsignacion:
+      type: object
+      properties:
+        id:
+          type: integer
+        descripcion:
+          type: string
+        estado:
+          type: string
+          enum: [pendiente, aprobado, rechazado]
+        motivo_rechazo:
+          type: string
+        valor_base_asignado:
+          type: number
+        comision:
+          type: number
+        subasta_asignada:
+          $ref: '#/components/schemas/SubastaCard'
+        ubicacion_deposito:
+          type: string
+        poliza_seguro:
+          type: string
