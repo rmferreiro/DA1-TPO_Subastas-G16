@@ -85,10 +85,10 @@ Incluye:
 El diseño completo de la API se documentó utilizando Swagger.
 
 📍 **Archivo en el repositorio:**  
-https://github.com/rmferreiro/DA1-TPO_Subastas-G16/blob/develop/swagger.yaml
+https://github.com/rmferreiro/DA1-TPO_Subastas-G16/blob/dev/swagger.yaml
 
 📍 **Ver documentación interactiva Swagger UI:**  
-https://editor.swagger.io/?url=https://raw.githubusercontent.com/rmferreiro/DA1-TPO_Subastas-G16/develop/swagger.yaml
+https://editor.swagger.io/?url=https://raw.githubusercontent.com/rmferreiro/DA1-TPO_Subastas-G16/blob/dev/swagger.yaml
 
 ---
 
