@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="#1C2A21"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blackwood Fine Sales"
+            android:textColor="#F4F1EA"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registro en proceso"
+            android:textColor="#C6A75E"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <!-- CONTENIDO CENTRADO -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- CÍRCULO + BORDE DORADO -->
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="20dp">
+
+            <!-- Borde dorado -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circle_gold"/>
+
+            <!-- Círculo negro interior -->
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_black"/>
+        </FrameLayout>
+
+        <!-- TÍTULO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verificando información"
+            android:textSize="18sp"
+            android:textColor="#1A1A1A"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- DESCRIPCIÓN -->
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:text="Estamos validando tus datos y documentación mediante nuestros procesos de verificación."
+            android:textColor="#6B6B6B"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- CAJA INFO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/info_box"
+            android:padding="14dp"
+            android:text="Este proceso puede demorar unos minutos.\nTe notificaremos por correo electrónico cuando tu cuenta esté aprobada."
+            android:textColor="#6B6B6B"
+            android:textSize="13sp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- ESTADO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estado: En revisión"
+            android:textColor="#C6A75E"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
