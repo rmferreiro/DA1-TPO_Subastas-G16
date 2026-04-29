@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F1EA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="#1C2A21">
+
+            <TextView
+                android:text="Blackwood Fine Sales"
+                android:textColor="#F4F1EA"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:text="Registro de postor"
+                android:textColor="#C6A75E"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
+        <!-- CONTENIDO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="#F4F1EA"
+            >
+
+            <!-- TÍTULO -->
+            <TextView
+                android:text="Datos personales"
+                android:textSize="20sp"
+                android:textColor="#1A1A1A"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <!-- INPUTS -->
+            <EditText
+                android:hint="Nombre"
+                android:background="@drawable/input_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <EditText
+                android:hint="Apellido"
+                android:background="@drawable/input_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <EditText
+                android:hint="País de origen"
+                android:background="@drawable/input_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <EditText
+                android:hint="Domicilio legal"
+                android:background="@drawable/input_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <!-- DOCUMENTO -->
+            <TextView
+                android:text="Documento"
+                android:textSize="18sp"
+                android:textColor="#1A1A1A"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <!-- BOTÓN SUBIR -->
+            <Button
+                android:text="Subir documento (frente)"
+                android:background="@drawable/button_black_gold"
+                android:textColor="#6B6B6B"
+                android:layout_marginBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <Button
+                android:text="Subir documento (dorso)"
+                android:background="@drawable/button_black_gold"
+                android:textColor="#6B6B6B"
+                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <!-- INFO BOX -->
+            <TextView
+                android:text="Tus datos serán verificados por nuestro equipo.\nUna vez aprobado, recibirás un correo para completar tu registro y acceder a subastas."
+                android:background="@drawable/info_box"
+                android:padding="14dp"
+                android:textColor="#6B6B6B"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <!-- BOTÓN FINAL -->
+            <Button
+                android:text="Enviar para verificación"
+                android:background="@drawable/button_primary"
+                android:textColor="#F4F1EA"
+                android:padding="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
