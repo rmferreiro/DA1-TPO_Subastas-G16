@@ -1,151 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F1EA">
+    android:background="#F4F1EA"
+    android:fitsSystemWindows="true"
+    android:importantForAutofill="noExcludeDescendants">
 
-    <LinearLayout
+    <!-- CONTENIDO PRINCIPAL (Registro) -->
+    <ScrollView
+        android:id="@+id/main_registration_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- HEADER -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="#1C2A21"
-            android:padding="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Blackwood Fine Sales"
-                android:textColor="#F4F1EA"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Completar registro"
-                android:textColor="#C6A75E"/>
-        </LinearLayout>
-
-        <!-- CONTENIDO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
             android:orientation="vertical">
 
-            <!-- SEGURIDAD -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Seguridad"
-                android:textSize="20sp"
-                android:textColor="#1A1A1A"
-                android:layout_marginBottom="10dp"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Contraseña"
-                android:background="@drawable/input_bg"
-                android:padding="14dp"
-                android:layout_marginBottom="12dp"
-                android:inputType="textPassword"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Confirmar contraseña"
-                android:background="@drawable/input_bg"
-                android:padding="14dp"
-                android:layout_marginBottom="20dp"
-                android:inputType="textPassword"/>
-
-            <!-- MEDIOS DE PAGO -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Medios de pago"
-                android:textSize="20sp"
-                android:textColor="#1A1A1A"
-                android:layout_marginBottom="12dp"/>
-
-            <!-- TARJETA -->
+            <!-- HEADER AJUSTADO (Sin padding superior excesivo) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_bg"
-                android:padding="16dp"
+                android:background="#1C2A21"
                 android:orientation="vertical"
-                android:layout_marginBottom="12dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tarjeta crédito"
-                    android:textColor="#1A1A1A"/>
+                    android:text="Blackwood Fine Sales"
+                    android:textColor="#F4F1EA"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="**** 4587 · Internacional"
-                    android:textColor="#6B6B6B"/>
+                    android:text="Completar registro"
+                    android:textColor="#C6A75E"
+                    android:textSize="14sp" />
+
             </LinearLayout>
 
-            <!-- CUENTA -->
+            <!-- CONTENIDO -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_bg"
-                android:padding="16dp"
                 android:orientation="vertical"
-                android:layout_marginBottom="12dp">
+                android:padding="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
+                <!-- SEGURIDAD -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cuenta bancaria"
-                    android:textColor="#1A1A1A"/>
+                    android:layout_marginBottom="16dp"
+                    android:text="Seguridad"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp" />
 
+                <!-- PASSWORD -->
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="14dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="#1A1A1A"
+                    android:textColorHint="#7B7B7B"
+                    android:textSize="15sp" />
+
+                <!-- CONFIRM PASSWORD -->
+                <EditText
+                    android:id="@+id/et_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="26dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="Confirmar contraseña"
+                    android:inputType="textPassword"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="#1A1A1A"
+                    android:textColorHint="#7B7B7B"
+                    android:textSize="15sp" />
+
+                <!-- MEDIOS DE PAGO -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Banco exterior · USD"
-                    android:textColor="#6B6B6B"/>
+                    android:layout_marginBottom="14dp"
+                    android:text="Medios de pago"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp" />
+
+                <!-- LISTA DE METODOS -->
+                <LinearLayout
+                    android:id="@+id/container_metodos_pago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <!-- BOTON AGREGAR -->
+                <Button
+                    android:id="@+id/btn_agregar_metodo"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/button_black_gold"
+                    android:backgroundTint="@null"
+                    app:backgroundTint="@null"
+                    android:elevation="0dp"
+                    android:text="+ Agregar medio de pago"
+                    android:textAllCaps="false"
+                    android:textColor="#F4F1EA"
+                    android:textSize="15sp" />
+
+                <!-- INFO BOX -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/info_box"
+                    android:lineSpacingExtra="3dp"
+                    android:padding="16dp"
+                    android:text="Tus medios de pago habilitan tu participación en subastas y pueden mejorar tu categoría."
+                    android:textColor="#6B6B6B"
+                    android:textSize="13sp" />
+
+                <!-- BOTON FINAL -->
+                <Button
+                    android:id="@+id/btn_finalizar"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:background="@drawable/button_primary"
+                    android:backgroundTint="@null"
+                    app:backgroundTint="@null"
+                    android:elevation="0dp"
+                    android:text="Finalizar registro"
+                    android:textAllCaps="false"
+                    android:textColor="#F4F1EA"
+                    android:textSize="16sp" />
+
             </LinearLayout>
-
-            <!-- BOTÓN AGREGAR -->
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="+ Agregar medio de pago"
-                android:background="@drawable/button_black_gold"
-                android:textColor="#6B6B6B"
-                android:layout_marginBottom="20dp"/>
-
-            <!-- INFO -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tus medios de pago habilitan tu participación en subastas y pueden mejorar tu categoría. Puedes agregar múltiples opciones."
-                android:background="@drawable/info_box"
-                android:padding="14dp"
-                android:textColor="#6B6B6B"
-                android:layout_marginBottom="20dp"/>
-
-            <!-- FINAL -->
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:text="Finalizar registro"
-                android:background="@drawable/button_primary"
-                android:textColor="#F4F1EA"/>
-
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
+    <!-- CONTENEDOR PARA EL FRAGMENTO (Oculto por defecto) -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F4F1EA"
+        android:visibility="gone" />
 
-</ScrollView>
+</FrameLayout>
