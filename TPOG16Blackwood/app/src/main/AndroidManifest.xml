@@ -36,6 +36,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- VENDEDOR - Gestión de lotes -->
+        <activity
+            android:name=".vendedor.HomeVendedorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.CrearSolicitudActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.MisLotesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.DetalleLoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.SeguimientoEstadoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.MetricasVendedorActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

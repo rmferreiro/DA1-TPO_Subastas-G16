@@ -5,4 +5,8 @@
     <color name="green_dark">#1C2A21</color>
     <color name="cream">#F4F1EA</color>
     <color name="gold">#C6A75E</color>
+    <color name="estado_proceso">#F39C12</color>
+    <color name="estado_aprobado">#27AE60</color>
+    <color name="estado_rechazado">#E74C3C</color>
+    <color name="estado_vendido">#2C3E50</color>
 </resources>

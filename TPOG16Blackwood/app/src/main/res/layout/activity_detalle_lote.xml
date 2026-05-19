@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F1EA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="#1C2A21">
+
+            <TextView
+                android:text="Blackwood Fine Sales"
+                android:textColor="#F4F1EA"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvHeaderSub"
+                android:text="Detalle del lote"
+                android:textColor="#C6A75E"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Nombre -->
+            <TextView
+                android:id="@+id/tvDetalleNombre"
+                android:textSize="22sp"
+                android:textColor="#1A1A1A"
+                android:layout_marginBottom="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvDetalleCategoria"
+                android:textSize="13sp"
+                android:textColor="#C6A75E"
+                android:layout_marginBottom="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Estado actual -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/info_box"
+                android:padding="14dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:text="Estado: "
+                    android:textColor="#1A1A1A"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvDetalleEstado"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Descripción -->
+            <TextView
+                android:text="Descripción"
+                android:textSize="16sp"
+                android:textColor="#1A1A1A"
+                android:layout_marginBottom="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvDetalleDescripcion"
+                android:textColor="#6B6B6B"
+                android:textSize="13sp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Grid info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/input_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:text="Estado producto:"
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvDetalleEstadoProducto"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:text="Precio estimado:"
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvDetallePrecioEstimado"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Fecha creación:"
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvDetalleFecha"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Tasación (visible si aplica) -->
+                <LinearLayout
+                    android:id="@+id/layoutTasacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:text="Tasación:"
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvDetalleTasacion"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Datos de subasta (si aprobado) -->
+            <LinearLayout
+                android:id="@+id/layoutSubasta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/info_box"
+                android:padding="14dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:text="Información de subasta"
+                    android:textSize="15sp"
+                    android:textColor="#1A1A1A"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:text="Precio base: "
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvDetallePrecioBase"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:text="Comisión: "
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvDetalleComision"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Fecha subasta: "
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvDetalleFechaSubasta"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Rechazo -->
+            <LinearLayout
+                android:id="@+id/layoutRechazo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/info_box"
+                android:padding="14dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:text="Motivo del rechazo"
+                    android:textSize="15sp"
+                    android:textColor="#C0392B"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvDetalleMotivoRechazo"
+                    android:textColor="#1A1A1A"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:text="Costo devolución: "
+                        android:textColor="#6B6B6B"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvDetalleCostoDevolucion"
+                        android:textColor="#1A1A1A"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:text="Observaciones:"
+                    android:textColor="#6B6B6B"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tvDetalleObservaciones"
+                    android:textColor="#1A1A1A"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Botón seguimiento -->
+            <Button
+                android:id="@+id/btnVerSeguimiento"
+                android:text="Ver seguimiento completo"
+                android:background="@drawable/button_primary"
+                android:textColor="#F4F1EA"
+                android:padding="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stateListAnimator="@null" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
