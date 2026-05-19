@@ -1,43 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1C2A21">
 
-    <!-- Contenedor centrado -->
+    <!-- Logo: ocupa toda la pantalla, dibuja el rombo centrado internamente -->
+    <tpo.g16.blackwood.SplashLogoView
+        android:id="@+id/splash_logo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!--
+        Los textos se posicionan usando layout_gravity="center" + marginTop
+        para quedar justo debajo del rombo.
+
+        El rombo queda en cy = h/2 - 41dp  (la mitad del bloque logo+texto)
+        La punta inferior del rombo está en cy + r  ≈  cy + ~58dp
+        Entonces el texto arranca en cy + r + 32dp de gap
+
+        Para aproximarlo sin código Java:
+          marginTop = 50% pantalla - 41dp + r_approx + 32dp
+        Usamos layout_gravity="center_vertical" con un marginTop negativo
+        para "subirlo" del centro, equivalente a cy + r + gap.
+
+        La forma más simple y confiable: centramos el contenedor completo
+        (logo + texto) como un LinearLayout vertical centrado en la pantalla.
+    -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center_horizontal">
 
-        <!-- Logo (rombo) -->
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/logo_blackwood"
-            android:contentDescription="Logo"/>
+        <!-- Spacer que representa la altura del rombo (r*2 = ~16% * 2 del ancho)
+             En una pantalla de 360dp → r ≈ 58dp → altura rombo ≈ 116dp -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="116dp"/>
 
-        <!-- Texto principal -->
+        <!-- Gap entre rombo y texto -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="32dp"/>
+
         <TextView
+            android:id="@+id/splash_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Blackwood"
+            android:text="BlackWood"
             android:textColor="#F4F1EA"
-            android:textSize="18sp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="serif"/>
+            android:textSize="26sp"
+            android:letterSpacing="0.12"
+            android:fontFamily="serif"
+            android:alpha="0"/>
 
-        <!-- Subtítulo -->
         <TextView
+            android:id="@+id/splash_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fine Sales"
+            android:text="Finance  &amp;  Sales"
             android:textColor="#C6A75E"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp"/>
+            android:textSize="11sp"
+            android:letterSpacing="0.28"
+            android:fontFamily="serif"
+            android:layout_marginTop="6dp"
+            android:alpha="0"/>
 
     </LinearLayout>
 

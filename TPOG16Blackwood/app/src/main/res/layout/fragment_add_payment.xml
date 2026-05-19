@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F1EA"
-    android:fitsSystemWindows="true"
-    android:importantForAutofill="noExcludeDescendants">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F4F1EA">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- HEADER UNIFICADO -->
+        <!-- HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:background="#1C2A21"
             android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -33,136 +28,144 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Registro de postor"
+                android:text="Agregar medio de pago"
                 android:textColor="#C6A75E"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
-        <!-- CONTENIDO LIBERADO -->
+        <!-- CONTENIDO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp">
 
+            <!-- TITULO -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:text="Datos personales"
+                android:text="Nuevo método"
                 android:textColor="#1A1A1A"
                 android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/et_nombre"
+            <!-- SELECTOR TIPO -->
+            <Spinner
+                android:id="@+id/spinner_tipo_pago"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/input_bg"
-                android:hint="Nombre"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp" />
+
+            <!-- TITULAR -->
+            <EditText
+                android:id="@+id/et_titular"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/input_bg"
+                android:hint="Titular"
                 android:inputType="textPersonName"
-                android:importantForAutofill="no"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
                 android:textSize="15sp" />
 
+            <!-- NUMERO -->
             <EditText
-                android:id="@+id/et_apellido"
+                android:id="@+id/et_numero"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/input_bg"
-                android:hint="Apellido"
-                android:inputType="textPersonName"
-                android:importantForAutofill="no"
+                android:hint="Número de tarjeta / cuenta"
+                android:inputType="number"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
                 android:textSize="15sp" />
 
+            <!-- BANCO -->
+            <EditText
+                android:id="@+id/et_banco"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/input_bg"
+                android:hint="Banco"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#1A1A1A"
+                android:textColorHint="#7B7B7B"
+                android:textSize="15sp" />
+
+            <!-- VENCIMIENTO -->
+            <EditText
+                android:id="@+id/et_vencimiento"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/input_bg"
+                android:hint="Vencimiento (MM/AA)"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#1A1A1A"
+                android:textColorHint="#7B7B7B"
+                android:textSize="15sp" />
+
+            <!-- PAIS -->
             <EditText
                 android:id="@+id/et_pais"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginBottom="14dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/input_bg"
                 android:hint="País de origen"
                 android:inputType="text"
-                android:importantForAutofill="no"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
                 android:textSize="15sp" />
 
-            <EditText
-                android:id="@+id/et_domicilio"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="26dp"
-                android:background="@drawable/input_bg"
-                android:hint="Domicilio legal"
-                android:inputType="textPostalAddress"
-                android:importantForAutofill="no"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="#1A1A1A"
-                android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
-
+            <!-- INFO -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:text="Documento"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/btn_frente"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:layout_marginBottom="14dp"
-                android:background="@drawable/button_black_gold"
-                android:backgroundTint="@null"
-                app:backgroundTint="@null"
-                android:elevation="0dp"
-                android:text="Subir documento (frente)"
-                android:textAllCaps="false"
-                android:textColor="#F4F1EA"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/btn_dorso"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
                 android:layout_marginBottom="24dp"
+                android:background="@drawable/info_box"
+                android:lineSpacingExtra="3dp"
+                android:padding="16dp"
+                android:text="Los medios de pago serán verificados por nuestro equipo antes de habilitar su uso en subastas."
+                android:textColor="#6B6B6B"
+                android:textSize="13sp" />
+
+            <!-- BOTON -->
+            <Button
+                android:id="@+id/btn_guardar_pago"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+
                 android:background="@drawable/button_black_gold"
                 android:backgroundTint="@null"
                 app:backgroundTint="@null"
-                android:elevation="0dp"
-                android:text="Subir documento (dorso)"
-                android:textAllCaps="false"
-                android:textColor="#F4F1EA"
-                android:textSize="15sp" />
 
-            <Button
-                android:id="@+id/btn_enviar"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="@drawable/button_primary"
-                android:backgroundTint="@null"
-                app:backgroundTint="@null"
-                android:text="Enviar para verificación"
+                android:elevation="0dp"
+
+                android:text="Guardar medio de pago"
                 android:textAllCaps="false"
                 android:textColor="#F4F1EA"
-                android:textSize="18sp"
-                android:elevation="0dp"/>
+                android:textSize="16sp" />
 
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>
