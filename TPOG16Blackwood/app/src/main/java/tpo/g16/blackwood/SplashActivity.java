@@ -108,7 +108,9 @@ public class SplashActivity extends AppCompatActivity {
 
         // ── Navegar a MainActivity después del tiempo total ───────────────
         logoView.postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
+            //startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
+            //startActivity(new Intent(SplashActivity.this, EmpleadoSubastasActivity.class));
+            startActivity(new Intent(SplashActivity.this, EmpleadoRevisionLotesActivity.class));
             finish();
         }, NEXT_DELAY);
     }
