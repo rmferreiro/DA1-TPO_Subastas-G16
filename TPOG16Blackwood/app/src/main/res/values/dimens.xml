@@ -1,3 +1,12 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Tamaños de Texto Estándar -->
+    <dimen name="text_size_title">18sp</dimen>
+    <dimen name="text_size_header_main">16sp</dimen>
+    <dimen name="text_size_header_sub">14sp</dimen>
+    <dimen name="text_size_body">15sp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_button">16sp</dimen>
+    <dimen name="text_size_large_title">24sp</dimen>
 </resources>

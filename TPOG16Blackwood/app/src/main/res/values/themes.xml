@@ -1,8 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.TPOG16Blackwood" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Color principal (el que suele verse violeta) -->
+        <item name="colorPrimary">@color/green_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Color para los placeholders y detalles (Surface Variant) -->
+        <item name="colorOnSurfaceVariant">#7B7B7B</item>
+
+        <!-- Color de los elementos del dropdown y controles -->
+        <item name="colorSecondary">@color/gold</item>
     </style>
 
     <style name="Theme.TPOG16Blackwood" parent="Base.Theme.TPOG16Blackwood" />
