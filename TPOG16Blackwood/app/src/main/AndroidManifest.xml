@@ -25,10 +25,10 @@
             android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -48,24 +48,27 @@
             android:name=".MainActivity"
             android:exported="false" />
 
-        <!-- VENDEDOR - Gestión de lotes -->
+        <!-- VENDEDOR - Gestión de lotes (nuevo flujo) -->
         <activity
-            android:name=".vendedor.HomeVendedorActivity"
+            android:name=".vendedor.GestionArticulosActivity"
             android:exported="false" />
         <activity
-            android:name=".vendedor.CrearSolicitudActivity"
+            android:name=".vendedor.NuevoLoteActivity"
             android:exported="false" />
         <activity
-            android:name=".vendedor.MisLotesActivity"
+            android:name=".vendedor.SeguimientoSoporteActivity"
             android:exported="false" />
         <activity
-            android:name=".vendedor.DetalleLoteActivity"
+            android:name=".vendedor.SeguimientoAseguradoraActivity"
             android:exported="false" />
         <activity
-            android:name=".vendedor.SeguimientoEstadoActivity"
+            android:name=".vendedor.SubastaAsignadaActivity"
             android:exported="false" />
         <activity
-            android:name=".vendedor.MetricasVendedorActivity"
+            android:name=".vendedor.RechazarPropuestaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.PostAprobacionActivity"
             android:exported="false" />
     </application>
 
