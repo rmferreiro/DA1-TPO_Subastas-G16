@@ -53,6 +53,12 @@
             android:name=".EmpleadoRevisionLotesActivity" />
         <activity
             android:name=".EmpleadoDetalleLoteActivity" />
+        <activity
+            android:name=".EmpleadoMetricasActivity" />
+        <activity
+            android:name=".EmpleadoLogsPujasActivity" />
+        <activity
+            android:name=".EmpleadoSubastaActivaActivity" />
     </application>
 
 </manifest>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F1EA">
+    android:background="#F4F1EA"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,22 +14,23 @@
         <!-- HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:orientation="horizontal"
-            android:paddingTop="36dp"
-            android:paddingBottom="12dp"
-            android:paddingHorizontal="16dp"
+            android:layout_height="wrap_content"
             android:background="#1C2A21"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/btn_volver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="←"
                 android:textColor="#F4F1EA"
                 android:textSize="20sp"
-                android:layout_marginEnd="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginEnd="12dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -35,18 +38,18 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Blackwood Fine Sales"
                     android:textColor="#F4F1EA"
-                    android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="16sp" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Detalle del lote"
                     android:textColor="#C6A75E"
-                    android:textSize="14sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -57,88 +60,82 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="24dp">
 
             <!-- ESTADO -->
             <TextView
                 android:id="@+id/txt_estado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="EN INSPECCIÓN"
                 android:textColor="#FFFFFF"
                 android:textSize="11sp"
                 android:background="#C6A75E"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp" />
 
-            <!-- NOMBRE -->
             <TextView
                 android:id="@+id/txt_nombre_lote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#1A1A1A"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="8dp" />
 
-            <!-- DUEÑO -->
             <TextView
                 android:id="@+id/txt_duenio_lote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#555555"
                 android:textSize="14sp"
-                android:layout_marginBottom="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="4dp" />
 
-            <!-- VALOR -->
             <TextView
                 android:id="@+id/txt_valor_lote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#C6A75E"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="20dp" />
 
-            <!-- SEPARADOR -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#DDDDDD"
                 android:layout_marginBottom="20dp" />
 
-            <!-- INFO ADICIONAL -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Descripción"
                 android:textColor="#1A1A1A"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="6dp" />
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Pieza en excelente estado de conservación. Incluye documentación original de procedencia y certificado de autenticidad. El dueño declara ser el propietario legal del bien sin impedimentos para su venta."
                 android:textColor="#555555"
                 android:textSize="14sp"
                 android:lineSpacingExtra="4dp"
-                android:layout_marginBottom="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="20dp" />
 
-            <!-- FOTOS PLACEHOLDER -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Fotografías (6)"
                 android:textColor="#1A1A1A"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,40 +154,40 @@
 
             </LinearLayout>
 
-            <!-- MOTIVO RECHAZO (oculto inicialmente) -->
             <TextView
                 android:id="@+id/txt_motivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#E53935"
                 android:textSize="14sp"
                 android:layout_marginBottom="16dp"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
 
-            <!-- BOTONES ACEPTAR / RECHAZAR -->
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_aceptar"
-                android:text="Aceptar lote"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
                 android:background="@drawable/button_primary"
-                android:textColor="#F4F1EA"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Aceptar lote"
                 android:textAllCaps="false"
+                android:textColor="#F4F1EA"
                 android:textSize="15sp"
-                android:paddingVertical="12dp"
-                android:layout_marginBottom="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_marginBottom="12dp" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_rechazar"
-                android:text="Rechazar lote"
-                android:background="@drawable/button_danger"
-                android:textColor="#F4F1EA"
-                android:textAllCaps="false"
-                android:textSize="15sp"
-                android:paddingVertical="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="72dp"
+                android:background="@drawable/button_danger"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Rechazar lote"
+                android:textAllCaps="false"
+                android:textColor="#F4F1EA"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
