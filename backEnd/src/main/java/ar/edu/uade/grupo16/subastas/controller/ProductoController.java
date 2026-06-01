@@ -55,11 +55,57 @@ public class ProductoController {
 
     @PutMapping("/{id}/revisar")
     @Operation(summary = "[EMPLEADO] Aprobar o rechazar un producto",
-               description = "Decisión: 'aprobado' o 'rechazado'. Si rechazado, incluir motivo.")
+               description = "Decisión: 'ACEPTADO' o 'RECHAZADO'. Si aceptado, incluir precioBase y comision. El estado pasará a PENDIENTE_DUENIO.")
     public ResponseEntity<Map<String, Object>> revisar(
             @PathVariable Integer id,
             @RequestBody Map<String, Object> request) {
         return ResponseEntity.ok(productoService.revisarProducto(id, request));
+    }
+
+    @PutMapping("/{id}/condiciones-duenio")
+    @Operation(summary = "[DUEÑO] Aceptar o rechazar condiciones propuestas",
+               description = "Decisión: 'ACEPTADO' o 'RECHAZADO'. Si el dueño acepta, el producto queda listo (ACEPTADO_DUENIO) para ir a catálogo.")
+    public ResponseEntity<Map<String, Object>> responderCondiciones(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(productoService.responderCondiciones(id, request));
+    }
+
+    @PutMapping("/{id}/ubicacion")
+    @Operation(summary = "[EMPLEADO] Actualizar ubicación del producto en depósito")
+    public ResponseEntity<Map<String, Object>> actualizarUbicacion(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(productoService.actualizarUbicacion(id, request));
+    }
+
+    // ────────── Vendedores (Dueños) ──────────
+
+    @GetMapping("/mis-productos")
+    @Operation(summary = "[DUEÑO] Ver mis productos ofrecidos y su estado")
+    public ResponseEntity<List<Map<String, Object>>> listarMisProductos(java.security.Principal principal) {
+        return ResponseEntity.ok(productoService.listarMisProductos(principal.getName()));
+    }
+
+    @PutMapping("/{id}/cuenta-cobro")
+    @Operation(summary = "[DUEÑO] Declarar cuenta bancaria para cobrar la venta",
+               description = "Requiere el ID de un medioPago tipo CUENTA_BANCARIA ya verificado")
+    public ResponseEntity<Map<String, Object>> declararCuentaCobro(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> request,
+            java.security.Principal principal) {
+        Long medioPagoId = Long.valueOf(request.get("medioPagoId").toString());
+        return ResponseEntity.ok(productoService.declararCuentaCobro(id, medioPagoId, principal.getName()));
+    }
+
+    @PostMapping("/{id}/seguro/aumentar")
+    @Operation(summary = "[DUEÑO] Aumentar póliza de seguro abonando la diferencia")
+    public ResponseEntity<Map<String, Object>> aumentarPoliza(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> request,
+            java.security.Principal principal) {
+        java.math.BigDecimal montoAdicional = new java.math.BigDecimal(request.get("montoAdicional").toString());
+        return ResponseEntity.ok(productoService.aumentarPoliza(id, montoAdicional, principal.getName()));
     }
 
     // ────────── Catálogos ──────────
