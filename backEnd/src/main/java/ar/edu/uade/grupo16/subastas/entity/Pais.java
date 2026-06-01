@@ -20,8 +20,14 @@ public class Pais {
     @Column(name = "descripcion", nullable = false, length = 100)
     private String descripcion;
 
-    @Column(name = "gentilicio", length = 100)
-    private String gentilicio;
+    @Column(name = "nombreCorto", length = 10)
+    private String nombreCorto;
+
+    @Column(name = "capital", length = 100)
+    private String capital;
+
+    @Column(name = "nacionalidad", length = 100)
+    private String nacionalidad;
 
     @Column(name = "idiomas", nullable = false, length = 150)
     private String idiomas;

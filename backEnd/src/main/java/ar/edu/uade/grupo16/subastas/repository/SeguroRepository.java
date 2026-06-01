@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface SeguroRepository extends JpaRepository<Seguro, String> {
     boolean existsByProductoIdentificadorAndVigente(Integer productoId, Boolean vigente);
     java.util.List<Seguro> findByProductoIdentificador(Integer productoId);
+    java.util.List<Seguro> findByProductoIdentificadorAndVigente(Integer productoId, Boolean vigente);
 }
