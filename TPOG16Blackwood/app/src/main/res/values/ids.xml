@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="et_password" type="id" />
+    <item name="et_confirm_password" type="id" />
+    <item name="container_metodos_pago" type="id" />
+    <item name="btn_agregar_metodo" type="id" />
+    <item name="btn_finalizar" type="id" />
+</resources>

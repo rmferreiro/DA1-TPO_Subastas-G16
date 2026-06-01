@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/xml/file_paths.xml -->
+<paths>
+    <external-files-path
+        name="dni_photos"
+        path="Pictures/"/>
+</paths>

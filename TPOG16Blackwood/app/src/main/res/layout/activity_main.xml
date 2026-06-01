@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#1C2A21">
+
+    <!-- LOGO -->
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/logo_blackwood"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Logo"/>
+
+    <!-- TITULO -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Blackwood Fine Sales"
+        android:textColor="#F4F1EA"
+        android:textSize="@dimen/text_size_large_title"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- SUBTITULO -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Luxury Auctions &amp; Fine Collections"
+        android:textColor="#C6A75E"
+        android:textSize="@dimen/text_size_header_sub"/>
+
+</LinearLayout>

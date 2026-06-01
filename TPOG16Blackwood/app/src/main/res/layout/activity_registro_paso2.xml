@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F1EA">
+
+    <!-- CONTENIDO PRINCIPAL (Registro) -->
+    <ScrollView
+        android:id="@+id/main_registration_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- HEADER REUTILIZABLE -->
+            <include
+                android:id="@+id/include_header"
+                layout="@layout/view_header" />
+
+            <!-- CONTENIDO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- SEGURIDAD -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Seguridad"
+                    android:textColor="#1A1A1A"
+                    android:textSize="@dimen/text_size_title" />
+
+                <!-- PASSWORD -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:hint="@string/pass"
+                        android:inputType="textPassword"
+                        android:importantForAutofill="yes"
+                        android:autofillHints="password"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="#1A1A1A"
+                        android:textColorHint="#7B7B7B"
+                        android:textSize="@dimen/text_size_body" />
+                    <TextView
+                        android:id="@+id/error_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#C6A75E"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- CONFIRM PASSWORD -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="26dp"
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/et_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:hint="@string/conf_pass"
+                        android:inputType="textPassword"
+                        android:importantForAutofill="yes"
+                        android:autofillHints="password"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="#1A1A1A"
+                        android:textColorHint="#7B7B7B"
+                        android:textSize="@dimen/text_size_body" />
+                    <TextView
+                        android:id="@+id/error_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#C6A75E"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- MEDIOS DE PAGO -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:text="@string/medios_pago"
+                    android:textColor="#1A1A1A"
+                    android:textSize="@dimen/text_size_title" />
+
+                <!-- LISTA DE METODOS -->
+                <LinearLayout
+                    android:id="@+id/container_metodos_pago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <!-- BOTON AGREGAR -->
+                <Button
+                    android:id="@+id/btn_agregar_metodo"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/button_black_gold"
+                    app:backgroundTint="@null"
+                    android:elevation="0dp"
+                    android:text="@string/medios_pago_add"
+                    android:textAllCaps="false"
+                    android:textColor="#6B6B6B"
+                    android:textSize="@dimen/text_size_body" />
+
+                <!-- INFO BOX -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/info_box"
+                    android:lineSpacingExtra="3dp"
+                    android:padding="16dp"
+                    android:text="@string/medios_pago_info"
+                    android:textColor="#6B6B6B"
+                    android:textSize="@dimen/text_size_small" />
+
+                <!-- BOTON FINAL -->
+                <Button
+                    android:id="@+id/btn_finalizar"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:background="@drawable/button_primary"
+                    app:backgroundTint="@null"
+                    android:elevation="0dp"
+                    android:text="@string/final_reg"
+                    android:textAllCaps="false"
+                    android:textColor="#F4F1EA"
+                    android:textSize="@dimen/text_size_button" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- CONTENEDOR PARA EL FRAGMENTO (Oculto por defecto) -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F4F1EA"
+        android:visibility="gone" />
+
+</FrameLayout>

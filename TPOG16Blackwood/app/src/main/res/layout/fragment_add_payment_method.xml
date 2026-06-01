@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F4F1EA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- HEADER REUTILIZABLE -->
+        <include
+            android:id="@+id/include_header"
+            layout="@layout/view_header" />
+
+        <!-- CONTENIDO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- SELECTOR -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tipo_pago_title"
+                android:textColor="#1A1A1A"
+                android:textSize="18sp"
+                android:layout_marginBottom="14dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                app:endIconTint="@color/green_dark">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinner_tipo_pago"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:popupBackground="#EAE6DF"
+                    android:hint="@string/tipo_pago_ph"
+                    android:textColorHint="#7B7B7B"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
+                    android:textColor="#1A1A1A"
+                    android:textSize="@dimen/text_size_body"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- CAMPOS DINÁMICOS -->
+            <LinearLayout
+                android:id="@+id/dynamic_fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- BOTÓN -->
+            <Button
+                android:id="@+id/btn_guardar_pago"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:background="@drawable/button_primary"
+                app:backgroundTint="@null"
+                android:text="@string/guardar_mp"
+                android:textAllCaps="false"
+                android:textColor="#F4F1EA"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

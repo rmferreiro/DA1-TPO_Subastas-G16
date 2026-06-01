@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Primarios -->
+    <color name="green_bottle">#1C2A21</color>
+    <color name="green_olive">#2F3E34</color>
+    <color name="green_dark">#1C2A21</color>
+
+    <!-- Fondo -->
+    <color name="cream">#F4F1EA</color>
+    <color name="marfil">#F4F1EA</color>
+
+    <!-- Acento Premium -->
+    <color name="gold">#C6A75E</color>
+    <color name="gold_aged">#C6A75E</color>
+
+    <!-- Estados -->
+    <color name="success">#5C7A65</color>
+    <color name="error">#6E2C2C</color>
+</resources>
