@@ -54,7 +54,7 @@ public class AuthService {
     }
 
     @Transactional
-    public String registrar(RegistroRequest request) {
+    public AuthResponse registrar(RegistroRequest request) {
         // Validar que no exista el email
         if (usuarioAuthRepository.existsByEmail(request.getEmail())) {
             throw new RegistroInvalidoException("El email ya está registrado");
@@ -69,12 +69,6 @@ public class AuthService {
         var pais = paisRepository.findById(request.getPaisId())
                 .orElseThrow(() -> new RegistroInvalidoException("País no válido"));
 
-        // Obtener empleado del sistema como verificador por defecto
-        Empleado verificador = empleadoRepository.findAll().stream()
-                .findFirst()
-                .orElseThrow(() -> new RegistroInvalidoException(
-                        "No hay empleados en el sistema. Ejecute el script 03_datos_iniciales.sql"));
-
         // 1. Crear Persona
         Persona persona = Persona.builder()
                 .documento(request.getDocumento())
@@ -84,19 +78,31 @@ public class AuthService {
                 .build();
         persona = personaRepository.save(persona);
 
-        // 2. Crear Cliente (admitido='no', sin categoría hasta aprobación)
+        // 2. Crear Cliente — KYC eliminado: admitido y con categoría 'comun' de inmediato.
+        //    El campo 'verificador' del legacy es NOT NULL; se asigna el primer empleado del sistema
+        //    o se deja null si la BD lo permite. Como el legacy lo exige, buscamos uno.
+        Empleado verificador = empleadoRepository.findAll().stream()
+                .findFirst()
+                .orElse(null);
+
         Cliente cliente = Cliente.builder()
                 .persona(persona)
                 .pais(pais)
-                .admitido("no")
-                .categoria(null)
+                .admitido("si")          // auto-aprobado
+                .categoria("comun")      // categoría inicial por defecto
                 .verificador(verificador)
                 .build();
         clienteRepository.save(cliente);
 
-        // 3. Crear UsuarioAuth con estado PENDIENTE
-        byte[] fotoFrente = Base64.getDecoder().decode(request.getFotoDocFrente());
-        byte[] fotoDorso = Base64.getDecoder().decode(request.getFotoDocDorso());
+        // 3. Crear UsuarioAuth — @PrePersist setea estado=APROBADO automáticamente
+        byte[] fotoFrente = null;
+        byte[] fotoDorso  = null;
+        if (request.getFotoDocFrente() != null && !request.getFotoDocFrente().isBlank()) {
+            fotoFrente = java.util.Base64.getDecoder().decode(request.getFotoDocFrente());
+        }
+        if (request.getFotoDocDorso() != null && !request.getFotoDocDorso().isBlank()) {
+            fotoDorso = java.util.Base64.getDecoder().decode(request.getFotoDocDorso());
+        }
 
         UsuarioAuth auth = UsuarioAuth.builder()
                 .persona(persona)
@@ -105,10 +111,21 @@ public class AuthService {
                 .fotoDocFrente(fotoFrente)
                 .fotoDocDorso(fotoDorso)
                 .build();
-        // @PrePersist generará UUID, fechaRegistro y estado PENDIENTE
         auth = usuarioAuthRepository.save(auth);
 
-        return auth.getUuid();
+        // 4. Generar tokens directamente (el usuario ya está aprobado)
+        String accessToken  = jwtTokenProvider.generateAccessToken(auth.getEmail());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(auth.getEmail());
+
+        return AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .email(auth.getEmail())
+                .nombre(persona.getNombre())
+                .categoria("comun")
+                .estado(EstadoUsuario.APROBADO.name())
+                .tokenType("Bearer")
+                .build();
     }
 
     public AuthResponse login(LoginRequest request) {
