@@ -1,0 +1,1219 @@
+__export_format: 4
+__export_date: "2026-06-01T05:30:00.000Z"
+__export_source: "insomnia.desktop.app:v2023.5.8"
+resources:
+  - _id: wrk_subastas_g16
+    parentId: null
+    modified: 1717200000000
+    created: 1717200000000
+    name: Subastas G16 API
+    description: Colección completa de endpoints para testear a fondo el sistema de subastas del Grupo 16.
+    type: workspace
+    scope: collection
+
+  - _id: env_subastas_base
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: Base Environment
+    data:
+      base_url: http://localhost:8080
+      client_token: "INSERTAR_JWT_CLIENTE_AQUÍ"
+      admin_token: "INSERTAR_JWT_ADMIN_AQUÍ"
+      client_refresh_token: "INSERTAR_REFRESH_TOKEN_AQUÍ"
+      default_uuid: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      test_producto_id: 1
+      test_subasta_id: 10
+      test_item_id: 42
+      test_medio_pago_id: 7
+      test_multa_id: 3
+    dataPropertyOrder:
+      &:
+        - base_url
+        - client_token
+        - admin_token
+        - client_refresh_token
+        - default_uuid
+        - test_producto_id
+        - test_subasta_id
+        - test_item_id
+        - test_medio_pago_id
+        - test_multa_id
+    color: null
+    isPrivate: false
+    metaSortKey: 1717200000000
+    type: environment
+
+  # ────────────────────────────────────────────────────────
+  # FOLDERS (REQUEST GROUPS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: fld_1_auth
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 1. Autenticación y Registro
+    description: Endpoints para registro de usuarios (KYC simplificado), login y refresco de tokens.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 1000
+    type: request_group
+
+  - _id: fld_2_admin
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 2. Administración y Verificación
+    description: Panel de administración para aprobar/rechazar nuevos usuarios (definir categorías).
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 2000
+    type: request_group
+
+  - _id: fld_3_cliente
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 3. Clientes (Perfil y Métricas)
+    description: Endpoints del perfil del cliente, métricas de subastas e información previa al ingreso de salas.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 3000
+    type: request_group
+
+  - _id: fld_4_medios
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 4. Medios de Pago
+    description: Gestión de medios de pago del usuario (cuentas bancarias nacionales/extranjeras, tarjetas, cheques).
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 4000
+    type: request_group
+
+  - _id: fld_5_vendedor
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 5. Panel Vendedor (Dueño)
+    description: Endpoints para que el dueño/vendedor declare productos, configure cuenta de cobro y aumente seguros.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 5000
+    type: request_group
+
+  - _id: fld_6_empleado
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 6. Operaciones Empleado / Catálogo
+    description: Gestión de depósitos, revisión de solicitudes de productos y carga de catálogos de subasta.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 6000
+    type: request_group
+
+  - _id: fld_7_subastas
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 7. Subastas y Salas
+    description: Listado de subastas disponibles, salas activas y unión/salida de usuarios.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 7000
+    type: request_group
+
+  - _id: fld_8_pujas
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 8. Motor de Pujas en Vivo
+    description: Realización de pujas, cierre de items y consultas del historial o mejor puja.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 8000
+    type: request_group
+
+  - _id: fld_9_multas
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 9. Multas
+    description: Endpoints para ver multas pendientes, pagarlas y generar multas administrativas.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 9000
+    type: request_group
+
+  - _id: fld_10_notificaciones
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 10. Notificaciones
+    description: Consulta de notificaciones del sistema en tiempo real y marcas de lectura.
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 10000
+    type: request_group
+
+  - _id: fld_11_publicos
+    parentId: wrk_subastas_g16
+    modified: 1717200000000
+    created: 1717200000000
+    name: 11. Endpoints Públicos / Auxiliares
+    description: Endpoints que no requieren autenticación (Catálogo público, países de origen).
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 11000
+    type: request_group
+
+
+  # ────────────────────────────────────────────────────────
+  # 1. AUTENTICACIÓN Y REGISTRO (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_auth_registro
+    parentId: fld_1_auth
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/registro"
+    name: Registrar Cliente (KYC Simplificado)
+    description: Crea un nuevo usuario. Al registrarse, el sistema lo auto-aprueba directamente con categoría 'común' y le devuelve los tokens JWT de forma inmediata.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "nombre": "Juan Pérez",
+          "documento": "35123456",
+          "direccion": "Av. Corrientes 1234",
+          "paisId": 1,
+          "email": "juan.perez@email.com",
+          "password": "Password123!",
+          "fotoDocFrente": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+          "fotoDocDorso": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: 1100
+    type: request
+
+  - _id: req_auth_login_client
+    parentId: fld_1_auth
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/login"
+    name: Login como Cliente
+    description: Inicia sesión con la cuenta de un cliente previamente registrado y aprobado. Copiar el accessToken devuelto en la variable 'client_token'.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "juan.perez@email.com",
+          "password": "Password123!"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: 1200
+    type: request
+
+  - _id: req_auth_login_admin
+    parentId: fld_1_auth
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/login"
+    name: Login como Admin / Empleado
+    description: Inicia sesión con las credenciales de un empleado/administrador del sistema. Copiar el accessToken en la variable 'admin_token'.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "admin@subastas.com",
+          "password": "adminPassword123"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: 1300
+    type: request
+
+  - _id: req_auth_refresh
+    parentId: fld_1_auth
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/refresh"
+    name: Refrescar Token
+    description: Envía el refresh token almacenado para obtener un nuevo access token vigente.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "refreshToken": "{{ _.client_refresh_token }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: 1400
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 2. ADMINISTRACIÓN Y VERIFICACIÓN (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_admin_pendientes
+    parentId: fld_2_admin
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/admin/usuarios/pendientes"
+    name: Listar Usuarios Pendientes
+    description: Devuelve el listado de usuarios que aún se encuentran en estado 'PENDIENTE' para su aprobación manual por parte de administración.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 2100
+    type: request
+
+  - _id: req_admin_aprobar
+    parentId: fld_2_admin
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/admin/usuarios/{{ _.default_uuid }}/aprobar"
+    name: Aprobar Usuario (Asignar Categoría)
+    description: Aprueba la solicitud del usuario con el UUID especificado y le asigna una categoría (comun, especial, plata, oro, platino).
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "categoria": "plata"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 2200
+    type: request
+
+  - _id: req_admin_rechazar
+    parentId: fld_2_admin
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/admin/usuarios/{{ _.default_uuid }}/rechazar"
+    name: Rechazar Usuario
+    description: Rechaza la solicitud del usuario con el UUID especificado. Este no podrá volver a loguearse.
+    method: PUT
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 2300
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 3. CLIENTES - PERFIL Y MÉTRICAS (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_clientes_perfil
+    parentId: fld_3_cliente
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/clientes/perfil"
+    name: Obtener Perfil Autenticado
+    description: Devuelve el perfil completo del cliente que está logueado en la sesión (según el token enviado).
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 3100
+    type: request
+
+  - _id: req_clientes_metricas
+    parentId: fld_3_cliente
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/clientes/metricas"
+    name: Obtener Métricas del Cliente
+    description: Retorna métricas acumuladas del usuario, como el total de pujas realizadas, subastas ganadas y tasa de éxito.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 3200
+    type: request
+
+  - _id: req_clientes_info_subasta
+    parentId: fld_3_cliente
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/clientes/info-subasta"
+    name: Consultar Habilitación para Subasta
+    description: Retorna un objeto indicando si el cliente tiene medios de pago configurados y si posee multas pendientes, indicando si puede o no unirse a subastas.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 3300
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 4. MEDIOS DE PAGO (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_medios_pago_bank_ars
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago"
+    name: Registrar Cuenta Bancaria (Nacional)
+    description: Registra una cuenta bancaria local en ARS asociada al usuario para validar su solvencia.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "tipo": "CUENTA_BANCARIA",
+          "moneda": "ARS",
+          "banco": "Banco Nación",
+          "numeroCuenta": "0012345678",
+          "cbuSwift": "0110123456789012345678",
+          "esInternacional": false
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 4100
+    type: request
+
+  - _id: req_medios_pago_bank_usd
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago"
+    name: Registrar Cuenta Bancaria (Internacional - USD)
+    description: Registra una cuenta bancaria internacional en USD (ideal para subastas dolarizadas).
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "tipo": "CUENTA_BANCARIA",
+          "moneda": "USD",
+          "banco": "Chase Bank",
+          "numeroCuenta": "9876543210",
+          "cbuSwift": "CHASUS33XXX",
+          "esInternacional": true
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 4200
+    type: request
+
+  - _id: req_medios_pago_card
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago"
+    name: Registrar Tarjeta de Crédito
+    description: Registra una tarjeta de crédito nacional o internacional para cobro ágil de las pujas.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "tipo": "TARJETA_CREDITO",
+          "moneda": "USD",
+          "numeroTarjeta": "4111111111111111",
+          "titular": "JUAN PEREZ",
+          "vencimiento": "12/28",
+          "esTarjetaInternacional": true
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 4300
+    type: request
+
+  - _id: req_medios_pago_cheque
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago"
+    name: Registrar Cheque Certificado
+    description: Registra un cheque certificado entregado físicamente con un límite establecido de monto.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "tipo": "CHEQUE_CERTIFICADO",
+          "moneda": "ARS",
+          "numeroCheque": "99882233",
+          "bancoEmisor": "Banco Galicia",
+          "montoCertificado": 150000.00
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 4400
+    type: request
+
+  - _id: req_medios_pago_listar
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago"
+    name: Listar Mis Medios de Pago
+    description: Devuelve todos los medios de pago configurados y activos para el cliente actual.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 4500
+    type: request
+
+  - _id: req_medios_pago_eliminar
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago/{{ _.test_medio_pago_id }}"
+    name: Eliminar Medio de Pago
+    description: Hace una baja lógica (soft delete) del medio de pago indicado por el ID.
+    method: DELETE
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 4600
+    type: request
+
+  - _id: req_medios_pago_admin_verificar
+    parentId: fld_4_medios
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/medios-pago/admin/{{ _.test_medio_pago_id }}/verificar"
+    name: [ADMIN] Verificar Medio de Pago
+    description: Marca un medio de pago como verificado para que el cliente pueda empezar a realizar ofertas.
+    method: PUT
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 4700
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 5. PANEL VENDEDOR / DUEÑO (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_productos_solicitar
+    parentId: fld_5_vendedor
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/solicitar"
+    name: Ofrecer Producto para Subasta
+    description: Un cliente solicita que la empresa evalúe un producto de su propiedad. Debe declarar de manera obligatoria que el bien le pertenece (`declaracionJurada: true`).
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "duenioId": 1,
+          "descripcion": "Estupenda mesa de roble macizo del siglo XIX con incrustaciones de nácar.",
+          "declaracionJurada": true,
+          "fotos": [
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+          ]
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 5100
+    type: request
+
+  - _id: req_productos_mis_productos
+    parentId: fld_5_vendedor
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/mis-productos"
+    name: Ver Mis Productos Ofrecidos
+    description: Retorna los productos de la propiedad del usuario autenticado. Permite ver el estado de cada solicitud de subasta y el motivo en caso de rechazo (`motivoRechazo`).
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 5200
+    type: request
+
+  - _id: req_productos_cuenta_cobro
+    parentId: fld_5_vendedor
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/{{ _.test_producto_id }}/cuenta-cobro"
+    name: Declarar Cuenta para Cobro
+    description: Asocia un medio de pago de tipo CUENTA_BANCARIA (debe estar verificado) a un producto específico para cobrar el monto si llega a ser subastado.
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "medioPagoId": "{{ _.test_medio_pago_id }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 5300
+    type: request
+
+  - _id: req_productos_seguro_aumentar
+    parentId: fld_5_vendedor
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/{{ _.test_producto_id }}/seguro/aumentar"
+    name: Aumentar Seguro de la Pieza
+    description: Permite al dueño contactar a la aseguradora y aumentar la cobertura de su pieza en depósito abonando una diferencia de premio.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "montoAdicional": 25000.00
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 5400
+    type: request
+
+  - _id: req_productos_condiciones_duenio
+    parentId: fld_5_vendedor
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/{{ _.test_producto_id }}/condiciones-duenio"
+    name: Aceptar/Rechazar Condiciones Propuestas
+    description: Permite al dueño del producto aceptar o rechazar el precio base y la comisión propuestas por la empresa tras la revisión física.
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "decision": "ACEPTADO"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 5500
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 6. OPERACIONES EMPLEADO / CATÁLOGOS (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_productos_pendientes
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/pendientes"
+    name: Ver Productos Pendientes de Revisión
+    description: Permite a los empleados listar todas las solicitudes de subasta de productos que están esperando evaluación.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 6100
+    type: request
+
+  - _id: req_productos_aprobados
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/aprobados"
+    name: Ver Productos Aprobados
+    description: Retorna la lista de productos que ya han sido aprobados por la empresa y por su dueño, listos para ser catalogados en subastas.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 6200
+    type: request
+
+  - _id: req_productos_detalle
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/{{ _.test_producto_id }}"
+    name: Ver Detalle del Producto (Con Seguro)
+    description: Muestra la información técnica detallada de una pieza, incluyendo fotos cargadas, su estado, ubicación y si posee un seguro vigente contratado.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 6300
+    type: request
+
+  - _id: req_productos_revisar
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/{{ _.test_producto_id }}/revisar"
+    name: Revisar Producto (Aprobar/Rechazar)
+    description: El empleado evalúa la pieza. Si es 'ACEPTADO', debe proponer el precioBase y comision. Si es 'RECHAZADO', debe indicar obligatoriamente el 'motivo'.
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "decision": "ACEPTADO",
+          "precioBase": 85000.00,
+          "comision": 10.0
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 6400
+    type: request
+
+  - _id: req_productos_ubicacion
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/{{ _.test_producto_id }}/ubicacion"
+    name: Actualizar Ubicación en Depósito
+    description: Actualiza la localización física (estantería, sector, pasillo) de la pieza depositada en los almacenes de la empresa.
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "ubicacion": "Depósito Central - Estante B-12"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 6500
+    type: request
+
+  - _id: req_productos_catalogo_agregar
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/catalogo/{{ _.test_subasta_id }}/items"
+    name: Agregar Producto al Catálogo
+    description: Vincula un producto aprobado al catálogo de una subasta específica. Requiere ingresar el precio base y la comisión de venta, y valida que el seguro del producto esté vigente.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "productoId": "{{ _.test_producto_id }}",
+          "precioBase": 90000.00,
+          "comision": 12.5
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 6600
+    type: request
+
+  - _id: req_productos_catalogo_completo
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/catalogo/{{ _.test_subasta_id }}"
+    name: Ver Catálogo Completo (Privado)
+    description: Devuelve todos los artículos que forman el catálogo de una subasta, incluyendo sus precios base oficiales. Requiere estar registrado.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 6700
+    type: request
+
+  - _id: req_productos_catalogo_disponibles
+    parentId: fld_6_empleado
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/productos/catalogo/{{ _.test_subasta_id }}/disponibles"
+    name: Ver Items Disponibles (No Subastados Aún)
+    description: Retorna los artículos del catálogo de la subasta indicada que aún no han sido rematados o cerrados en la sesión.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 6800
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 7. SUBASTAS Y SALAS (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_subastas_listar_disponibles
+    parentId: fld_7_subastas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas"
+    name: Listar Subastas Disponibles para Mí
+    description: Retorna las subastas activas o abiertas cuya categoría sea menor o igual a la categoría asignada al cliente logueado.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 7100
+    type: request
+
+  - _id: req_subastas_admin_todas
+    parentId: fld_7_subastas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/admin/todas"
+    name: [ADMIN] Listar Todas las Subastas
+    description: Retorna todas las subastas registradas en el sistema de manera global, sin realizar filtros de categoría.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 7200
+    type: request
+
+  - _id: req_subastas_detalle
+    parentId: fld_7_subastas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}"
+    name: Ver Detalle de Subasta
+    description: Devuelve la ficha descriptiva de una subasta en particular por su identificador.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 7300
+    type: request
+
+  - _id: req_subastas_unirse
+    parentId: fld_7_subastas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/unirse"
+    name: Unirse a la Subasta (Entrar a Sala)
+    description: Registra el ingreso del cliente a la subasta. Valida si la subasta posee cupo disponible, si el cliente posee multas impagas, si cuenta con un medio de pago verificado y si ya está en otra sala activa. Retorna el 'numeroPostor' asignado.
+    method: POST
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 7400
+    type: request
+
+  - _id: req_subastas_salir
+    parentId: fld_7_subastas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/salir"
+    name: Salir de la Subasta (Abandonar Sala)
+    description: Desconecta al cliente de la sala actual, liberando su cupo y permitiéndole unirse a otras salas.
+    method: DELETE
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 7500
+    type: request
+
+  - _id: req_subastas_estado_vivo
+    parentId: fld_7_subastas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/estado-vivo"
+    name: Obtener Estado en Vivo (Polling)
+    description: Retorna el estado en tiempo real de la subasta activa. Incluye el item actual que se está ofertando, la mayor puja, los límites (mínimo/máximo) para el siguiente pujo y el historial de las últimas 10 ofertas del item.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 7600
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 8. MOTOR DE PUJAS EN VIVO (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_pujas_realizar
+    parentId: fld_8_pujas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/pujas"
+    name: Realizar Puja
+    description: Encola una oferta para ser procesada. El sistema valida si el importe cumple los límites dinámicos (mínimo de +1% y máximo de +20% sobre el precio base frente a la oferta anterior) o si es Oro/Platino para omitir límites. El resultado final del pujo se emite por WebSocket.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "itemId": "{{ _.test_item_id }}",
+          "importe": 95000.00,
+          "medioPagoId": "{{ _.test_medio_pago_id }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 8100
+    type: request
+
+  - _id: req_pujas_mejor
+    parentId: fld_8_pujas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/pujas/items/{{ _.test_item_id }}/mejor"
+    name: Ver Mejor Oferta Actual del Item
+    description: Devuelve el monto de la oferta ganadora momentánea del artículo indicado y el número de postor que la realizó.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 8200
+    type: request
+
+  - _id: req_pujas_historial
+    parentId: fld_8_pujas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/pujas/items/{{ _.test_item_id }}/historial"
+    name: Ver Historial de Pujas del Item
+    description: Muestra todas las ofertas registradas para este artículo específico, ordenadas cronológicamente para auditoría.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 8300
+    type: request
+
+  - _id: req_pujas_cerrar
+    parentId: fld_8_pujas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/subastas/{{ _.test_subasta_id }}/pujas/items/{{ _.test_item_id }}/cerrar"
+    name: [ADMIN] Cerrar Item y Declarar Ganador
+    description: Ejecuta el martillazo de cierre del ítem. Si hubo ofertas válidas, declara la venta al mejor postor y emite la factura con impuestos/envío. Si no hubo ofertas, el sistema (SISTEMA_EMPRESA) autocompra el bien por el valor base.
+    method: POST
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 8400
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 9. MULTAS (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_multas_listar_todas
+    parentId: fld_9_multas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/multas"
+    name: Listar Todas Mis Multas
+    description: Muestra el historial completo de multas aplicadas al cliente logueado (tanto pagadas como pendientes).
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 9100
+    type: request
+
+  - _id: req_multas_listar_pendientes
+    parentId: fld_9_multas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/multas/pendientes"
+    name: Listar Mis Multas Pendientes
+    description: Muestra únicamente las sanciones monetarias no pagadas que bloquean al usuario para participar en otras salas.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 9200
+    type: request
+
+  - _id: req_multas_pagar
+    parentId: fld_9_multas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/multas/{{ _.test_multa_id }}/pagar"
+    name: Pagar Multa
+    description: Registra el abono del cargo de la multa indicada (10% de la puja no pagada). Restablece inmediatamente la habilitación del usuario.
+    method: POST
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 9300
+    type: request
+
+  - _id: req_multas_admin_generar
+    parentId: fld_9_multas
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/multas/admin/generar"
+    name: [ADMIN] Generar Multa Manual
+    description: Permite al administrador crear una sanción pecuniaria de manera manual a un cliente oferente incumplidor.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "clienteId": 1,
+          "subastaId": "{{ _.test_subasta_id }}",
+          "itemId": "{{ _.test_item_id }}",
+          "montoOfertado": 150000.00
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.admin_token }}"
+    metaSortKey: 9400
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 10. NOTIFICACIONES (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_notificaciones_listar
+    parentId: fld_10_notificaciones
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/notificaciones"
+    name: Listar Mis Notificaciones Paginadas
+    description: Devuelve la lista paginada de alertas y notificaciones del usuario (por ejemplo, producto aprobado, ganaste subasta, etc.). Admite los parámetros opcionales `pagina` y `tamanio`.
+    method: GET
+    body: {}
+    parameters:
+      - name: pagina
+        value: "0"
+      - name: tamanio
+        value: "20"
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 10100
+    type: request
+
+  - _id: req_notificaciones_no_leidas
+    parentId: fld_10_notificaciones
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/notificaciones/no-leidas"
+    name: Consultar Cantidad de Alertas No Leídas
+    description: Retorna el contador total de mensajes de alerta que el cliente aún no ha visualizado en su panel.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 10200
+    type: request
+
+  - _id: req_notificaciones_marcar_leidas
+    parentId: fld_10_notificaciones
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/notificaciones/marcar-leidas"
+    name: Marcar Todas como Leídas
+    description: Marca masivamente todas las notificaciones pendientes de lectura en el buzón del usuario autenticado como leídas.
+    method: PUT
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.client_token }}"
+    metaSortKey: 10300
+    type: request
+
+
+  # ────────────────────────────────────────────────────────
+  # 11. ENDPOINTS PÚBLICOS / AUXILIARES (REQUESTS)
+  # ────────────────────────────────────────────────────────
+  
+  - _id: req_public_catalogo
+    parentId: fld_11_publicos
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/public/catalogo/{{ _.test_subasta_id }}"
+    name: Ver Catálogo Público (Sin Precios Base)
+    description: Acceso libre sin necesidad de token. Muestra las piezas y descripciones de una subasta, pero oculta el precio base inicial por confidencialidad.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: 11100
+    type: request
+
+  - _id: req_paises_listar
+    parentId: fld_11_publicos
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/paises"
+    name: Listar Países Disponibles
+    description: Obtiene el listado de países del sistema para que los cargadores puedan elegir su nacionalidad en el formulario de registro.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: 11200
+    type: request
