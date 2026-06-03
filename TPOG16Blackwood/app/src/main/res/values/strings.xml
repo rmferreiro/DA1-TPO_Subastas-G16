@@ -42,4 +42,36 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="espere">Por favor, aguarda un momento.</string>
+    <string name="validando_op">Estamos validando la operación.</string>
+    <string name="pais_ph">País de origen</string>
+    <string name="dom_ph">Domicilio legal</string>
+    <string name="doc_ph">Documento</string>
+    <string name="submit_f_doc">Subir documento (frente)</string>
+    <string name="submit_d_doc">Subir documento (dorso)</string>
+    <string name="enviar">Enviar para verificación</string>
+    <string name="ver_info">Verificando información</string>
+    <string name="ver_info_description">Estamos validando tus datos y documentación mediante nuestros procesos de verificación.</string>
+    <string name="ver_info_info">Este proceso puede demorar unos minutos.\nTe notificaremos por correo electrónico cuando tu cuenta esté aprobada.</string>
+    <string name="ver_info_estatus">Estado: En revisión</string>
+    <string name="pass">Contraseña</string>
+    <string name="conf_pass">Confirmar contraseña</string>
+    <string name="medios_pago">Medios de pago</string>
+    <string name="medios_pago_add">+ Agregar medio de pago</string>
+    <string name="medios_pago_info">Tus medios de pago habilitan tu participación en subastas y pueden mejorar tu categoría.</string>
+    <string name="final_reg">Finalizar registro</string>
+    <string name="logo_title">BlackWood</string>
+    <string name="logo_sub_title"><![CDATA[Finance & Sales]]></string>
+    <string name="nuevo_metodo">Nuevo método</string>
+    <string name="tipo_pago_ph">Seleccionar tipo de pago</string>
+    <string name="cuenta_ph">Número de tarjeta / cuenta</string>
+    <string name="tarjeta_ven">Vencimiento (MM/AA)</string>
+    <string name="pais_org_ph">País de origen</string>
+    <string name="medio_pago_info">Los medios de pago serán verificados por nuestro equipo antes de habilitar su uso en subastas.</string>
+    <string name="guardar_mp">Guardar medio de pago</string>
+    <string name="tipo_pago_title">Tipo de pago</string>
+    <string name="detalle_metodo">**** 4587 · Internacional</string>
+    <string name="tarj_credito">Tarjeta crédito</string>
+    <string name="header_brand">Blackwood Fine Sales</string>
+    <string name="registro">Registro</string>
 </resources>

@@ -1,7 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.TPOG16Blackwood" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#1C2A21</item>
+    <style name="Base.Theme.TPOG16Blackwood" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Color principal (el que suele verse violeta) -->
+        <item name="colorPrimary">@color/green_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Color para los placeholders y detalles (Surface Variant) -->
+        <item name="colorOnSurfaceVariant">#7B7B7B</item>
+
+        <!-- Color de los elementos del dropdown y controles -->
+        <item name="colorSecondary">@color/gold</item>
+
         <item name="colorPrimaryDark">#1C2A21</item>
         <item name="colorAccent">#C6A75E</item>
         <item name="android:navigationBarColor">#1C2A21</item>

@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F1EA"
-    android:fitsSystemWindows="true"
-    android:importantForAutofill="noExcludeDescendants">
+    android:background="#F4F1EA">
 
     <!-- CONTENIDO PRINCIPAL (Registro) -->
     <ScrollView
@@ -19,41 +17,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- HEADER AJUSTADO (Sin padding superior excesivo) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#1C2A21"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Blackwood Fine Sales"
-                    android:textColor="#F4F1EA"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Completar registro"
-                    android:textColor="#C6A75E"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
+            <!-- HEADER REUTILIZABLE -->
+            <include
+                android:id="@+id/include_header"
+                layout="@layout/view_header" />
 
             <!-- CONTENIDO -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:padding="24dp">
 
                 <!-- SEGURIDAD -->
                 <TextView
@@ -62,48 +36,76 @@
                     android:layout_marginBottom="16dp"
                     android:text="Seguridad"
                     android:textColor="#1A1A1A"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_title" />
 
                 <!-- PASSWORD -->
-                <EditText
-                    android:id="@+id/et_password"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"
-                    android:importantForAutofill="no"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
-                    android:textColorHint="#7B7B7B"
-                    android:textSize="15sp" />
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:hint="@string/pass"
+                        android:inputType="textPassword"
+                        android:importantForAutofill="yes"
+                        android:autofillHints="password"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="#1A1A1A"
+                        android:textColorHint="#7B7B7B"
+                        android:textSize="@dimen/text_size_body" />
+                    <TextView
+                        android:id="@+id/error_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#C6A75E"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <!-- CONFIRM PASSWORD -->
-                <EditText
-                    android:id="@+id/et_confirm_password"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="26dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="Confirmar contraseña"
-                    android:inputType="textPassword"
-                    android:importantForAutofill="no"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
-                    android:textColorHint="#7B7B7B"
-                    android:textSize="15sp" />
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/et_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:hint="@string/conf_pass"
+                        android:inputType="textPassword"
+                        android:importantForAutofill="yes"
+                        android:autofillHints="password"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="#1A1A1A"
+                        android:textColorHint="#7B7B7B"
+                        android:textSize="@dimen/text_size_body" />
+                    <TextView
+                        android:id="@+id/error_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#C6A75E"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <!-- MEDIOS DE PAGO -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp"
-                    android:text="Medios de pago"
+                    android:text="@string/medios_pago"
                     android:textColor="#1A1A1A"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_title" />
 
                 <!-- LISTA DE METODOS -->
                 <LinearLayout
@@ -116,16 +118,15 @@
                 <Button
                     android:id="@+id/btn_agregar_metodo"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
+                    android:layout_height="55dp"
                     android:layout_marginBottom="24dp"
                     android:background="@drawable/button_black_gold"
-                    android:backgroundTint="@null"
                     app:backgroundTint="@null"
                     android:elevation="0dp"
-                    android:text="+ Agregar medio de pago"
+                    android:text="@string/medios_pago_add"
                     android:textAllCaps="false"
-                    android:textColor="#F4F1EA"
-                    android:textSize="15sp" />
+                    android:textColor="#6B6B6B"
+                    android:textSize="@dimen/text_size_body" />
 
                 <!-- INFO BOX -->
                 <TextView
@@ -135,23 +136,22 @@
                     android:background="@drawable/info_box"
                     android:lineSpacingExtra="3dp"
                     android:padding="16dp"
-                    android:text="Tus medios de pago habilitan tu participación en subastas y pueden mejorar tu categoría."
+                    android:text="@string/medios_pago_info"
                     android:textColor="#6B6B6B"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_small" />
 
                 <!-- BOTON FINAL -->
                 <Button
                     android:id="@+id/btn_finalizar"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
+                    android:layout_height="65dp"
                     android:background="@drawable/button_primary"
-                    android:backgroundTint="@null"
                     app:backgroundTint="@null"
                     android:elevation="0dp"
-                    android:text="Finalizar registro"
+                    android:text="@string/final_reg"
                     android:textAllCaps="false"
                     android:textColor="#F4F1EA"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_size_button" />
 
             </LinearLayout>
         </LinearLayout>

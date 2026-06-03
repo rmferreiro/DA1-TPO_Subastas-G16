@@ -3,15 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F4F1EA"
-    android:importantForAutofill="noExcludeDescendants">
+    android:background="#F4F1EA">
 
-    <!-- HEADER REUTILIZABLE -->
+    <!-- HEADER CON ID PARA EVITAR CRASH -->
     <include
         android:id="@+id/include_header"
         layout="@layout/view_header" />
 
-    <!-- CONTENIDO CENTRADO -->
+    <!-- CONTENIDO DE CARGA -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,14 +18,13 @@
         android:gravity="center_horizontal"
         android:padding="24dp">
 
-        <!-- CÍRCULO + ARCO DORADO ANIMADO -->
         <FrameLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="100dp"
             android:layout_marginBottom="24dp">
 
-            <!-- Círculo negro con borde gris (Fondo estático) -->
+            <!-- Círculo negro con borde gris (Idéntico a procesamiento de registro) -->
             <View
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -35,6 +33,7 @@
 
             <!-- Arco dorado rotatorio (ProgressBar) -->
             <ProgressBar
+                android:id="@+id/loading_progress"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
@@ -42,43 +41,34 @@
                 android:indeterminateDrawable="@drawable/loading_ring" />
         </FrameLayout>
 
-        <!-- TÍTULO -->
         <TextView
+            android:id="@+id/tv_loading_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ver_info"
+            android:text="Procesando"
             android:textSize="@dimen/text_size_title"
             android:textColor="#1A1A1A"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="8dp" />
 
-        <!-- DESCRIPCIÓN -->
         <TextView
+            android:id="@+id/tv_loading_desc"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:text="@string/ver_info_description"
+            android:text="@string/espere"
             android:textColor="#6B6B6B"
             android:textSize="@dimen/text_size_small"
             android:gravity="center"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="24dp" />
 
-        <!-- CAJA INFO -->
         <TextView
+            android:id="@+id/tv_loading_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/info_box"
             android:padding="14dp"
-            android:text="@string/ver_info_info"
+            android:text="@string/validando_op"
             android:textColor="#6B6B6B"
-            android:textSize="@dimen/text_size_small"
-            android:layout_marginBottom="20dp"/>
-
-        <!-- ESTADO -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ver_info_estatus"
-            android:textColor="#C6A75E"
-            android:textSize="@dimen/text_size_small"/>
+            android:textSize="@dimen/text_size_small" />
 
     </LinearLayout>
 
