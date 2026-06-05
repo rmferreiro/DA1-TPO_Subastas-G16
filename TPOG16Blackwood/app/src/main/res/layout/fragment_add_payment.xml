@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F4F1EA">
 
     <LinearLayout
@@ -10,29 +10,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- HEADER -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="#1C2A21"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Blackwood Fine Sales"
-                android:textColor="#F4F1EA"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Agregar medio de pago"
-                android:textColor="#C6A75E"
-                android:textSize="14sp" />
-
-        </LinearLayout>
+        <!-- HEADER REUTILIZABLE -->
+        <include
+            android:id="@+id/include_header"
+            layout="@layout/view_header" />
 
         <!-- CONTENIDO -->
         <LinearLayout
@@ -46,94 +27,121 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:text="Nuevo método"
+                android:text="@string/nuevo_metodo"
                 android:textColor="#1A1A1A"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_size_title" />
 
             <!-- SELECTOR TIPO -->
-            <Spinner
-                android:id="@+id/spinner_tipo_pago"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:background="@drawable/input_bg"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp" />
+                app:hintEnabled="false"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                app:endIconTint="@color/green_dark">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinner_tipo_pago"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/tipo_pago_ph"
+                    android:textColorHint="#7B7B7B"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
+                    android:textColor="#1A1A1A"
+                    android:textSize="@dimen/text_size_body"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- TITULAR -->
             <EditText
                 android:id="@+id/et_titular"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/input_bg"
                 android:hint="Titular"
                 android:inputType="textPersonName"
+                android:importantForAutofill="yes"
+                android:autofillHints="name"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <!-- NUMERO -->
             <EditText
                 android:id="@+id/et_numero"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/input_bg"
-                android:hint="Número de tarjeta / cuenta"
+                android:hint="@string/cuenta_ph"
                 android:inputType="number"
+                android:importantForAutofill="yes"
+                android:autofillHints="creditCardNumber"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <!-- BANCO -->
             <EditText
                 android:id="@+id/et_banco"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/input_bg"
                 android:hint="Banco"
                 android:inputType="text"
+                android:importantForAutofill="no"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <!-- VENCIMIENTO -->
             <EditText
                 android:id="@+id/et_vencimiento"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/input_bg"
-                android:hint="Vencimiento (MM/AA)"
+                android:hint="@string/tarjeta_ven"
                 android:inputType="text"
+                android:importantForAutofill="yes"
+                android:autofillHints="creditCardExpirationDate"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <!-- PAIS -->
             <EditText
                 android:id="@+id/et_pais"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/input_bg"
-                android:hint="País de origen"
+                android:hint="@string/pais_org_ph"
                 android:inputType="text"
+                android:importantForAutofill="yes"
+                android:autofillHints="countryName"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#1A1A1A"
                 android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_size_body" />
 
             <!-- INFO -->
             <TextView
@@ -143,26 +151,22 @@
                 android:background="@drawable/info_box"
                 android:lineSpacingExtra="3dp"
                 android:padding="16dp"
-                android:text="Los medios de pago serán verificados por nuestro equipo antes de habilitar su uso en subastas."
+                android:text="@string/medio_pago_info"
                 android:textColor="#6B6B6B"
-                android:textSize="13sp" />
+                android:textSize="@dimen/text_size_small" />
 
             <!-- BOTON -->
             <Button
                 android:id="@+id/btn_guardar_pago"
                 android:layout_width="match_parent"
-                android:layout_height="58dp"
-
-                android:background="@drawable/button_black_gold"
-                android:backgroundTint="@null"
+                android:layout_height="65dp"
+                android:background="@drawable/button_primary"
                 app:backgroundTint="@null"
-
                 android:elevation="0dp"
-
-                android:text="Guardar medio de pago"
+                android:text="@string/guardar_mp"
                 android:textAllCaps="false"
                 android:textColor="#F4F1EA"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_size_button" />
 
         </LinearLayout>
 
