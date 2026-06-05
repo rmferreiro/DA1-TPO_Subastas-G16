@@ -25,12 +25,7 @@
             android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
@@ -46,6 +41,30 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <!-- FLUJO COMPRA DE LOTES -->
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DetalleSubastaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubastaEnVivoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PermanecerSubastaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificacionGanadorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificacionPerdedorActivity"
             android:exported="false" />
     </application>
 
