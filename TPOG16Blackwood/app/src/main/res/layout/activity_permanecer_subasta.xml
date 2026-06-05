@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#1C2A21"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lote adjudicado"
+            android:textColor="#F4F1EA"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <!-- CONTENIDO SCROLLEABLE -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F4F1EA">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- CARD 1: ESTADO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_white"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estado"
+                    android:textColor="#1A1A1A"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Ganaste este lote"
+                    android:textColor="#C6A75E"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Juego de té antiguo · $820"
+                    android:textColor="#6B6B6B"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Puedes continuar participando en la subasta"
+                android:textColor="#6B6B6B"
+                android:textSize="12sp" />
+
+            <!-- CARD 2: PENDIENTE DE PAGO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/card_white"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pendiente de pago"
+                    android:textColor="#1A1A1A"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="$820"
+                    android:textColor="#C6A75E"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Se acumulará con otros lotes ganados"
+                    android:textColor="#6B6B6B"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- ¿QUÉ DESEAS HACER? -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="¿Qué deseas hacer?"
+                android:textColor="#1A1A1A"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+            <!-- BOTÓN SEGUIR EN LA SUBASTA -->
+            <LinearLayout
+                android:id="@+id/btn_permanecer"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/card_white"
+                android:backgroundTint="#1C2A21"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seguir en la subasta"
+                    android:textColor="#F4F1EA"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- BOTÓN PAGAR AHORA -->
+            <LinearLayout
+                android:id="@+id/btn_salir"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/button_primary"
+                android:backgroundTint="#C0A062"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pagar ahora"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- BOTTOM NAV -->
+    <include layout="@layout/bottom_nav" />
+
+</LinearLayout>
