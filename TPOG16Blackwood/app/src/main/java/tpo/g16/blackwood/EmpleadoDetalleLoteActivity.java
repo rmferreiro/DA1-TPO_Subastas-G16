@@ -1,6 +1,7 @@
 package tpo.g16.blackwood;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -75,6 +76,12 @@ public class EmpleadoDetalleLoteActivity extends AppCompatActivity {
                     })
                     .setNegativeButton("Cancelar", null)
                     .show();
+        });
+        findViewById(R.id.nav_subastas).setOnClickListener(v -> {
+            startActivity(new Intent(this, EmpleadoSubastasActivity.class));
+        });
+        findViewById(R.id.nav_perfil).setOnClickListener(v -> {
+            startActivity(new Intent(this, EmpleadoPanelControlActivity.class));
         });
     }
 }

@@ -2,25 +2,15 @@ package tpo.g16.blackwood;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-public class EmpleadoLogsPujasActivity extends AppCompatActivity {
+public class EmpleadoControlPujasActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_empleado_logs_ofertas);
-
-        // Botón volver
+        setContentView(R.layout.activity_empleado_metricas_control_pujas);
         findViewById(R.id.btn_volver).setOnClickListener(v -> finish());
-
-        // Mostrar nombre de la subasta
-        String subasta = getIntent().getStringExtra("subasta");
-        if (subasta != null) {
-            ((TextView) findViewById(R.id.txt_subasta_nombre)).setText(subasta);
-        }
         findViewById(R.id.nav_subastas).setOnClickListener(v -> {
             startActivity(new Intent(this, EmpleadoSubastasActivity.class));
         });

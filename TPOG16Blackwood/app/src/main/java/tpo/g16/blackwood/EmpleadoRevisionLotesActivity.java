@@ -19,6 +19,12 @@ public class EmpleadoRevisionLotesActivity extends AppCompatActivity {
         findViewById(R.id.lote_1).setOnClickListener(v -> abrirDetalle("Reloj Patek Philippe 1950s", "Carlos Méndez", "15.000"));
         findViewById(R.id.lote_2).setOnClickListener(v -> abrirDetalle("Vajilla de plata Sterling", "Ana López", "8.000"));
         findViewById(R.id.lote_3).setOnClickListener(v -> abrirDetalle("Cuadro Berni - Escuela Rioplatense", "Roberto Silva", "22.000"));
+        findViewById(R.id.nav_subastas).setOnClickListener(v -> {
+            startActivity(new Intent(this, EmpleadoSubastasActivity.class));
+        });
+        findViewById(R.id.nav_perfil).setOnClickListener(v -> {
+            startActivity(new Intent(this, EmpleadoPanelControlActivity.class));
+        });
     }
 
     private void abrirDetalle(String nombre, String duenio, String valor) {

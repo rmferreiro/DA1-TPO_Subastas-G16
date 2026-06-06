@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#F4F1EA"
     android:fitsSystemWindows="true">
 
+    <!-- HEADER -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="#1C2A21"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
 
-        <!-- HEADER -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/btn_volver"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#1C2A21"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:gravity="center_vertical">
+            android:text="←"
+            android:textColor="#F4F1EA"
+            android:textSize="20sp"
+            android:layout_marginEnd="12dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/btn_volver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="←"
+                android:text="Blackwood Fine Sales"
                 android:textColor="#F4F1EA"
-                android:textSize="20sp"
-                android:layout_marginEnd="12dp" />
+                android:textSize="16sp" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Blackwood Fine Sales"
-                    android:textColor="#F4F1EA"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Logs de pujas"
-                    android:textColor="#C6A75E"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
+                android:text="Logs de ofertas"
+                android:textColor="#C6A75E"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
-        <!-- CONTENIDO -->
+    </LinearLayout>
+
+    <!-- CONTENIDO CON SCROLL -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- NOMBRE SUBASTA -->
             <TextView
                 android:id="@+id/txt_subasta_nombre"
                 android:layout_width="wrap_content"
@@ -319,6 +319,80 @@
 
         </LinearLayout>
 
+    </ScrollView>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/nav_subastas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:text="Subastas"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_mis_pujas"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:text="Mis pujas"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_perfil"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/circle_gold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perfil"
+                android:textColor="#C6A75E"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</ScrollView>
+</LinearLayout>

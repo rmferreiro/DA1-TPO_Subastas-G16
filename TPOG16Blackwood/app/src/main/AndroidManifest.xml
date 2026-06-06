@@ -54,11 +54,15 @@
         <activity
             android:name=".EmpleadoDetalleLoteActivity" />
         <activity
-            android:name=".EmpleadoMetricasActivity" />
-        <activity
             android:name=".EmpleadoLogsPujasActivity" />
         <activity
-            android:name=".EmpleadoSubastaActivaActivity" />
+            android:name=".EmpleadoDetalleSubastaActivity" />
+        <activity
+            android:name=".EmpleadoPanelControlActivity" />
+        <activity
+            android:name=".EmpleadoSubastasVivoActivity" />
+        <activity
+            android:name=".EmpleadoControlPujasActivity" />
     </application>
 
 </manifest>
