@@ -1,17 +1,15 @@
 package tpo.g16.blackwood.splash;
 
 import tpo.g16.blackwood.R;
-import tpo.g16.blackwood.register.RegisterActivity;
+import tpo.g16.blackwood.login.LoginActivity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -118,9 +116,9 @@ public class SplashActivity extends AppCompatActivity {
             phase1.start();
         });
 
-        // ── Navegar a MainActivity después del tiempo total ───────────────
+        // ── Navegar a LoginActivity después del tiempo total ───────────────
         logoView.postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }, NEXT_DELAY);
     }
