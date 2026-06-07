@@ -15,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -33,7 +34,15 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Instalar la pantalla de splash oficial antes de super.onCreate
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
         super.onCreate(savedInstanceState);
+
+        // Remover el splash del sistema inmediatamente cuando la actividad esté lista
+        splashScreen.setOnExitAnimationListener(splashScreenProvider -> {
+            splashScreenProvider.remove();
+        });
 
         // Ocultar status bar para pantalla completa
         getWindow().getDecorView().setSystemUiVisibility(
