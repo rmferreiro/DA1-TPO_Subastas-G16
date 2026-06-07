@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#F4F1EA"
+    android:background="@color/marfil"
     android:fillViewport="true">
 
     <LinearLayout
@@ -27,8 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:text="Datos personales"
-                android:textColor="#1A1A1A"
+                android:text="@string/datos_personales_title"
+                android:textColor="@color/charcoal"
                 android:textSize="@dimen/text_size_title" />
 
             <!-- NOMBRE -->
@@ -42,21 +42,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:background="@drawable/input_bg"
-                    android:hint="Nombre"
+                    android:hint="@string/nombre_ph"
                     android:inputType="textNoSuggestions"
                     android:maxLength="20"
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B" />
+                    android:textColorHint="@color/gray_medium" />
                 <TextView
                     android:id="@+id/error_n"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -72,21 +72,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:background="@drawable/input_bg"
-                    android:hint="Apellido"
+                    android:hint="@string/apellido_ph"
                     android:inputType="textNoSuggestions"
                     android:maxLength="20"
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_a"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -108,15 +108,15 @@
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -138,15 +138,15 @@
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_d"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -168,15 +168,15 @@
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_doc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -190,7 +190,7 @@
                 app:backgroundTint="@null"
                 android:text="@string/submit_f_doc"
                 android:textAllCaps="false"
-                android:textColor="#6B6B6B"
+                android:textColor="@color/gray_light"
                 android:textSize="@dimen/text_size_body" />
 
             <Button
@@ -202,7 +202,7 @@
                 app:backgroundTint="@null"
                 android:text="@string/submit_d_doc"
                 android:textAllCaps="false"
-                android:textColor="#6B6B6B"
+                android:textColor="@color/gray_light"
                 android:textSize="@dimen/text_size_body" />
 
             <Button
@@ -213,7 +213,7 @@
                 app:backgroundTint="@null"
                 android:text="@string/enviar"
                 android:textAllCaps="false"
-                android:textColor="#F4F1EA"
+                android:textColor="@color/marfil"
                 android:textSize="@dimen/text_size_button" />
 
         </LinearLayout>

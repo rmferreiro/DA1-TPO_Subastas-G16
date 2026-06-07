@@ -74,4 +74,59 @@
     <string name="tarj_credito">Tarjeta crédito</string>
     <string name="header_brand">Blackwood Fine Sales</string>
     <string name="registro">Registro</string>
+
+    <!-- Layout Title/Text Strings -->
+    <string name="loading_procesando">Procesando</string>
+    <string name="luxury_auctions_subtitle">Luxury Auctions &amp; Fine Collections</string>
+    <string name="datos_personales_title">Datos personales</string>
+    <string name="registro_aprobado_title">Registro aprobado</string>
+    <string name="seguridad_title">Seguridad</string>
+    <string name="nombre_ph">Nombre</string>
+    <string name="apellido_ph">Apellido</string>
+    <string name="titular_ph">Titular</string>
+    <string name="banco_ph">Banco</string>
+    <string name="frente_capturado">Frente capturado</string>
+    <string name="dorso_capturado">Dorso capturado</string>
+
+    <!-- Register Validation & Messages -->
+    <string name="error_nombre_obligatorio">El nombre es obligatorio</string>
+    <string name="error_nombre_minimo">Mínimo 3 caracteres</string>
+    <string name="error_apellido_obligatorio">El apellido es obligatorio</string>
+    <string name="error_apellido_minimo">Mínimo 3 caracteres</string>
+    <string name="error_pais_obligatorio">El país es obligatorio</string>
+    <string name="error_pais_minimo">Mínimo 3 caracteres</string>
+    <string name="error_domicilio_obligatorio">El domicilio es obligatorio</string>
+    <string name="error_doc_obligatorio">El documento es obligatorio</string>
+    <string name="error_doc_numeros">Solo se permiten números</string>
+    <string name="error_camara_permiso">Se necesita permiso de cámara.</string>
+    <string name="error_camara_preparar">Error al preparar la cámara.</string>
+    <string name="error_fotos_faltantes">Faltan fotos del documento</string>
+
+    <!-- Register Step 2 & Payment Methods -->
+    <string name="tipo_tarjeta_credito">Tarjeta de crédito</string>
+    <string name="tipo_cuenta_bancaria">Cuenta bancaria</string>
+    <string name="tipo_cheque_certificado">Cheque certificado</string>
+    <string name="loading_finalizando_registro">Finalizando Registro</string>
+    <string name="loading_creando_perfil">Estamos creando tu perfil de seguridad.</string>
+    <string name="error_password_obligatorio">La contraseña es obligatoria</string>
+    <string name="error_password_minimo">Mínimo 6 caracteres</string>
+    <string name="error_confirm_password_obligatorio">Debes confirmar la contraseña</string>
+    <string name="error_passwords_no_coinciden">Las contraseñas no coinciden</string>
+    <string name="loading_verificando_medio">Verificando Medio</string>
+    <string name="loading_vinculando_medio">Estamos vinculando tu %1$s</string>
+    <string name="loading_info_pujas">Esto asegura la validez de tus futuras pujas.</string>
+    <string name="detalle_vacio">Sin detalles proporcionados</string>
+    <string name="btn_guardar_cambios">Guardar cambios</string>
+    <string name="agregar_medio_pago">Agregar medio de pago</string>
+    <string name="editar_medio_pago">Editar medio de pago</string>
+    <string name="input_num_tarjeta">Número de tarjeta</string>
+    <string name="input_vencimiento">Vencimiento MM/AA</string>
+    <string name="input_cvv">CVV</string>
+    <string name="input_num_cuenta">Número de cuenta</string>
+    <string name="input_cbu">CBU / IBAN</string>
+    <string name="input_banco_emisor">Banco emisor</string>
+    <string name="input_num_cheque">Número de cheque</string>
+    <string name="desc_logo">Logotipo de Blackwood</string>
+    <string name="desc_editar">Editar</string>
+    <string name="desc_eliminar">Eliminar</string>
 </resources>
