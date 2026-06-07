@@ -1,4 +1,6 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.common;
+
+import tpo.g16.blackwood.R;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,4 +1,7 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.register;
+
+import tpo.g16.blackwood.R;
+import tpo.g16.blackwood.common.LoadingActivity;
 
 import android.content.Intent;
 import android.graphics.Color;

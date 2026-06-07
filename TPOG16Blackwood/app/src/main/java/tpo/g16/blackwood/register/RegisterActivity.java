@@ -1,4 +1,6 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.register;
+
+import tpo.g16.blackwood.R;
 
 import android.Manifest;
 import android.content.Intent;
