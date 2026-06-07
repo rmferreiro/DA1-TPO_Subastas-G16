@@ -129,4 +129,18 @@
     <string name="desc_logo">Logotipo de Blackwood</string>
     <string name="desc_editar">Editar</string>
     <string name="desc_eliminar">Eliminar</string>
+
+    <!-- Login Activity -->
+    <string name="login_brand_tagline">Subastas premium desde 1987</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_subtitle">Ingresá con tu cuenta para acceder a las subastas</string>
+    <string name="login_email_label">Correo electrónico</string>
+    <string name="login_email_hint">usuario@ejemplo.com</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_btn_ingresar">Ingresar</string>
+    <string name="login_separator">o</string>
+    <string name="login_btn_crear_cuenta">Crear cuenta nueva</string>
+    <string name="login_legal_text">Al continuar, aceptás nuestros Términos y condiciones</string>
+    <string name="error_email_invalido">Ingresá una dirección válida</string>
 </resources>
