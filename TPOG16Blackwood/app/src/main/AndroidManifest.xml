@@ -24,7 +24,7 @@
         </provider>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
             android:exported="true">
@@ -35,20 +35,20 @@
         </activity>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".register.RegisterActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
 
-        <activity android:name=".LoadingActivity" android:exported="false" />
+        <activity android:name=".common.LoadingActivity" android:exported="false" />
 
         <activity
-            android:name=".RegistroPaso2Activity"
+            android:name=".register.RegistroPaso2Activity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
 
-        <activity android:name=".RegistroCompletadoActivity" android:exported="false" />
-        <activity android:name=".MainActivity" android:exported="false" />
-        <activity android:name=".RegistroEnProcesoActivity" android:exported="false" />
+        <activity android:name=".register.RegistroCompletadoActivity" android:exported="false" />
+        <activity android:name=".main.MainActivity" android:exported="false" />
+        <activity android:name=".register.RegistroEnProcesoActivity" android:exported="false" />
 
     </application>
 </manifest>

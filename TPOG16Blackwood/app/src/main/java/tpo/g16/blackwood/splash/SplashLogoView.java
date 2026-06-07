@@ -1,4 +1,4 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.splash;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;

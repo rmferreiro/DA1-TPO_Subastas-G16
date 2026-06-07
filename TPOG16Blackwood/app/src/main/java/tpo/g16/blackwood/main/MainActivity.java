@@ -1,4 +1,7 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.main;
+
+import tpo.g16.blackwood.R;
+import tpo.g16.blackwood.register.RegisterActivity;
 
 
 import android.content.Intent;

@@ -1,4 +1,7 @@
-package tpo.g16.blackwood; // ← Cambia este package por el tuyo
+package tpo.g16.blackwood.splash;
+
+import tpo.g16.blackwood.R;
+import tpo.g16.blackwood.register.RegisterActivity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

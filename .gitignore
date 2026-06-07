@@ -1,0 +1,77 @@
+# =========================================================================
+# SYSTEM FILES
+# =========================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =========================================================================
+# IDEs (IntelliJ IDEA, Android Studio, VS Code, Eclipse, NetBeans)
+# =========================================================================
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# =========================================================================
+# JAVA / SPRING BOOT (Maven)
+# =========================================================================
+# Maven build directory
+target/
+**/target/
+# Maven wrapper jar
+.mvn/wrapper/maven-wrapper.jar
+**/mvnw.cmd
+**/mvnw
+# Logs
+*.log
+logs/
+**/logs/
+
+# =========================================================================
+# ANDROID (Gradle)
+# =========================================================================
+# Gradle build directories
+.gradle/
+**/build/
+build/
+# Local configuration files (contains local SDK paths)
+local.properties
+**/local.properties
+# Android Studio captures
+captures/
+**/captures/
+# C++ build directories
+.externalNativeBuild/
+.cxx/
+**/.externalNativeBuild/
+**/.cxx/
+# Package Files (APKs, AABs)
+*.apk
+*.ap_
+*.aab
+# Generated digital signatures
+*.keystore
+*.jks
+!debug.keystore
+
+# =========================================================================
+# CRASH LOGS / SCRATCH
+# =========================================================================
+hs_err_pid*
+replay_pid*
