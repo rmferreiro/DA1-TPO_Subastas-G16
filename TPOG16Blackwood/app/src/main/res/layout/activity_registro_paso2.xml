@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F1EA">
+    android:background="@color/marfil">
 
     <!-- CONTENIDO PRINCIPAL (Registro) -->
     <ScrollView
@@ -34,8 +34,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="Seguridad"
-                    android:textColor="#1A1A1A"
+                    android:text="@string/seguridad_title"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_title" />
 
                 <!-- PASSWORD -->
@@ -55,15 +55,15 @@
                         android:autofillHints="password"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:textColor="#1A1A1A"
-                        android:textColorHint="#7B7B7B"
+                        android:textColor="@color/charcoal"
+                        android:textColorHint="@color/gray_medium"
                         android:textSize="@dimen/text_size_body" />
                     <TextView
                         android:id="@+id/error_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:textColor="#C6A75E"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -85,15 +85,15 @@
                         android:autofillHints="password"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:textColor="#1A1A1A"
-                        android:textColorHint="#7B7B7B"
+                        android:textColor="@color/charcoal"
+                        android:textColorHint="@color/gray_medium"
                         android:textSize="@dimen/text_size_body" />
                     <TextView
                         android:id="@+id/error_confirm_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:textColor="#C6A75E"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp"
                     android:text="@string/medios_pago"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_title" />
 
                 <!-- LISTA DE METODOS -->
@@ -115,7 +115,7 @@
                     android:orientation="vertical" />
 
                 <!-- BOTON AGREGAR -->
-                <Button
+                 <Button
                     android:id="@+id/btn_agregar_metodo"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -125,7 +125,7 @@
                     android:elevation="0dp"
                     android:text="@string/medios_pago_add"
                     android:textAllCaps="false"
-                    android:textColor="#6B6B6B"
+                    android:textColor="@color/gray_light"
                     android:textSize="@dimen/text_size_body" />
 
                 <!-- INFO BOX -->
@@ -137,7 +137,7 @@
                     android:lineSpacingExtra="3dp"
                     android:padding="16dp"
                     android:text="@string/medios_pago_info"
-                    android:textColor="#6B6B6B"
+                    android:textColor="@color/gray_light"
                     android:textSize="@dimen/text_size_small" />
 
                 <!-- BOTON FINAL -->
@@ -150,7 +150,7 @@
                     android:elevation="0dp"
                     android:text="@string/final_reg"
                     android:textAllCaps="false"
-                    android:textColor="#F4F1EA"
+                    android:textColor="@color/marfil"
                     android:textSize="@dimen/text_size_button" />
 
             </LinearLayout>
@@ -162,7 +162,7 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F4F1EA"
+        android:background="@color/marfil"
         android:visibility="gone" />
 
 </FrameLayout>

@@ -6,6 +6,7 @@ import tpo.g16.blackwood.common.LoadingActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -100,18 +101,18 @@ public class RegistroPaso2Activity extends AppCompatActivity {
         boolean esValido = true;
 
         if (pass.isEmpty()) {
-            mostrarError(tvErrorPassword, "La contraseña es obligatoria");
+            mostrarError(tvErrorPassword, getString(R.string.error_password_obligatorio));
             esValido = false;
         } else if (pass.length() < 6) {
-            mostrarError(tvErrorPassword, "Mínimo 6 caracteres");
+            mostrarError(tvErrorPassword, getString(R.string.error_password_minimo));
             esValido = false;
         }
 
         if (confirm.isEmpty()) {
-            mostrarError(tvErrorConfirmPassword, "Debes confirmar la contraseña");
+            mostrarError(tvErrorConfirmPassword, getString(R.string.error_confirm_password_obligatorio));
             esValido = false;
         } else if (!pass.equals(confirm)) {
-            mostrarError(tvErrorConfirmPassword, "Las contraseñas no coinciden");
+            mostrarError(tvErrorConfirmPassword, getString(R.string.error_passwords_no_coinciden));
             esValido = false;
         }
 
@@ -129,17 +130,17 @@ public class RegistroPaso2Activity extends AppCompatActivity {
         
         // Si ya hay texto en ambos, damos feedback visual con el color Gold
         if (!confirm.isEmpty() && !pass.equals(confirm)) {
-            etConfirmPassword.setTextColor(Color.parseColor("#C6A75E")); // Gold
+            etConfirmPassword.setTextColor(ContextCompat.getColor(this, R.color.gold)); // Gold
         } else {
-            etConfirmPassword.setTextColor(Color.parseColor("#1A1A1A")); // Original
+            etConfirmPassword.setTextColor(ContextCompat.getColor(this, R.color.charcoal)); // Original
             tvErrorConfirmPassword.setVisibility(View.GONE);
         }
     }
 
     private void navegarACompletado() {
         Intent intent = new Intent(this, LoadingActivity.class);
-        intent.putExtra(LoadingActivity.EXTRA_TITLE, "Finalizando Registro");
-        intent.putExtra(LoadingActivity.EXTRA_DESC, "Estamos creando tu perfil de seguridad.");
+        intent.putExtra(LoadingActivity.EXTRA_TITLE, getString(R.string.loading_finalizando_registro));
+        intent.putExtra(LoadingActivity.EXTRA_DESC, getString(R.string.loading_creando_perfil));
         intent.putExtra(LoadingActivity.EXTRA_NEXT_ACTIVITY, RegistroCompletadoActivity.class.getName());
         startActivity(intent);
         finish();

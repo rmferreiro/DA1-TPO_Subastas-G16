@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tarj_credito"
-            android:textColor="#1A1A1A"
+            android:textColor="@color/charcoal"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/detalle_metodo"
-            android:textColor="#6B6B6B"
+            android:textColor="@color/gray_light"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -46,7 +46,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Editar"
+            android:contentDescription="@string/desc_editar"
             android:src="@drawable/ic_edit"
             app:tint="@color/gold" />
 
@@ -55,9 +55,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Eliminar"
+            android:contentDescription="@string/desc_eliminar"
             android:src="@drawable/ic_delete"
-            app:tint="#B00020" />
+            app:tint="@color/error" />
     </LinearLayout>
 
 </LinearLayout>

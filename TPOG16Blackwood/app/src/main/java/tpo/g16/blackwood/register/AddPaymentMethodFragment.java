@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.text.InputType;
 import android.util.TypedValue;
@@ -46,14 +47,18 @@ public class AddPaymentMethodFragment extends Fragment {
         View header = view.findViewById(R.id.include_header);
         if (header != null) {
             TextView tvSubtitle = header.findViewById(R.id.header_subtitle);
-            tvSubtitle.setText("Agregar medio de pago");
+            tvSubtitle.setText(getString(R.string.agregar_medio_pago));
         }
 
         spinnerTipo = view.findViewById(R.id.spinner_tipo_pago);
         dynamicFields = view.findViewById(R.id.dynamic_fields);
         btnGuardar = view.findViewById(R.id.btn_guardar_pago);
 
-        String[] tipos = {"Tarjeta de crédito", "Cuenta bancaria", "Cheque certificado"};
+        String[] tipos = {
+                getString(R.string.tipo_tarjeta_credito),
+                getString(R.string.tipo_cuenta_bancaria),
+                getString(R.string.tipo_cheque_certificado)
+        };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tipos);
         spinnerTipo.setAdapter(adapter);
 
@@ -89,9 +94,9 @@ public class AddPaymentMethodFragment extends Fragment {
             }
             if (header != null) {
                 TextView tvSubtitle = header.findViewById(R.id.header_subtitle);
-                tvSubtitle.setText("Editar medio de pago");
+                tvSubtitle.setText(getString(R.string.editar_medio_pago));
             }
-            btnGuardar.setText("Guardar cambios");
+            btnGuardar.setText(getString(R.string.btn_guardar_cambios));
         } else {
             renderFields(0);
             spinnerTipo.setText(tipos[0], false);
@@ -113,7 +118,7 @@ public class AddPaymentMethodFragment extends Fragment {
             
             String detalle = sb.toString();
             if (detalle.trim().isEmpty() || detalle.replace(";", "").trim().isEmpty()) {
-                detalle = "Sin detalles proporcionados";
+                detalle = getString(R.string.detalle_vacio);
             }
 
             // 1. Preparar el resultado para la actividad principal
@@ -126,9 +131,9 @@ public class AddPaymentMethodFragment extends Fragment {
             // 2. Lanzar pantalla de procesamiento (solo si es nuevo)
             if (editIndex == -1) {
                 Intent loadingIntent = new Intent(getActivity(), LoadingActivity.class);
-                loadingIntent.putExtra(LoadingActivity.EXTRA_TITLE, "Verificando Medio");
-                loadingIntent.putExtra(LoadingActivity.EXTRA_DESC, "Estamos vinculando tu " + tipoSeleccionado);
-                loadingIntent.putExtra(LoadingActivity.EXTRA_INFO, "Esto asegura la validez de tus futuras pujas.");
+                loadingIntent.putExtra(LoadingActivity.EXTRA_TITLE, getString(R.string.loading_verificando_medio));
+                loadingIntent.putExtra(LoadingActivity.EXTRA_DESC, getString(R.string.loading_vinculando_medio, tipoSeleccionado));
+                loadingIntent.putExtra(LoadingActivity.EXTRA_INFO, getString(R.string.loading_info_pujas));
                 loadingIntent.putExtra(LoadingActivity.EXTRA_DURATION, 2000);
                 startActivity(loadingIntent);
             }
@@ -141,17 +146,17 @@ public class AddPaymentMethodFragment extends Fragment {
     private void renderFields(int type) {
         dynamicFields.removeAllViews();
         if (type == 0) {
-            dynamicFields.addView(createInput("Número de tarjeta", InputType.TYPE_CLASS_NUMBER));
-            dynamicFields.addView(createInput("Titular", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
-            dynamicFields.addView(createInput("Vencimiento MM/AA", InputType.TYPE_CLASS_DATETIME));
-            dynamicFields.addView(createInput("CVV", InputType.TYPE_CLASS_NUMBER));
+            dynamicFields.addView(createInput(getString(R.string.input_num_tarjeta), InputType.TYPE_CLASS_NUMBER));
+            dynamicFields.addView(createInput(getString(R.string.titular_ph), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
+            dynamicFields.addView(createInput(getString(R.string.input_vencimiento), InputType.TYPE_CLASS_DATETIME));
+            dynamicFields.addView(createInput(getString(R.string.input_cvv), InputType.TYPE_CLASS_NUMBER));
         } else if (type == 1) {
-            dynamicFields.addView(createInput("Banco", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
-            dynamicFields.addView(createInput("Número de cuenta", InputType.TYPE_CLASS_NUMBER));
-            dynamicFields.addView(createInput("CBU / IBAN", InputType.TYPE_CLASS_NUMBER));
+            dynamicFields.addView(createInput(getString(R.string.banco_ph), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
+            dynamicFields.addView(createInput(getString(R.string.input_num_cuenta), InputType.TYPE_CLASS_NUMBER));
+            dynamicFields.addView(createInput(getString(R.string.input_cbu), InputType.TYPE_CLASS_NUMBER));
         } else {
-            dynamicFields.addView(createInput("Banco emisor", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
-            dynamicFields.addView(createInput("Número de cheque", InputType.TYPE_CLASS_NUMBER));
+            dynamicFields.addView(createInput(getString(R.string.input_banco_emisor), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
+            dynamicFields.addView(createInput(getString(R.string.input_num_cheque), InputType.TYPE_CLASS_NUMBER));
         }
     }
 
@@ -163,8 +168,8 @@ public class AddPaymentMethodFragment extends Fragment {
         editText.setHint(hint);
         
         // Usando colores de la nueva paleta: Marfil (#F4F1EA) de fondo está en el layout, texto oscuro
-        editText.setTextColor(0xFF1A1A1A);      
-        editText.setHintTextColor(0xFF7B7B7B);  
+        editText.setTextColor(ContextCompat.getColor(requireContext(), R.color.charcoal));      
+        editText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.gray_medium));  
 
         editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_body));
 

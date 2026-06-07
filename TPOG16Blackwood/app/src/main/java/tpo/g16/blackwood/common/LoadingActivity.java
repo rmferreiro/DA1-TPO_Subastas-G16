@@ -44,7 +44,7 @@ public class LoadingActivity extends AppCompatActivity {
         // El subtitle del header se puede cambiar si es necesario
         View header = findViewById(R.id.include_header);
         TextView tvHeaderSubtitle = header.findViewById(R.id.header_subtitle);
-        tvHeaderSubtitle.setText("Procesando");
+        tvHeaderSubtitle.setText(getString(R.string.loading_procesando));
 
         // Simular proceso y navegar
         new Handler().postDelayed(() -> {

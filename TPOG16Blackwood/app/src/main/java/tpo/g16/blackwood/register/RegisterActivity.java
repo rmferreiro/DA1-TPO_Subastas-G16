@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (granted) {
                             abrirCamara();
                         } else {
-                            Toast.makeText(this, "Se necesita permiso de cámara.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, getString(R.string.error_camara_permiso), Toast.LENGTH_LONG).show();
                         }
                     }
             );
@@ -59,11 +59,11 @@ public class RegisterActivity extends AppCompatActivity {
                         if (success) {
                             if (capturandoFrente) {
                                 photoFrenteUri = Uri.fromFile(currentPhotoFile);
-                                btnFrente.setText("✓ Frente capturado");
+                                btnFrente.setText("✓ " + getString(R.string.frente_capturado));
                                 btnFrente.setAlpha(1f);
                             } else {
                                 photoDorsoUri = Uri.fromFile(currentPhotoFile);
-                                btnDorso.setText("✓ Dorso capturado");
+                                btnDorso.setText("✓ " + getString(R.string.dorso_capturado));
                                 btnDorso.setAlpha(1f);
                             }
                             verificarBotónEnviar();
@@ -105,11 +105,11 @@ public class RegisterActivity extends AppCompatActivity {
         btnEnviar   = findViewById(R.id.btn_enviar);
 
         // Hints por código
-        etNombre.setHint("Nombre");
-        etApellido.setHint("Apellido");
-        etPais.setHint("País de origen");
-        etDomicilio.setHint("Domicilio legal");
-        etDocumento.setHint("Documento");
+        etNombre.setHint(getString(R.string.nombre_ph));
+        etApellido.setHint(getString(R.string.apellido_ph));
+        etPais.setHint(getString(R.string.pais_ph));
+        etDomicilio.setHint(getString(R.string.dom_ph));
+        etDocumento.setHint(getString(R.string.doc_ph));
 
         btnEnviar.setAlpha(0.5f);
         btnEnviar.setEnabled(false);
@@ -133,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
             Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", currentPhotoFile);
             camaraLauncher.launch(photoUri);
         } catch (IOException e) {
-            Toast.makeText(this, "Error al preparar la cámara.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_camara_preparar), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -157,53 +157,53 @@ public class RegisterActivity extends AppCompatActivity {
         // Validar Nombre
         String nombre = etNombre.getText().toString().trim();
         if (nombre.isEmpty()) {
-            mostrarError(tvErrorN, "El nombre es obligatorio");
+            mostrarError(tvErrorN, getString(R.string.error_nombre_obligatorio));
             esValido = false;
         } else if (nombre.length() < 3) {
-            mostrarError(tvErrorN, "Mínimo 3 caracteres");
+            mostrarError(tvErrorN, getString(R.string.error_nombre_minimo));
             esValido = false;
         }
 
         // Validar Apellido
         String apellido = etApellido.getText().toString().trim();
         if (apellido.isEmpty()) {
-            mostrarError(tvErrorA, "El apellido es obligatorio");
+            mostrarError(tvErrorA, getString(R.string.error_apellido_obligatorio));
             esValido = false;
         } else if (apellido.length() < 3) {
-            mostrarError(tvErrorA, "Mínimo 3 caracteres");
+            mostrarError(tvErrorA, getString(R.string.error_apellido_minimo));
             esValido = false;
         }
 
         // Validar País
         String pais = etPais.getText().toString().trim();
         if (pais.isEmpty()) {
-            mostrarError(tvErrorP, "El país es obligatorio");
+            mostrarError(tvErrorP, getString(R.string.error_pais_obligatorio));
             esValido = false;
         } else if (pais.length() < 3) {
-            mostrarError(tvErrorP, "Mínimo 3 caracteres");
+            mostrarError(tvErrorP, getString(R.string.error_pais_minimo));
             esValido = false;
         }
 
         // Validar Domicilio
         if (etDomicilio.getText().toString().trim().isEmpty()) {
-            mostrarError(tvErrorD, "El domicilio es obligatorio");
+            mostrarError(tvErrorD, getString(R.string.error_domicilio_obligatorio));
             esValido = false;
         }
 
         // Validar Documento
         String doc = etDocumento.getText().toString().trim();
         if (doc.isEmpty()) {
-            mostrarError(tvErrorDoc, "El documento es obligatorio");
+            mostrarError(tvErrorDoc, getString(R.string.error_doc_obligatorio));
             esValido = false;
         } else if (!doc.matches("\\d+")) {
-            mostrarError(tvErrorDoc, "Solo se permiten números");
+            mostrarError(tvErrorDoc, getString(R.string.error_doc_numeros));
             esValido = false;
         }
 
         if (!esValido) return false;
 
         if (photoFrenteUri == null || photoDorsoUri == null) {
-            Toast.makeText(this, "Faltan fotos del documento", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_fotos_faltantes), Toast.LENGTH_SHORT).show();
             return false;
         }
         
