@@ -5,7 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "registroDeSubasta")
+@Table(name = "registrosSubasta")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,6 +40,19 @@ public class RegistroSubasta {
     @Column(name = "comision", nullable = false, precision = 18, scale = 2)
     private BigDecimal comision;
 
+<<<<<<< HEAD
     @Column(name = "pagado")
     private Boolean pagado = false;
+=======
+    @Column(name = "costo_envio", precision = 18, scale = 2)
+    private BigDecimal costoEnvio;
+
+    /**
+     * true si nadie pujó y la empresa compró el item al precio base.
+     * false en el caso normal (compra por un postor).
+     */
+    @Builder.Default
+    @Column(name = "compra_empresa", nullable = false)
+    private Boolean compraEmpresa = false;
+>>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 }

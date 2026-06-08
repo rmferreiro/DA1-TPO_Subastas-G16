@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#F4F1EA"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:background="@color/marfil">
 
-    <LinearLayout
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content" />
 
-        <include
-            android:id="@+id/include_header"
-            layout="@layout/view_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,9 +28,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:text="Datos personales"
-                android:textColor="#1A1A1A"
+                android:text="@string/datos_personales_title"
+                android:textColor="@color/charcoal"
                 android:textSize="@dimen/text_size_title" />
+
+            <!-- EMAIL -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/field_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/login_email_label"
+                    android:inputType="textEmailAddress"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColorHint="@color/gray_medium"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext"/>
+                <TextView
+                    android:id="@+id/error_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <!-- NOMBRE -->
             <LinearLayout
@@ -42,21 +74,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:background="@drawable/input_bg"
-                    android:hint="Nombre"
+                    android:hint="@string/nombre_ph"
                     android:inputType="textNoSuggestions"
                     android:maxLength="20"
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B" />
+                    android:textColorHint="@color/gray_medium" />
                 <TextView
                     android:id="@+id/error_n"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -72,21 +104,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:background="@drawable/input_bg"
-                    android:hint="Apellido"
+                    android:hint="@string/apellido_ph"
                     android:inputType="textNoSuggestions"
                     android:maxLength="20"
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_a"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -97,26 +129,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
                 android:orientation="vertical">
-                <EditText
-                    android:id="@+id/field_p"
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="@string/pais_ph"
-                    android:inputType="textNoSuggestions"
-                    android:maxLength="20"
-                    android:importantForAutofill="no"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
-                    android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="false"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    app:endIconTint="@color/green_dark">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/field_p"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:popupBackground="@color/marfil"
+                        android:hint="@string/pais_ph"
+                        android:textColorHint="@color/gray_medium"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_body"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <TextView
                     android:id="@+id/error_p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -138,15 +184,15 @@
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_d"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -164,19 +210,20 @@
                     android:background="@drawable/input_bg"
                     android:hint="@string/doc_ph"
                     android:inputType="number"
-                    android:maxLength="15"
+                    android:digits="0123456789"
+                    android:maxLength="8"
                     android:importantForAutofill="no"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:textColor="#1A1A1A"
+                    android:textColor="@color/charcoal"
                     android:textSize="@dimen/text_size_body"
-                    android:textColorHint="#7B7B7B"/>
+                    android:textColorHint="@color/gray_medium"/>
                 <TextView
                     android:id="@+id/error_doc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="#C6A75E"
+                    android:textColor="@color/gold"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -190,8 +237,11 @@
                 app:backgroundTint="@null"
                 android:text="@string/submit_f_doc"
                 android:textAllCaps="false"
-                android:textColor="#6B6B6B"
-                android:textSize="@dimen/text_size_body" />
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_size_body"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/gray_light" />
 
             <Button
                 android:id="@+id/btn_dorso"
@@ -202,8 +252,11 @@
                 app:backgroundTint="@null"
                 android:text="@string/submit_d_doc"
                 android:textAllCaps="false"
-                android:textColor="#6B6B6B"
-                android:textSize="@dimen/text_size_body" />
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_size_body"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/gray_light" />
 
             <Button
                 android:id="@+id/btn_enviar"
@@ -213,9 +266,12 @@
                 app:backgroundTint="@null"
                 android:text="@string/enviar"
                 android:textAllCaps="false"
-                android:textColor="#F4F1EA"
-                android:textSize="@dimen/text_size_button" />
+                android:textColor="@color/marfil"
+                android:textSize="@dimen/text_size_button"
+                app:icon="@drawable/ic_arrow_forward"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/marfil" />
 
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

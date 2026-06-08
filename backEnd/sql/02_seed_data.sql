@@ -53,15 +53,15 @@ INSERT INTO personas (identificador, nombre, documento, direccion, pais) VALUES
 -- ============================================================
 -- CLIENTES
 -- ============================================================
-INSERT INTO clientes (identificador, pais, categoria, admitido) VALUES
-(1, 1, 'comun',        1),  -- Juan Pablo - NORMAL
-(2, 1, 'plata',        1),  -- María Laura - SILVER  
-(3, 1, 'oro',          1),  -- Carlos - GOLD
-(4, 1, 'comun',        1),  -- Ana Carolina
-(5, 1, 'plata',        1),  -- Roberto
-(6, 1, 'comun',        0),  -- Valentina - pendiente de aprobación
-(7, 1, 'oro',          1),  -- Diego - GOLD
-(8, 1, 'platino',      1);  -- Laura - PLATINUM (mayor nivel)
+INSERT INTO clientes (identificador, pais, categoria, admitido, verificador) VALUES
+(1, 1, 'comun',        'si', 10),  -- Juan Pablo - NORMAL
+(2, 1, 'plata',        'si', 10),  -- María Laura - SILVER  
+(3, 1, 'oro',          'si', 10),  -- Carlos - GOLD
+(4, 1, 'comun',        'si', 10),  -- Ana Carolina
+(5, 1, 'plata',        'si', 10),  -- Roberto
+(6, 1, 'comun',        'no', 10),  -- Valentina - pendiente de aprobación
+(7, 1, 'oro',          'si', 10),  -- Diego - GOLD
+(8, 1, 'platino',      'si', 10);  -- Laura - PLATINUM (mayor nivel)
 
 -- ============================================================
 -- EMPLEADOS
@@ -80,10 +80,10 @@ INSERT INTO subastadores (identificador, matricula) VALUES
 -- ============================================================
 -- DUEÑOS
 -- ============================================================
-INSERT INTO duenios (identificador, razon_social) VALUES
-(30, 'Galería de Arte Borges S.R.L.'),
-(31, 'Casa Subastas del Sur S.A.'),
-(32, 'Smith Private Collection LLC');
+INSERT INTO duenios (identificador, razon_social, numeroPais, verificacionFinanciera, verificacionJudicial, calificacionRiesgo, verificador) VALUES
+(30, 'Galería de Arte Borges S.R.L.', 1, 'si', 'si', 1, 10),
+(31, 'Casa Subastas del Sur S.A.',    1, 'si', 'si', 1, 10),
+(32, 'Smith Private Collection LLC', 11, 'si', 'si', 1, 10);
 
 -- ============================================================
 -- USUARIOS AUTH (contraseña = "Password123!" — bcrypt)
@@ -210,10 +210,10 @@ INSERT INTO subastas (identificador, fecha, hora, estado, categoria, ubicacion, 
 -- ============================================================
 -- CATÁLOGOS
 -- ============================================================
-INSERT INTO catalogos (identificador, subasta) VALUES
-(1, 1), -- Catálogo de la subasta abierta
-(2, 2), -- Catálogo de la subasta futura
-(3, 3); -- Catálogo de la subasta cerrada
+INSERT INTO catalogos (identificador, subasta, responsable) VALUES
+(1, 1, 10), -- Catálogo de la subasta abierta
+(2, 2, 10), -- Catálogo de la subasta futura
+(3, 3, 10); -- Catálogo de la subasta cerrada
 
 -- ============================================================
 -- ITEMS EN CATÁLOGOS
@@ -244,22 +244,18 @@ INSERT INTO asistentes (identificador, cliente, subasta, numero_postor) VALUES
 -- ============================================================
 -- MEDIOS DE PAGO
 -- ============================================================
-INSERT INTO mediosPago (identificador, cliente, tipo, banco, numero_cuenta, tipo_cuenta,
-                         es_internacional, verificado, activo, monto_reservado) VALUES
-(1, 1, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', 'CORRIENTE', 0, 1, 1, 0.00),
-(2, 2, 'CUENTA_BANCARIA', 'Banco Santander', '0000987654321', 'CAJA_DE_AHORRO', 0, 1, 1, 0.00),
-(3, 3, 'CUENTA_BANCARIA', 'HSBC Argentina', '0000555666777', 'CORRIENTE', 1, 1, 1, 0.00),
-(4, 5, 'CUENTA_BANCARIA', 'Banco Macro', '0000111222333', 'CORRIENTE', 0, 1, 1, 0.00),
-(5, 7, 'CUENTA_BANCARIA', 'Banco Nación', '0000444555666', 'CORRIENTE', 0, 1, 1, 24000.00),
-(6, 8, 'CUENTA_BANCARIA', 'BBVA Argentina', '0000777888999', 'CORRIENTE', 1, 1, 1, 0.00);
+INSERT INTO medios_pago (id, cliente_id, tipo, banco, numero_cuenta, cbu_swift, es_internacional, moneda, verificado, activo, monto_reservado) VALUES
+(1, 1, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', '0000123456789', 0, 'ARS', 1, 1, 0.00),
+(2, 2, 'CUENTA_BANCARIA', 'Banco Santander', '0000987654321', '0000987654321', 0, 'ARS', 1, 1, 0.00),
+(3, 3, 'CUENTA_BANCARIA', 'HSBC Argentina', '0000555666777', '0000555666777', 1, 'ARS', 1, 1, 0.00),
+(4, 5, 'CUENTA_BANCARIA', 'Banco Macro', '0000111222333', '0000111222333', 0, 'ARS', 1, 1, 0.00),
+(5, 7, 'CUENTA_BANCARIA', 'Banco Nación', '0000444555666', '0000444555666', 0, 'ARS', 1, 1, 24000.00),
+(6, 8, 'CUENTA_BANCARIA', 'BBVA Argentina', '0000777888999', '0000777888999', 1, 'ARS', 1, 1, 0.00);
 
 -- Tarjetas (adicionales)
-INSERT INTO mediosPago (identificador, cliente, tipo, numero_tarjeta, titular_tarjeta,
-                         vencimiento, marca, es_internacional, verificado, activo, monto_reservado) VALUES
-(7, 2, 'TARJETA_CREDITO', '4111111111111111', 'MARIA LAURA GONZALEZ',
-   '2027-12-31', 'VISA', 0, 1, 1, 0.00),
-(8, 8, 'TARJETA_CREDITO', '5500005555555559', 'LAURA SILVINA MORENO',
-   '2028-06-30', 'MASTERCARD', 1, 1, 1, 0.00);
+INSERT INTO medios_pago (id, cliente_id, tipo, numero_tarjeta_hash, titular, vencimiento, es_tarjeta_internacional, moneda, verificado, activo, monto_reservado) VALUES
+(7, 2, 'TARJETA_CREDITO', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHOC', 'MARIA LAURA GONZALEZ', '12/2027', 0, 'ARS', 1, 1, 0.00),
+(8, 8, 'TARJETA_CREDITO', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHOC', 'LAURA SILVINA MORENO', '06/2028', 1, 'ARS', 1, 1, 0.00);
 
 -- ============================================================
 -- PUJAS HISTÓRICAS (subasta 3 cerrada)
@@ -287,12 +283,12 @@ INSERT INTO pujos (identificador, asistente, item, importe, ganador, fecha_hora)
 (9, 1, 1, 36000.00, 'si', DATE_SUB(NOW(), INTERVAL 5 MINUTE));  -- Juan va ganando
 
 -- Actualizar reserva de fondos (Juan tiene 36000 reservados)
-UPDATE mediosPago SET monto_reservado = 36000.00 WHERE identificador = 1;
+UPDATE medios_pago SET monto_reservado = 36000.00 WHERE id = 1;
 
 -- ============================================================
 -- NOTIFICACIONES DE PRUEBA
 -- ============================================================
-INSERT INTO notificaciones (id, cliente, tipo, titulo, mensaje, leida, referencia_id, referencia_tipo, fecha_creacion) VALUES
+INSERT INTO notificaciones (id, cliente_id, tipo, titulo, mensaje, leida, referencia_id, referencia_tipo, fecha_creacion) VALUES
 (1, 1, 'PUJA_GANADA', '¡Estás ganando!',
  'Sos el mejor postor por el Rolex Submariner con $36.000. La subasta sigue abierta.',
  0, 1, 'ITEM', DATE_SUB(NOW(), INTERVAL 5 MINUTE)),

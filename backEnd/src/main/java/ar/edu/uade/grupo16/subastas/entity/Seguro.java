@@ -29,4 +29,5 @@ public class Seguro {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto")
     private Producto producto;
+
 }

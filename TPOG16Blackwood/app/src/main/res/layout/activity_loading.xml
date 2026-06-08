@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F4F1EA">
+    android:background="@color/marfil">
 
     <!-- HEADER CON ID PARA EVITAR CRASH -->
     <include
@@ -45,9 +45,9 @@
             android:id="@+id/tv_loading_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Procesando"
+            android:text="@string/loading_procesando"
             android:textSize="@dimen/text_size_title"
-            android:textColor="#1A1A1A"
+            android:textColor="@color/charcoal"
             android:layout_marginBottom="8dp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:text="@string/espere"
-            android:textColor="#6B6B6B"
+            android:textColor="@color/gray_light"
             android:textSize="@dimen/text_size_small"
             android:gravity="center"
             android:layout_marginBottom="24dp" />
@@ -67,7 +67,7 @@
             android:background="@drawable/info_box"
             android:padding="14dp"
             android:text="@string/validando_op"
-            android:textColor="#6B6B6B"
+            android:textColor="@color/gray_light"
             android:textSize="@dimen/text_size_small" />
 
     </LinearLayout>

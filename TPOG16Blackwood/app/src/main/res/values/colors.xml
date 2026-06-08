@@ -19,4 +19,9 @@
     <!-- Estados -->
     <color name="success">#5C7A65</color>
     <color name="error">#6E2C2C</color>
+
+    <!-- Escala de Grises y Textos -->
+    <color name="charcoal">#1A1A1A</color>
+    <color name="gray_medium">#7B7B7B</color>
+    <color name="gray_light">#6B6B6B</color>
 </resources>

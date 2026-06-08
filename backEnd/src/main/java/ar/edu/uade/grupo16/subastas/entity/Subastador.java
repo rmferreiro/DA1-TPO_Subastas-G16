@@ -21,7 +21,7 @@ public class Subastador {
     @JoinColumn(name = "identificador")
     private Persona persona;
 
-    @Column(name = "matricula", length = 15)
+    @Column(name = "matricula", length = 50)
     private String matricula;
 
     @Column(name = "region", length = 50)
