@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS clientes (
 
 CREATE TABLE IF NOT EXISTS empleados (
     identificador   INT PRIMARY KEY,
-    legajo          VARCHAR(50),
+    cargo           VARCHAR(100),
     sector          VARCHAR(100),
     CONSTRAINT fk_empleado_persona FOREIGN KEY (identificador) REFERENCES personas(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

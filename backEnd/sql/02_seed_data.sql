@@ -66,7 +66,7 @@ INSERT INTO clientes (identificador, pais, categoria, admitido, verificador) VAL
 -- ============================================================
 -- EMPLEADOS
 -- ============================================================
-INSERT INTO empleados (identificador, legajo, sector) VALUES
+INSERT INTO empleados (identificador, cargo, sector) VALUES
 (10, 'EMP-001', 'Revisión de Productos'),
 (11, 'EMP-002', 'Atención al Cliente');
 
