@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS personas (
     documento     VARCHAR(50)  NOT NULL UNIQUE,
     direccion     VARCHAR(300),
     pais          INT,
+    estado        VARCHAR(15)  DEFAULT 'activo',
+    foto          LONGBLOB,
     CONSTRAINT fk_personas_pais FOREIGN KEY (pais) REFERENCES paises(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -43,13 +45,16 @@ CREATE TABLE IF NOT EXISTS personas (
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS usuarios_auth (
-    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-    persona       INT         NOT NULL UNIQUE,
-    email         VARCHAR(200) NOT NULL UNIQUE,
-    password_hash VARCHAR(300) NOT NULL,
-    estado        VARCHAR(20)  NOT NULL DEFAULT 'PENDIENTE',
-    uuid          VARCHAR(36)  NOT NULL UNIQUE,
-    CONSTRAINT fk_ua_persona FOREIGN KEY (persona) REFERENCES personas(identificador)
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    persona_id      INT          NOT NULL UNIQUE,
+    email           VARCHAR(200) NOT NULL UNIQUE,
+    password_hash   VARCHAR(300) NOT NULL,
+    estado          VARCHAR(20)  NOT NULL DEFAULT 'PENDIENTE',
+    uuid            VARCHAR(36)  NOT NULL UNIQUE,
+    foto_doc_frente LONGBLOB,
+    foto_doc_dorso  LONGBLOB,
+    fecha_registro  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ua_persona FOREIGN KEY (persona_id) REFERENCES personas(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -60,9 +65,11 @@ CREATE TABLE IF NOT EXISTS clientes (
     identificador INT PRIMARY KEY,
     pais          INT,
     categoria     VARCHAR(20) NOT NULL DEFAULT 'comun',
-    admitido      TINYINT(1)  NOT NULL DEFAULT 0,
+    admitido      VARCHAR(2)  NOT NULL DEFAULT 'no',
+    verificador   INT NOT NULL,
     CONSTRAINT fk_cliente_persona FOREIGN KEY (identificador) REFERENCES personas(identificador),
-    CONSTRAINT fk_cliente_pais    FOREIGN KEY (pais)          REFERENCES paises(identificador)
+    CONSTRAINT fk_cliente_pais    FOREIGN KEY (pais)          REFERENCES paises(identificador),
+    CONSTRAINT fk_cliente_verificador FOREIGN KEY (verificador) REFERENCES empleados(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -91,9 +98,16 @@ CREATE TABLE IF NOT EXISTS subastadores (
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS duenios (
-    identificador   INT PRIMARY KEY,
-    razon_social    VARCHAR(200),
-    CONSTRAINT fk_duenio_persona FOREIGN KEY (identificador) REFERENCES personas(identificador)
+    identificador          INT PRIMARY KEY,
+    razon_social           VARCHAR(200),
+    numeroPais             INT,
+    verificacionFinanciera VARCHAR(2) DEFAULT 'si',
+    verificacionJudicial   VARCHAR(2) DEFAULT 'si',
+    calificacionRiesgo     INT DEFAULT 1,
+    verificador            INT NOT NULL,
+    CONSTRAINT fk_duenio_persona FOREIGN KEY (identificador) REFERENCES personas(identificador),
+    CONSTRAINT fk_duenio_pais FOREIGN KEY (numeroPais) REFERENCES paises(identificador),
+    CONSTRAINT fk_duenio_verificador FOREIGN KEY (verificador) REFERENCES empleados(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -150,12 +164,13 @@ CREATE TABLE IF NOT EXISTS fotos (
 -- PRODUCTOS OBRA DE ARTE (herencia)
 -- ============================================================
 
-CREATE TABLE IF NOT EXISTS productosObraArte (
-    identificador   INT PRIMARY KEY,
-    autor           VARCHAR(200),
-    anio_creacion   INT,
-    tecnica         VARCHAR(100),
-    CONSTRAINT fk_obra_producto FOREIGN KEY (identificador) REFERENCES productos(identificador)
+CREATE TABLE IF NOT EXISTS productos_obra_arte (
+    producto_id     INT PRIMARY KEY,
+    artista         VARCHAR(200),
+    disenador       VARCHAR(200),
+    fecha_creacion  DATE,
+    historia        TEXT,
+    CONSTRAINT fk_obra_producto FOREIGN KEY (producto_id) REFERENCES productos(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -185,7 +200,9 @@ CREATE TABLE IF NOT EXISTS subastas (
 CREATE TABLE IF NOT EXISTS catalogos (
     identificador   INT AUTO_INCREMENT PRIMARY KEY,
     subasta         INT NOT NULL UNIQUE,
-    CONSTRAINT fk_cat_subasta FOREIGN KEY (subasta) REFERENCES subastas(identificador)
+    responsable     INT NOT NULL,
+    CONSTRAINT fk_cat_subasta FOREIGN KEY (subasta) REFERENCES subastas(identificador),
+    CONSTRAINT fk_cat_responsable FOREIGN KEY (responsable) REFERENCES empleados(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -223,11 +240,12 @@ CREATE TABLE IF NOT EXISTS asistentes (
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS sesiones_subasta (
-    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cliente   INT NOT NULL UNIQUE,
-    subasta   INT NOT NULL,
-    CONSTRAINT fk_ses_cliente FOREIGN KEY (cliente) REFERENCES clientes(identificador),
-    CONSTRAINT fk_ses_subasta FOREIGN KEY (subasta) REFERENCES subastas(identificador)
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id      INT NOT NULL UNIQUE,
+    subasta_id      INT NOT NULL,
+    fecha_conexion  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ses_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(identificador),
+    CONSTRAINT fk_ses_subasta FOREIGN KEY (subasta_id) REFERENCES subastas(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -249,29 +267,27 @@ CREATE TABLE IF NOT EXISTS pujos (
 -- MEDIOS DE PAGO
 -- ============================================================
 
-CREATE TABLE IF NOT EXISTS mediosPago (
-    identificador       INT AUTO_INCREMENT PRIMARY KEY,
-    cliente             INT NOT NULL,
+CREATE TABLE IF NOT EXISTS medios_pago (
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id          INT NOT NULL,
     tipo                VARCHAR(30) NOT NULL,
-    -- Cuenta bancaria
-    banco               VARCHAR(100),
+    banco               VARCHAR(150),
     numero_cuenta       VARCHAR(50),
-    tipo_cuenta         VARCHAR(20),
-    -- Tarjeta de crédito
-    numero_tarjeta      VARCHAR(20),
-    titular_tarjeta     VARCHAR(200),
-    vencimiento         DATE,
-    marca               VARCHAR(20),
-    -- Cheque certificado
+    cbu_swift           VARCHAR(50),
+    es_internacional    BOOLEAN DEFAULT FALSE,
+    numero_tarjeta_hash VARCHAR(255),
+    titular             VARCHAR(150),
+    vencimiento         VARCHAR(7),
+    es_tarjeta_internacional BOOLEAN DEFAULT FALSE,
     numero_cheque       VARCHAR(50),
-    banco_emisor        VARCHAR(100),
+    banco_emisor        VARCHAR(150),
     monto_certificado   DECIMAL(18,2),
-    -- Campos comunes
-    es_internacional    TINYINT(1)  DEFAULT 0,
-    verificado          TINYINT(1)  DEFAULT 0,
-    activo              TINYINT(1)  DEFAULT 1,
+    moneda              VARCHAR(3) NOT NULL,
+    verificado          BOOLEAN DEFAULT FALSE,
+    activo              BOOLEAN DEFAULT TRUE,
+    fecha_registro      DATETIME DEFAULT CURRENT_TIMESTAMP,
     monto_reservado     DECIMAL(18,2) DEFAULT 0.00,
-    CONSTRAINT fk_mp_cliente FOREIGN KEY (cliente) REFERENCES clientes(identificador)
+    CONSTRAINT fk_mp_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -318,7 +334,7 @@ CREATE TABLE IF NOT EXISTS multas (
 
 CREATE TABLE IF NOT EXISTS notificaciones (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cliente         INT NOT NULL,
+    cliente_id      INT NOT NULL,
     tipo            VARCHAR(50)  NOT NULL,
     titulo          VARCHAR(200) NOT NULL,
     mensaje         TEXT,
@@ -326,7 +342,7 @@ CREATE TABLE IF NOT EXISTS notificaciones (
     referencia_id   BIGINT,
     referencia_tipo VARCHAR(30),
     fecha_creacion  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_notif_cliente FOREIGN KEY (cliente) REFERENCES clientes(identificador)
+    CONSTRAINT fk_notif_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================

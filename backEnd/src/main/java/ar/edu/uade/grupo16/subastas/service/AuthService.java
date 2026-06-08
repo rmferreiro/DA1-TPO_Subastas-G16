@@ -74,6 +74,7 @@ public class AuthService {
                 .documento(request.getDocumento())
                 .nombre(request.getNombre())
                 .direccion(request.getDireccion())
+                .pais(pais)
                 .estado("activo")
                 .build();
         persona = personaRepository.save(persona);
@@ -89,7 +90,7 @@ public class AuthService {
                 .persona(persona)
                 .pais(pais)
                 .admitido("si")          // auto-aprobado
-                .categoria("comun")      // categoría inicial por defecto
+                .categoria("oro")      // categoría inicial por defecto
                 .verificador(verificador)
                 .build();
         clienteRepository.save(cliente);

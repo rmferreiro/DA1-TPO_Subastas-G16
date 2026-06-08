@@ -32,4 +32,8 @@ public class Persona {
     @Lob
     @Column(name = "foto", columnDefinition = "LONGBLOB")
     private byte[] foto;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pais")
+    private Pais pais;
 }

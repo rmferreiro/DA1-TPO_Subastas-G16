@@ -9,8 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
+import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +34,11 @@ public class AddPaymentMethodFragment extends Fragment {
     private LinearLayout dynamicFields;
     private Button btnGuardar;
     private int editIndex = -1;
+
+    private EditText etCardNumber;
+    private EditText etCardHolder;
+    private EditText etCardExpiry;
+    private EditText etCardCvv;
 
     public AddPaymentMethodFragment() {
         // Required empty public constructor
@@ -105,6 +115,43 @@ public class AddPaymentMethodFragment extends Fragment {
         btnGuardar.setOnClickListener(v -> {
             String tipoSeleccionado = spinnerTipo.getText().toString();
             
+            // Validaciones específicas para Tarjeta de crédito (tipo 0)
+            if (tipoSeleccionado.equals(getString(R.string.tipo_tarjeta_credito))) {
+                boolean esValido = true;
+                
+                String numTarjeta = etCardNumber != null ? etCardNumber.getText().toString().trim() : "";
+                String titular = etCardHolder != null ? etCardHolder.getText().toString().trim() : "";
+                String vencimiento = etCardExpiry != null ? etCardExpiry.getText().toString().trim() : "";
+                String cvv = etCardCvv != null ? etCardCvv.getText().toString().trim() : "";
+                
+                if (etCardNumber != null) etCardNumber.setBackgroundResource(R.drawable.input_bg);
+                if (etCardHolder != null) etCardHolder.setBackgroundResource(R.drawable.input_bg);
+                if (etCardExpiry != null) etCardExpiry.setBackgroundResource(R.drawable.input_bg);
+                if (etCardCvv != null) etCardCvv.setBackgroundResource(R.drawable.input_bg);
+                
+                if (numTarjeta.length() != 16) {
+                    if (etCardNumber != null) etCardNumber.setBackgroundResource(R.drawable.input_bg_error);
+                    Toast.makeText(getContext(), getString(R.string.error_tarjeta_dieciseis_digitos), Toast.LENGTH_SHORT).show();
+                    esValido = false;
+                } else if (titular.isEmpty()) {
+                    if (etCardHolder != null) etCardHolder.setBackgroundResource(R.drawable.input_bg_error);
+                    Toast.makeText(getContext(), "El nombre del titular es obligatorio", Toast.LENGTH_SHORT).show();
+                    esValido = false;
+                } else if (vencimiento.length() != 5) {
+                    if (etCardExpiry != null) etCardExpiry.setBackgroundResource(R.drawable.input_bg_error);
+                    Toast.makeText(getContext(), getString(R.string.error_vencimiento_formato), Toast.LENGTH_SHORT).show();
+                    esValido = false;
+                } else if (cvv.length() != 3) {
+                    if (etCardCvv != null) etCardCvv.setBackgroundResource(R.drawable.input_bg_error);
+                    Toast.makeText(getContext(), getString(R.string.error_cvv_tres_digitos), Toast.LENGTH_SHORT).show();
+                    esValido = false;
+                }
+                
+                if (!esValido) {
+                    return;
+                }
+            }
+
             // Recolectamos TODOS los campos dinámicos para persistencia completa
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < dynamicFields.getChildCount(); i++) {
@@ -145,11 +192,90 @@ public class AddPaymentMethodFragment extends Fragment {
 
     private void renderFields(int type) {
         dynamicFields.removeAllViews();
+        
+        // Resetear referencias a campos de tarjeta
+        etCardNumber = null;
+        etCardHolder = null;
+        etCardExpiry = null;
+        etCardCvv = null;
+        
         if (type == 0) {
-            dynamicFields.addView(createInput(getString(R.string.input_num_tarjeta), InputType.TYPE_CLASS_NUMBER));
-            dynamicFields.addView(createInput(getString(R.string.titular_ph), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
-            dynamicFields.addView(createInput(getString(R.string.input_vencimiento), InputType.TYPE_CLASS_DATETIME));
-            dynamicFields.addView(createInput(getString(R.string.input_cvv), InputType.TYPE_CLASS_NUMBER));
+            etCardNumber = createInput(getString(R.string.input_num_tarjeta), InputType.TYPE_CLASS_NUMBER);
+            etCardHolder = createInput(getString(R.string.titular_ph), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+            etCardExpiry = createInput(getString(R.string.input_vencimiento), InputType.TYPE_CLASS_DATETIME);
+            etCardCvv = createInput(getString(R.string.input_cvv), InputType.TYPE_CLASS_NUMBER);
+            
+            // Configurar filtros y key listeners
+            etCardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+            etCardNumber.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+            
+            etCardExpiry.setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
+            etCardExpiry.setKeyListener(DigitsKeyListener.getInstance("0123456789/"));
+            
+            etCardCvv.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+            etCardCvv.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+            
+            // TextWatcher para el formateo automático de fecha MM/AA
+            etCardExpiry.addTextChangedListener(new TextWatcher() {
+                private String current = "";
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (!s.toString().equals(current)) {
+                        String clean = s.toString().replaceAll("[^\\d]", "");
+                        String formatted = clean;
+                        
+                        if (clean.length() > 2) {
+                            formatted = clean.substring(0, 2) + "/" + clean.substring(2);
+                        } else if (clean.length() == 2 && before < count) {
+                            formatted = clean + "/";
+                        }
+                        
+                        if (formatted.length() > 5) {
+                            formatted = formatted.substring(0, 5);
+                        }
+                        
+                        current = formatted;
+                        etCardExpiry.removeTextChangedListener(this);
+                        etCardExpiry.setText(formatted);
+                        etCardExpiry.setSelection(formatted.length());
+                        etCardExpiry.addTextChangedListener(this);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+            
+            // TextWatchers para limpiar los errores visuales al escribir
+            etCardNumber.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override public void afterTextChanged(Editable s) { etCardNumber.setBackgroundResource(R.drawable.input_bg); }
+            });
+            etCardHolder.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override public void afterTextChanged(Editable s) { etCardHolder.setBackgroundResource(R.drawable.input_bg); }
+            });
+            etCardExpiry.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override public void afterTextChanged(Editable s) { etCardExpiry.setBackgroundResource(R.drawable.input_bg); }
+            });
+            etCardCvv.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override public void afterTextChanged(Editable s) { etCardCvv.setBackgroundResource(R.drawable.input_bg); }
+            });
+            
+            dynamicFields.addView(etCardNumber);
+            dynamicFields.addView(etCardHolder);
+            dynamicFields.addView(etCardExpiry);
+            dynamicFields.addView(etCardCvv);
         } else if (type == 1) {
             dynamicFields.addView(createInput(getString(R.string.banco_ph), InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS));
             dynamicFields.addView(createInput(getString(R.string.input_num_cuenta), InputType.TYPE_CLASS_NUMBER));
@@ -162,7 +288,8 @@ public class AddPaymentMethodFragment extends Fragment {
 
     private EditText createInput(String hint, int inputType) {
         EditText editText = new EditText(requireContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int heightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55, getResources().getDisplayMetrics());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightPx);
         params.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
         editText.setLayoutParams(params);
         editText.setHint(hint);
@@ -175,7 +302,7 @@ public class AddPaymentMethodFragment extends Fragment {
 
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
         editText.setPadding(padding, 0, padding, 0);
-        editText.setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55, getResources().getDisplayMetrics()));
+        editText.setGravity(android.view.Gravity.CENTER_VERTICAL);
         
         editText.setBackgroundResource(R.drawable.input_bg);
         editText.setInputType(inputType);
