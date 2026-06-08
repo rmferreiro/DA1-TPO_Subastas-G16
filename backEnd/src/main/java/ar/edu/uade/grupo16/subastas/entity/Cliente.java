@@ -22,7 +22,7 @@ public class Cliente {
     private Persona persona;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "numeroPais")
+    @JoinColumn(name = "pais")
     private Pais pais;
 
     @Column(name = "admitido", length = 2)

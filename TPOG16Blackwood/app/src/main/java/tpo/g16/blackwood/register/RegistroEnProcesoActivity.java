@@ -25,7 +25,11 @@ public class RegistroEnProcesoActivity extends AppCompatActivity {
 
         // Espera 3 segundos y navega
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(RegistroEnProcesoActivity.this, RegistroPaso2Activity.class);            startActivity(intent);
+            Intent intent = new Intent(RegistroEnProcesoActivity.this, RegistroPaso2Activity.class);
+            if (getIntent().getExtras() != null) {
+                intent.putExtras(getIntent().getExtras());
+            }
+            startActivity(intent);
             finish(); // evita volver atrás
         }, 3000);
     }

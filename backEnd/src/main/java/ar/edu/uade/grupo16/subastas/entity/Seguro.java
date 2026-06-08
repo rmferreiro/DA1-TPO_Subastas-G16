@@ -30,8 +30,4 @@ public class Seguro {
     @JoinColumn(name = "producto")
     private Producto producto;
 
-    // Flag para indicar si este seguro cubre múltiples productos (póliza combinada)
-    @Builder.Default
-    @Column(name = "poliza_combinada", nullable = false)
-    private Boolean polizaCombinada = false;
 }
