@@ -4,55 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- HEADER (h=70dp, fill=#1C2A21) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#1C2A21"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
 
-        <!-- Logo diamante -->
-        <LinearLayout
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:gravity="center"
-            android:layout_marginEnd="12dp">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_logo_diamond"
-                android:contentDescription="Logo Blackwood" />
-            <!-- Note: the logo in the image seems to be a cross/diamond. Let's just use the shape or keep it simple with text. -->
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <!-- "Blackwood Fine Sales" #F4F1EA -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Blackwood Fine Sales"
-                android:textColor="#F4F1EA"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <!-- "Subastas disponibles" #C6A75E -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subastas disponibles"
-                android:textColor="#C6A75E"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-    </LinearLayout>
 
     <!-- CHIPS ROW (h=60dp) -->
     <HorizontalScrollView

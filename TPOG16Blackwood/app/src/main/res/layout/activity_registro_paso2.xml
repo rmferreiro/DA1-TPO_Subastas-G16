@@ -6,21 +6,24 @@
     android:background="@color/marfil">
 
     <!-- CONTENIDO PRINCIPAL (Registro) -->
-    <ScrollView
-        android:id="@+id/main_registration_content"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <!-- HEADER REUTILIZABLE -->
+        <include
+            android:id="@+id/include_header"
+            layout="@layout/view_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
 
-            <!-- HEADER REUTILIZABLE -->
-            <include
-                android:id="@+id/include_header"
-                layout="@layout/view_header" />
+        <ScrollView
+            android:id="@+id/main_registration_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
 
             <!-- CONTENIDO -->
             <LinearLayout
@@ -154,8 +157,8 @@
                     android:textSize="@dimen/text_size_button" />
 
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
     <!-- CONTENEDOR PARA EL FRAGMENTO (Oculto por defecto) -->
     <FrameLayout
