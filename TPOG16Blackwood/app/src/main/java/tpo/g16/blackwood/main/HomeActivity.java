@@ -1,4 +1,4 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import tpo.g16.blackwood.R;
+import tpo.g16.blackwood.subastas.ListaSubastasFragment;
+import tpo.g16.blackwood.subastas.MisPujasFragment;
 
 public class HomeActivity extends AppCompatActivity {
 

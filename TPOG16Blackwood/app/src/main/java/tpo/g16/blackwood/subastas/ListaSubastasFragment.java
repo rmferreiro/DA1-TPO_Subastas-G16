@@ -1,4 +1,4 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.subastas;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import tpo.g16.blackwood.R;
 
 public class ListaSubastasFragment extends Fragment {
 
