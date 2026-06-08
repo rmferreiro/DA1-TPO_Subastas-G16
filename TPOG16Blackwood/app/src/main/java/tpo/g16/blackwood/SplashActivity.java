@@ -13,6 +13,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import tpo.g16.blackwood.network.RetrofitClient;
+import tpo.g16.blackwood.network.models.AuthResponse;
+import tpo.g16.blackwood.network.models.LoginRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SplashActivity extends AppCompatActivity {
 
     // Durations (ms)
@@ -50,6 +57,22 @@ public class SplashActivity extends AppCompatActivity {
         // Estado inicial: texto invisible
         textTitle.setAlpha(0f);
         textSubtitle.setAlpha(0f);
+
+        // Login silencioso para pruebas
+        RetrofitClient.getApiService().login(new LoginRequest("juan.rodriguez@email.com", "uade"))
+                .enqueue(new Callback<AuthResponse>() {
+                    @Override
+                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            RetrofitClient.setAuthToken(response.body().getAccessToken());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AuthResponse> call, Throwable t) {
+                        // Omitir en desarrollo
+                    }
+                });
 
         startSplashAnimation();
     }
@@ -106,7 +129,7 @@ public class SplashActivity extends AppCompatActivity {
             phase1.start();
         });
 
-        // ── Navegar a MainActivity después del tiempo total ───────────────
+        // ── Navegar a HomeActivity después del tiempo total ───────────────
         logoView.postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, HomeActivity.class));
             finish();

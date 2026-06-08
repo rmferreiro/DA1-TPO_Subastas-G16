@@ -146,4 +146,15 @@ public class ProductoService {
                 "cantidadFotos", fotoRepository.countByProductoIdentificador(productoId)
         );
     }
+
+    /**
+     * Obtiene los bytes de la primera foto del producto (si existe).
+     */
+    @Transactional(readOnly = true)
+    public byte[] getFotoPrincipal(Integer productoId) {
+        return fotoRepository.findByProductoIdentificador(productoId).stream()
+                .findFirst()
+                .map(Foto::getFoto)
+                .orElse(null);
+    }
 }

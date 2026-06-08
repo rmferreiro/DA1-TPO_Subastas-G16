@@ -24,15 +24,15 @@ public class Multa {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subasta")
+    @JoinColumn(name = "subasta_id")
     private Subasta subasta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item")
+    @JoinColumn(name = "item_id")
     private ItemCatalogo item;
 
     @Column(name = "monto_ofertado", nullable = false, precision = 18, scale = 2)

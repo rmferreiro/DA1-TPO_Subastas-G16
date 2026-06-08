@@ -37,6 +37,10 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // WebSocket
                 .requestMatchers("/ws/**").permitAll()
+                // Fotos de productos públicas para carga rápida (Glide)
+                .requestMatchers("/api/productos/*/foto").permitAll()
+                // Endpoint para pruebas (reset de base de datos)
+                .requestMatchers("/api/pruebas/**").permitAll()
                 // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )

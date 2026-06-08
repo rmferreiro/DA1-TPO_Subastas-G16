@@ -182,24 +182,50 @@ public class PujaService {
                 .build();
     }
 
-    /**
-     * Cierra la puja de un item: marca al ganador, genera el registro de subasta.
-     * Llamado por el subastador cuando termina de vender un item.
-     */
     @Transactional
     public PujaResponse cerrarItem(Integer subastaId, Integer itemId, String emailSubastador) {
         ItemCatalogo item = itemCatalogoRepository.findById(itemId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Item no encontrado"));
 
-        Pujo ganador = pujoRepository.findGanadorByItem(itemId)
-                .orElseThrow(() -> new PujaInvalidaException("No hay pujas para este item"));
+        // Verificar si ya fue cerrado por otra petición (concurrencia)
+        if ("si".equalsIgnoreCase(item.getSubastado())) {
+            Optional<Pujo> ganadorOpt = pujoRepository.findGanadorByItem(itemId);
+            if (ganadorOpt.isPresent()) {
+                Pujo ganador = ganadorOpt.get();
+                return PujaResponse.builder()
+                    .pujoId(ganador.getIdentificador())
+                    .itemId(itemId)
+                    .nombrePostor(ganador.getAsistente().getCliente().getPersona().getNombre())
+                    .numeroPostor(ganador.getAsistente().getNumeroPostor())
+                    .importe(ganador.getImporte())
+                    .fechaHora(ganador.getFechaHora())
+                    .esGanadora(true)
+                    .mensaje("ITEM YA ESTABA CERRADO")
+                    .build();
+            }
+            return PujaResponse.builder().itemId(itemId).esGanadora(false).mensaje("ITEM YA ESTABA CERRADO SIN PUJAS").build();
+        }
 
-        // Marcar item como subastado
+        // Marcar item como subastado SIEMPRE
         item.setSubastado("si");
         itemCatalogoRepository.save(item);
 
         Subasta subasta = subastaRepository.findById(subastaId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Subasta no encontrada"));
+
+        Optional<Pujo> ganadorOpt = pujoRepository.findGanadorByItem(itemId);
+
+        if (ganadorOpt.isEmpty()) {
+            return PujaResponse.builder()
+                    .itemId(itemId)
+                    .esGanadora(false)
+                    .mensaje("ITEM CERRADO SIN PUJAS")
+                    .build();
+        }
+
+        Pujo ganador = ganadorOpt.get();
+
+        BigDecimal comision = item.getComision() != null ? item.getComision() : BigDecimal.ZERO;
 
         // Crear el registro de venta
         RegistroSubasta registro = RegistroSubasta.builder()
@@ -208,7 +234,8 @@ public class PujaService {
                 .producto(item.getProducto())
                 .cliente(ganador.getAsistente().getCliente())
                 .importe(ganador.getImporte())
-                .comision(item.getComision())
+                .comision(comision)
+                .pagado(false)
                 .build();
         registroSubastaRepository.save(registro);
 
@@ -219,7 +246,7 @@ public class PujaService {
                 "¡Ganaste la subasta!",
                 "Ganaste '" + item.getProducto().getDescripcionCompleta() +
                         "' por $" + ganador.getImporte() +
-                        ". Comisión: $" + item.getComision(),
+                        ". Comisión: $" + comision,
                 (long) itemId, "ITEM"
         );
 
@@ -252,5 +279,123 @@ public class PujaService {
                 .filter(p -> p.getAsistente().getIdentificador().equals(asistente.getIdentificador()))
                 .map(Pujo::getImporte)
                 .reduce(BigDecimal.ZERO, (max, val) -> val.compareTo(max) > 0 ? val : max);
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.Map<String, Object> obtenerResultadoItem(Integer subastaId, Integer itemId, String email) {
+        ItemCatalogo item = itemCatalogoRepository.findById(itemId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Item no encontrado: " + itemId));
+                
+        UsuarioAuth auth = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+                
+        Optional<Pujo> mejor = pujoRepository.findMejorPujaByItem(itemId);
+        
+        java.util.Map<String, Object> resultado = new java.util.HashMap<>();
+        resultado.put("itemId", itemId);
+        resultado.put("subastaId", subastaId);
+        resultado.put("productoDesc", item.getProducto().getDescripcionCompleta());
+        resultado.put("subastaDesc", item.getCatalogo().getSubasta().getDescripcion());
+        
+        if (mejor.isPresent()) {
+            Pujo ganador = mejor.get();
+            boolean soyGanador = ganador.getAsistente().getCliente().getIdentificador().equals(auth.getPersona().getIdentificador());
+            
+            resultado.put("ganadorNombre", ganador.getAsistente().getCliente().getPersona().getNombre());
+            resultado.put("soyGanador", soyGanador);
+            resultado.put("importe", ganador.getImporte());
+            resultado.put("pujoId", ganador.getIdentificador());
+        } else {
+            resultado.put("ganadorNombre", "Nadie");
+            resultado.put("soyGanador", false);
+            resultado.put("importe", 0);
+            resultado.put("pujoId", null);
+        }
+        
+        return resultado;
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.List<java.util.Map<String, Object>> getMisPujas(String email) {
+        UsuarioAuth auth = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+        
+        java.util.List<Pujo> misPujos = pujoRepository.findByAsistenteClienteIdentificadorOrderByFechaHoraDesc(auth.getPersona().getIdentificador());
+        
+        // Group by item
+        java.util.Map<Integer, java.util.Map<String, Object>> resultados = new java.util.LinkedHashMap<>();
+        
+        for (Pujo p : misPujos) {
+            ItemCatalogo item = p.getItem();
+            if (!resultados.containsKey(item.getIdentificador())) {
+                // Find mejor puja
+                Optional<Pujo> mejor = pujoRepository.findMejorPujaByItem(item.getIdentificador());
+                BigDecimal miMejorPuja = misPujos.stream()
+                        .filter(mp -> mp.getItem().getIdentificador().equals(item.getIdentificador()))
+                        .map(Pujo::getImporte)
+                        .max(BigDecimal::compareTo)
+                        .orElse(BigDecimal.ZERO);
+                        
+                String estadoStr;
+                if ("si".equalsIgnoreCase(item.getSubastado())) {
+                    boolean gane = mejor.isPresent() && mejor.get().getAsistente().getCliente().getIdentificador().equals(auth.getPersona().getIdentificador());
+                    if (gane) {
+                        estadoStr = "GANADA";
+                        // Verificar si está pagado
+                        java.util.Optional<RegistroSubasta> reg = registroSubastaRepository.findByProductoIdentificador(item.getProducto().getIdentificador());
+                        if (reg.isPresent() && Boolean.TRUE.equals(reg.get().getPagado())) {
+                            estadoStr = "PAGADA";
+                        }
+                    } else {
+                        estadoStr = "PERDIDA";
+                    }
+                } else {
+                    boolean ganando = mejor.isPresent() && mejor.get().getAsistente().getCliente().getIdentificador().equals(auth.getPersona().getIdentificador());
+                    estadoStr = ganando ? "GANANDO" : "PERDIENDO";
+                }
+                
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("itemId", item.getIdentificador());
+                map.put("productoDesc", item.getProducto().getDescripcionCompleta());
+                map.put("subastaId", item.getCatalogo().getSubasta().getIdentificador());
+                map.put("subastaDesc", item.getCatalogo().getSubasta().getDescripcion());
+                map.put("miPuja", miMejorPuja);
+                map.put("pujaActual", mejor.map(Pujo::getImporte).orElse(item.getPrecioBase()));
+                map.put("estado", estadoStr);
+                map.put("subastado", item.getSubastado());
+                
+                resultados.put(item.getIdentificador(), map);
+            }
+        }
+        return new java.util.ArrayList<>(resultados.values());
+    }
+
+    @Transactional
+    public java.util.Map<String, Object> pagarItemGanado(Integer itemId, Long medioPagoId, String email) {
+        UsuarioAuth auth = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+                
+        ItemCatalogo item = itemCatalogoRepository.findById(itemId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Item no encontrado: " + itemId));
+                
+        RegistroSubasta registro = registroSubastaRepository.findByProductoIdentificador(item.getProducto().getIdentificador())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Registro de subasta no encontrado para el producto"));
+                
+        if (!registro.getCliente().getIdentificador().equals(auth.getPersona().getIdentificador())) {
+            throw new PujaInvalidaException("Solo el ganador de la puja puede pagarla.");
+        }
+        
+        if (Boolean.TRUE.equals(registro.getPagado())) {
+            throw new PujaInvalidaException("Este ítem ya ha sido pagado.");
+        }
+        
+        // Simular lógica de cobro con medio de pago...
+        // Aquí podríamos validar que el medioPagoId existe y es del cliente.
+        
+        // Marcar como pagado
+        registro.setPagado(true);
+        registroSubastaRepository.save(registro);
+        
+        return java.util.Map.of("mensaje", "Pago procesado exitosamente", "registroId", registro.getIdentificador());
     }
 }

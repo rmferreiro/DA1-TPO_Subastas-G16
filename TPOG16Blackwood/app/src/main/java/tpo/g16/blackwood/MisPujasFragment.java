@@ -1,14 +1,31 @@
 package tpo.g16.blackwood;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import tpo.g16.blackwood.network.RetrofitClient;
+import tpo.g16.blackwood.network.models.MiPuja;
 
 public class MisPujasFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private MisPujasAdapter adapter;
+    private TextView tvParticipaciones;
 
     @Nullable
     @Override
@@ -30,36 +47,38 @@ public class MisPujasFragment extends Fragment {
             }
         }
 
-        // Click en Puja En Vivo Adjudicada
-        View cardEnVivoGanada = view.findViewById(R.id.card_puja_envivo_ganada);
-        if (cardEnVivoGanada != null) {
-            cardEnVivoGanada.setOnClickListener(v -> {
-                if (getActivity() != null) {
-                    startActivity(new android.content.Intent(getActivity(), PermanecerSubastaActivity.class));
-                }
-            });
-        }
+        tvParticipaciones = view.findViewById(R.id.tv_participaciones);
+        recyclerView = view.findViewById(R.id.rv_mis_pujas);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        adapter = new MisPujasAdapter(getContext());
+        recyclerView.setAdapter(adapter);
 
-        // Click en Puja Ganada
-        View cardGanada = view.findViewById(R.id.card_puja_ganada);
-        if (cardGanada != null) {
-            cardGanada.setOnClickListener(v -> {
-                if (getActivity() != null) {
-                    startActivity(new android.content.Intent(getActivity(), NotificacionGanadorActivity.class));
-                }
-            });
-        }
-
-        // Click en Puja Perdida
-        View cardPerdida = view.findViewById(R.id.card_puja_perdida);
-        if (cardPerdida != null) {
-            cardPerdida.setOnClickListener(v -> {
-                if (getActivity() != null) {
-                    startActivity(new android.content.Intent(getActivity(), NotificacionPerdedorActivity.class));
-                }
-            });
-        }
+        cargarMisPujas();
 
         return view;
+    }
+
+    private void cargarMisPujas() {
+        RetrofitClient.getApiService().getMisPujas().enqueue(new Callback<List<MiPuja>>() {
+            @Override
+            public void onResponse(Call<List<MiPuja>> call, Response<List<MiPuja>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<MiPuja> pujas = response.body();
+                    adapter.setPujas(pujas);
+                    if (tvParticipaciones != null) {
+                        tvParticipaciones.setText("Participaste en " + pujas.size() + " subastas");
+                    }
+                } else {
+                    if (tvParticipaciones != null) tvParticipaciones.setText("Error al cargar");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MiPuja>> call, Throwable t) {
+                Log.e("MisPujas", "Error: ", t);
+                if (tvParticipaciones != null) tvParticipaciones.setText("Error de red");
+            }
+        });
     }
 }

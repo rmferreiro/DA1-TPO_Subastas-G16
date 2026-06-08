@@ -5,11 +5,11 @@
 -- ============================================================
 
 -- Crear la base de datos si no existe
-CREATE DATABASE IF NOT EXISTS subastas
+CREATE DATABASE IF NOT EXISTS subastas_bd
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE subastas;
+USE subastas_bd;
 
 -- ============================================================
 -- TABLA: paises (catálogo de países)

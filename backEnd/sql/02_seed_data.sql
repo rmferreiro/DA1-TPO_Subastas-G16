@@ -89,7 +89,7 @@ INSERT INTO duenios (identificador, razon_social) VALUES
 -- USUARIOS AUTH (contraseña = "Password123!" — bcrypt)
 -- ============================================================
 -- Hash bcrypt de "Password123!" generado con strength 10
-INSERT INTO usuarios_auth (id, persona, email, password_hash, estado, uuid) VALUES
+INSERT INTO usuarios_auth (id, persona_id, email, password_hash, estado, uuid) VALUES
 (1, 1, 'juan.rodriguez@email.com',
    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHOC',
    'APROBADO','a1b2c3d4-e5f6-7890-abcd-ef1234567890'),

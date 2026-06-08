@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         // Splash → Register
         new Handler().postDelayed(() -> {
 
-            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
 
             finish();

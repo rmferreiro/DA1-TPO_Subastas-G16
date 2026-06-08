@@ -3,15 +3,15 @@
 -- Ejecutar DESPUÉS de 01 y 02
 -- ============================================================
 
-USE subastas;
+USE subastas_bd;
 
 -- ============================================================
 -- Empleado del sistema (necesario como verificador por defecto)
 -- ============================================================
-INSERT INTO personas (documento, nombre, direccion, estado) VALUES
-('SISTEMA', 'Empleado Sistema', 'Sistema interno', 'activo');
+INSERT INTO personas (identificador, documento, nombre, direccion, estado) VALUES
+(999, 'SISTEMA', 'Empleado Sistema', 'Sistema interno', 'activo');
 
-SET @sistema_id = LAST_INSERT_ID();
+SET @sistema_id = 999;
 
 INSERT INTO empleados (identificador, cargo, sector) VALUES
 (@sistema_id, 'Administrador del Sistema', NULL);

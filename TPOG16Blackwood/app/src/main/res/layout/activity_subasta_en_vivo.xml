@@ -16,13 +16,12 @@
 
         <TextView
             android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
             android:clickable="true"
             android:focusable="true"
-            android:paddingEnd="12dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginEnd="4dp"
             android:text="←"
             android:textColor="#F4F1EA"
             android:textSize="24sp" />
@@ -110,10 +109,12 @@
                     android:layout_height="140dp">
                     
                     <ImageView
+                        android:id="@+id/iv_lote_imagen"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:background="#E0DEDA" />
+                        android:background="#E0DEDA"
+                        android:src="@drawable/logo_blackwood" />
 
                     <!-- Placeholder texto imagen -->
                     <TextView
@@ -147,6 +148,7 @@
                     android:padding="14dp">
 
                     <TextView
+                        android:id="@+id/tv_lote_numero"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Lote #007 de 24"
@@ -154,6 +156,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_lote_titulo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -163,6 +166,7 @@
                         android:textStyle="normal" />
 
                     <TextView
+                        android:id="@+id/tv_lote_descripcion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -208,6 +212,7 @@
 
                     <!-- Circulo avatar -->
                     <TextView
+                        android:id="@+id/tv_avatar_iniciales"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:background="@drawable/circle_black"
@@ -226,6 +231,7 @@
                         android:layout_marginStart="8dp"
                         android:orientation="vertical">
                         <TextView
+                            android:id="@+id/tv_nombre_postor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="M. Rodríguez"
@@ -330,9 +336,12 @@
 
                     <!-- Menos -->
                     <LinearLayout
+                        android:id="@+id/btn_decrementar"
                         android:layout_width="48dp"
                         android:layout_height="match_parent"
                         android:background="#F4F1EA"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:gravity="center">
                         <TextView
                             android:layout_width="wrap_content"
@@ -435,6 +444,7 @@
                         android:textSize="11sp" />
 
                     <TextView
+                        android:id="@+id/tv_participantes_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#2F3E34"

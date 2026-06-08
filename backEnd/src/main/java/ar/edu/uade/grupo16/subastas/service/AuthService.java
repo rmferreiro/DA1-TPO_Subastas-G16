@@ -111,6 +111,7 @@ public class AuthService {
         return auth.getUuid();
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         // Verificar estado del usuario antes de intentar autenticación
         UsuarioAuth usuario = usuarioAuthRepository.findByEmail(request.getEmail())
@@ -157,6 +158,7 @@ public class AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse refreshToken(String refreshToken) {
         if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new BadCredentialsException("Refresh token inválido o expirado");

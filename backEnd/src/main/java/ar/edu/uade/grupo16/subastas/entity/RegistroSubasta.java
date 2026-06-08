@@ -39,4 +39,7 @@ public class RegistroSubasta {
 
     @Column(name = "comision", nullable = false, precision = 18, scale = 2)
     private BigDecimal comision;
+
+    @Column(name = "pagado")
+    private Boolean pagado = false;
 }

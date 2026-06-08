@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#E5E0D8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Ícono principal -->
+        <ImageView
+            android:id="@+id/iv_tipo_pago"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_crop"
+            app:tint="#6B6B6B"
+            android:layout_marginEnd="16dp"/>
+
+        <!-- Textos -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_tipo_pago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de Pago"
+                android:textColor="#1A1A1A"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_detalle_pago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalle"
+                android:textColor="#6B6B6B"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_estado_pago"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verificado"
+            android:textColor="#5C7A65"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="@drawable/chip_outline_gold_border"
+            android:backgroundTint="#E8F0EA"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_acciones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp">
+
+            <ImageView
+                android:id="@+id/btn_edit_pago"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="#6B6B6B"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <ImageView
+                android:id="@+id/btn_delete_pago"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#6E2C2C"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -44,12 +44,15 @@ CREATE TABLE IF NOT EXISTS personas (
 
 CREATE TABLE IF NOT EXISTS usuarios_auth (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-    persona       INT         NOT NULL UNIQUE,
+    persona_id    INT         NOT NULL UNIQUE,
     email         VARCHAR(200) NOT NULL UNIQUE,
     password_hash VARCHAR(300) NOT NULL,
     estado        VARCHAR(20)  NOT NULL DEFAULT 'PENDIENTE',
     uuid          VARCHAR(36)  NOT NULL UNIQUE,
-    CONSTRAINT fk_ua_persona FOREIGN KEY (persona) REFERENCES personas(identificador)
+    foto_doc_frente LONGBLOB,
+    foto_doc_dorso  LONGBLOB,
+    fecha_registro DATETIME    DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ua_persona FOREIGN KEY (persona_id) REFERENCES personas(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================

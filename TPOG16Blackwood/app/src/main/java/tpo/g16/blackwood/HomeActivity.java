@@ -71,10 +71,10 @@ public class HomeActivity extends AppCompatActivity {
                 dotMisPujas.setVisibility(View.VISIBLE);
                 selectedFragment = new MisPujasFragment();
                 break;
-            case 2: // Perfil (Ignorado por diseño actual, solo cambia el estado visual si se hace clic)
+            case 2: // Perfil
                 labelPerfil.setTextColor(Color.parseColor("#1C2A21"));
                 dotPerfil.setVisibility(View.VISIBLE);
-                // No cargamos ningún fragment para Perfil ya que no está implementado
+                selectedFragment = new PerfilFragment();
                 break;
         }
 
