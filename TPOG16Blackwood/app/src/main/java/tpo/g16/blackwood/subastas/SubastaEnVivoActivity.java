@@ -1,4 +1,4 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.subastas;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import tpo.g16.blackwood.R;
+import tpo.g16.blackwood.main.HomeActivity;
 
 public class SubastaEnVivoActivity extends AppCompatActivity {
 
@@ -59,7 +62,6 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
     private void configurarBottomNav() {
         LinearLayout tabSubastas = findViewById(R.id.tab_subastas);
         LinearLayout tabPujas    = findViewById(R.id.tab_mis_pujas);
-        LinearLayout tabPerfil   = findViewById(R.id.tab_perfil);
 
         if (tabSubastas != null) {
             tabSubastas.setOnClickListener(v -> {

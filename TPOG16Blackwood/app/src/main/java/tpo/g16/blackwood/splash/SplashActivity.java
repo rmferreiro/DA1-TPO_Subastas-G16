@@ -8,12 +8,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
+import tpo.g16.blackwood.network.ApiConfig;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -36,6 +38,10 @@ public class SplashActivity extends AppCompatActivity {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
         super.onCreate(savedInstanceState);
+
+        // Limpiar preferences al inicio para forzar relogin en cold starts
+        SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
+        prefs.edit().clear().apply();
 
         // Remover el splash del sistema inmediatamente cuando la actividad esté lista
         splashScreen.setOnExitAnimationListener(splashScreenProvider -> {

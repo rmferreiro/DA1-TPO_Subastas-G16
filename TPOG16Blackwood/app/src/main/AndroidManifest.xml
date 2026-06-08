@@ -29,7 +29,12 @@
             android:name=".splash.SplashActivity"
             android:theme="@style/Theme.App.Starting"
             android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".login.LoginActivity"
             android:windowSoftInputMode="adjustResize"
@@ -49,31 +54,25 @@
             android:exported="false" />
 
         <activity android:name=".register.RegistroCompletadoActivity" android:exported="false" />
-        <activity android:name=".main.MainActivity" android:exported="false" />
         <activity android:name=".register.RegistroEnProcesoActivity" android:exported="false" />
         <!-- FLUJO COMPRA DE LOTES -->
         <activity
-            android:name=".HomeActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".DetalleSubastaActivity"
+            android:name=".main.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".SubastaEnVivoActivity"
+            android:name=".subastas.DetalleSubastaActivity"
             android:exported="false" />
         <activity
-            android:name=".PermanecerSubastaActivity"
+            android:name=".subastas.SubastaEnVivoActivity"
             android:exported="false" />
         <activity
-            android:name=".NotificacionGanadorActivity"
+            android:name=".subastas.PermanecerSubastaActivity"
             android:exported="false" />
         <activity
-            android:name=".NotificacionPerdedorActivity"
+            android:name=".subastas.NotificacionGanadorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".subastas.NotificacionPerdedorActivity"
             android:exported="false" />
     </application>
 </manifest>

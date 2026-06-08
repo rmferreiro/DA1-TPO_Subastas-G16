@@ -1,8 +1,11 @@
-package tpo.g16.blackwood;
+package tpo.g16.blackwood.subastas;
 
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import tpo.g16.blackwood.R;
+import tpo.g16.blackwood.main.HomeActivity;
 
 public class NotificacionPerdedorActivity extends AppCompatActivity {
     @Override
