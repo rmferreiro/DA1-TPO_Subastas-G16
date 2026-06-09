@@ -111,46 +111,6 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-=======
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Reloj vintage"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$450"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cuadro óleo"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$600"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                </LinearLayout>
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
             </LinearLayout>
 
             <!-- CARD 3: RESUMEN DE PAGO -->
@@ -184,7 +144,6 @@
                         android:textColor="#6B6B6B"
                         android:textSize="12sp" />
                     <TextView
-<<<<<<< HEAD
                         android:id="@+id/tv_subtotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

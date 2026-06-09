@@ -5,6 +5,13 @@
      - Tab activo: texto #1C2A21 + punto dorado #C6A75E abajo (r=4)
      - Tab inactivo: texto #6B6B6B, sin punto
 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <!-- Separador superior (y=740, h=1, #E0DEDA) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -27,17 +34,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-=======
-            <!-- Dot indicador activo -->
-            <View
-                android:id="@+id/tab_subastas_dot"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/circle_gold"
-                android:visibility="visible" />
-
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
             <TextView
                 android:id="@+id/tab_subastas_label"
                 android:layout_width="wrap_content"
@@ -46,7 +42,6 @@
                 android:textColor="#1C2A21"
                 android:textSize="10sp" />
 
-<<<<<<< HEAD
             <!-- Dot indicador activo (cx=70 cy=762 r=4 fill=#C6A75E) -->
             <View
                 android:id="@+id/tab_subastas_dot"
@@ -69,17 +64,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-=======
-            <!-- Dot indicador activo -->
-            <View
-                android:id="@+id/tab_pujas_dot"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/circle_gold"
-                android:visibility="invisible" />
-
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
             <TextView
                 android:id="@+id/tab_pujas_label"
                 android:layout_width="wrap_content"
@@ -88,7 +72,6 @@
                 android:textColor="#6B6B6B"
                 android:textSize="10sp" />
 
-<<<<<<< HEAD
             <View
                 android:id="@+id/tab_pujas_dot"
                 android:layout_width="8dp"
@@ -110,18 +93,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-<<<<<<< HEAD
-=======
-            <!-- Dot indicador activo -->
-            <View
-                android:id="@+id/tab_perfil_dot"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/circle_gold"
-                android:visibility="invisible" />
-
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
             <TextView
                 android:id="@+id/tab_perfil_label"
                 android:layout_width="wrap_content"
@@ -130,7 +101,6 @@
                 android:textColor="#6B6B6B"
                 android:textSize="10sp" />
 
-<<<<<<< HEAD
             <View
                 android:id="@+id/tab_perfil_dot"
                 android:layout_width="8dp"
@@ -139,8 +109,6 @@
                 android:background="@drawable/circle_gold"
                 android:visibility="invisible" />
 
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
         </LinearLayout>
 
     </LinearLayout>

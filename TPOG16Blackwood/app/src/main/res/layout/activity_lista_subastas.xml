@@ -92,5 +92,55 @@
                 android:textColor="#6B6B6B"
                 android:textSize="12sp" />
 
+            <!-- Chip "Oro" -->
+            <TextView
+                android:id="@+id/chip_oro"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/chip_outline_gold_border"
+                android:gravity="center"
+                android:text="Oro"
+                android:textColor="#6B6B6B"
+                android:textSize="12sp" />
+
+            <!-- Chip "Platino" -->
+            <TextView
+                android:id="@+id/chip_platino"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/chip_outline_gold_border"
+                android:gravity="center"
+                android:text="Platino"
+                android:textColor="#6B6B6B"
+                android:textSize="12sp" />
+
+            <!-- Chip "Diamante" -->
+            <TextView
+                android:id="@+id/chip_diamante"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:background="@drawable/chip_outline_gold_border"
+                android:gravity="center"
+                android:text="Diamante"
+                android:textColor="#6B6B6B"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- CONTENIDO SCROLLEABLE -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_subastas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F4F1EA"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:clipToPadding="false" />
 
 </LinearLayout>
