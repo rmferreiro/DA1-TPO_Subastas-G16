@@ -145,6 +145,9 @@ public class SplashActivity extends AppCompatActivity {
             phase1.start();
         });
 
+        // ── Navegar a LoginActivity después del tiempo total ───────────────
+        logoView.postDelayed(() -> {
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }, NEXT_DELAY);
     }
