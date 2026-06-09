@@ -1,4 +1,6 @@
-package tpo.g16.blackwood.network;
+import os
+
+content = """package tpo.g16.blackwood.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -135,3 +137,9 @@ public class RetrofitClient {
         return getClient().create(SubastasApiService.class);
     }
 }
+"""
+
+with open("app/src/main/java/tpo/g16/blackwood/network/RetrofitClient.java", "w", encoding="utf-8") as f:
+    f.write(content)
+
+print("RetrofitClient rewritten.")

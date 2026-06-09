@@ -53,35 +53,21 @@
                     android:textStyle="bold" />
 
                 <TextView
-<<<<<<< HEAD
                     android:id="@+id/tv_estado_titulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text="Ganaste un lote"
-=======
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Ganaste múltiples lotes"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                     android:textColor="#C6A75E"
                     android:textSize="18sp"
                     android:textStyle="normal" />
 
                 <TextView
-<<<<<<< HEAD
                     android:id="@+id/tv_estado_subtitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text="Lote adjudicado en subasta"
-=======
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="3 lotes adjudicados en esta subasta"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                     android:textColor="#6B6B6B"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -99,11 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-<<<<<<< HEAD
                     android:text="Detalle de lote"
-=======
-                    android:text="Detalle de lotes"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                     android:textColor="#1A1A1A"
                     android:textSize="13sp"
                     android:textStyle="normal" />
@@ -111,7 +93,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-<<<<<<< HEAD
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/tv_lote_nombre"
@@ -126,26 +107,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$0"
-=======
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Juego de té antiguo"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$820"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                 </LinearLayout>
 
-<<<<<<< HEAD
 =======
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,11 +189,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$0"
-=======
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$1870"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -242,7 +202,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-<<<<<<< HEAD
                         android:text="Comisión (10%)"
                         android:textColor="#6B6B6B"
                         android:textSize="12sp" />
@@ -251,15 +210,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$0"
-=======
-                        android:text="Comisión"
-                        android:textColor="#6B6B6B"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$187"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -273,18 +223,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-<<<<<<< HEAD
                         android:text="Envío (Fijo)"
                         android:textColor="#6B6B6B"
                         android:textSize="12sp" />
                     <TextView
                         android:id="@+id/tv_envio"
-=======
-                        android:text="Envío"
-                        android:textColor="#6B6B6B"
-                        android:textSize="12sp" />
-                    <TextView
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$120"
@@ -306,25 +249,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-<<<<<<< HEAD
                         android:text="Total a debitar"
-=======
-                        android:text="Total"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:textColor="#1A1A1A"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                     <TextView
-<<<<<<< HEAD
                         android:id="@+id/tv_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$0"
-=======
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$2177"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:textColor="#C6A75E"
                         android:textSize="14sp"
                         android:textStyle="bold" />

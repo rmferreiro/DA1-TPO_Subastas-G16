@@ -145,15 +145,6 @@ public class SplashActivity extends AppCompatActivity {
             phase1.start();
         });
 
-<<<<<<< HEAD:TPOG16Blackwood/app/src/main/java/tpo/g16/blackwood/SplashActivity.java
-        // ── Navegar a HomeActivity después del tiempo total ───────────────
-        logoView.postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-=======
-        // ── Navegar a LoginActivity después del tiempo total ───────────────
-        logoView.postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d:TPOG16Blackwood/app/src/main/java/tpo/g16/blackwood/splash/SplashActivity.java
             finish();
         }, NEXT_DELAY);
     }

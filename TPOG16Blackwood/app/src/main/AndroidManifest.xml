@@ -2,11 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.CAMERA"/>
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.INTERNET"/>
-=======
-    <uses-permission android:name="android.permission.INTERNET" />
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:allowBackup="true"
@@ -16,13 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-<<<<<<< HEAD
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.TPOG16Blackwood">
-=======
-        android:theme="@style/Theme.TPOG16Blackwood"
-        android:usesCleartextTraffic="true">
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -51,7 +42,6 @@
             android:exported="false" />
 
         <activity
-<<<<<<< HEAD
             android:name=".RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.TPOG16Blackwood" />
@@ -68,10 +58,6 @@
 
         <activity
             android:name=".RegistroEnProcesoActivity"
-=======
-            android:name=".register.RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
             android:exported="false" />
 
         <activity android:name=".common.LoadingActivity" android:exported="false" />
@@ -80,7 +66,6 @@
             android:name=".register.RegistroPaso2Activity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
-<<<<<<< HEAD
         <activity
             android:name=".RegistroCompletadoActivity"
             android:exported="false" />
@@ -112,29 +97,5 @@
             android:name=".NotificacionPerdedorActivity"
             android:exported="false" />
 
-=======
-
-        <activity android:name=".register.RegistroCompletadoActivity" android:exported="false" />
-        <activity android:name=".register.RegistroEnProcesoActivity" android:exported="false" />
-        <!-- FLUJO COMPRA DE LOTES -->
-        <activity
-            android:name=".main.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".subastas.DetalleSubastaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".subastas.SubastaEnVivoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".subastas.PermanecerSubastaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".subastas.NotificacionGanadorActivity"
-            android:exported="false" />
-        <activity
-            android:name=".subastas.NotificacionPerdedorActivity"
-            android:exported="false" />
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
     </application>
 </manifest>

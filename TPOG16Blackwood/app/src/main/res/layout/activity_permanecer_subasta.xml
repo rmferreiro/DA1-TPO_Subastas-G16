@@ -64,18 +64,11 @@
                     android:textStyle="normal" />
 
                 <TextView
-<<<<<<< HEAD
                     android:id="@+id/tv_lote_nombre_precio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Cargando lote..."
-=======
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Juego de té antiguo · $820"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                     android:textColor="#6B6B6B"
                     android:textSize="12sp" />
 
@@ -107,18 +100,11 @@
                     android:textStyle="normal" />
 
                 <TextView
-<<<<<<< HEAD
                     android:id="@+id/tv_pendiente_pago"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="$0"
-=======
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="$820"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                     android:textColor="#C6A75E"
                     android:textSize="16sp"
                     android:textStyle="normal" />

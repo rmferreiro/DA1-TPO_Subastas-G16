@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<<<<<<< HEAD
     <!-- HEADER -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,9 +30,6 @@
             android:textSize="14sp" />
 
     </LinearLayout>
-=======
-
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 
     <!-- CONTENIDO -->
     <ScrollView
@@ -56,7 +52,6 @@
                 android:textColor="#1A1A1A"
                 android:textSize="18sp" />
 
-<<<<<<< HEAD
             <!-- Lista dinámica -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_mis_pujas"
@@ -67,244 +62,11 @@
 
             <TextView
                 android:id="@+id/tv_participaciones"
-=======
-            <!-- Puja en vivo / Adjudicada -->
-            <LinearLayout
-                android:id="@+id/card_puja_envivo_ganada"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/info_box"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="6dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Juego de té antiguo · Lote 03"
-                        android:textColor="#1A1A1A"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#1C2A21"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="● En vivo"
-                        android:textColor="#C6A75E"
-                        android:textSize="11sp" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="Subasta de Antigüedades"
-                    android:textColor="#6B6B6B"
-                    android:textSize="13sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mi puja: $3.210"
-                        android:textColor="#C6A75E"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lote adjudicado"
-                        android:textColor="#1C2A21"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Puja ganada -->
-            <LinearLayout
-                android:id="@+id/card_puja_ganada"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/info_box"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="6dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Collar de diamantes · Lote 01"
-                        android:textColor="#1A1A1A"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#1C2A21"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="★ Ganada"
-                        android:textColor="#C6A75E"
-                        android:textSize="11sp" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="Subasta de Alta Joyería"
-                    android:textColor="#6B6B6B"
-                    android:textSize="13sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Puja final: $16.000"
-                        android:textColor="#C6A75E"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="¡Ganaste!"
-                        android:textColor="#1C2A21"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Puja perdida -->
-            <LinearLayout
-                android:id="@+id/card_puja_perdida"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/info_box"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="6dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Reloj Patek Philippe · Lote 02"
-                        android:textColor="#1A1A1A"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#EAE6DF"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="Finalizada"
-                        android:textColor="#6B6B6B"
-                        android:textSize="11sp" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="Relojería de Colección"
-                    android:textColor="#6B6B6B"
-                    android:textSize="13sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mi puja: $43.000"
-                        android:textColor="#6B6B6B"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="No ganado"
-                        android:textColor="#6B6B6B"
-                        android:textSize="13sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <TextView
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-<<<<<<< HEAD
                 android:text="Cargando participaciones..."
-=======
-                android:text="Participaste en 2 subastas"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                 android:textColor="#6B6B6B"
                 android:textSize="13sp" />
 

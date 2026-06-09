@@ -1,30 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <!-- Bottom nav fiel al Figma:
      - Fondo blanco, separador #E0DEDA arriba (h=1dp)
      - 3 tabs igualmente espaciadas (0-120, 120-240, 240-360 dp)
      - Tab activo: texto #1C2A21 + punto dorado #C6A75E abajo (r=4)
      - Tab inactivo: texto #6B6B6B, sin punto
 -->
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:orientation="vertical">
-
-<<<<<<< HEAD
-    <!-- Separador superior (y=740, h=1, #E0DEDA) -->
-=======
-    <!-- Separador superior -->
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E0DEDA" />
 
-<<<<<<< HEAD
     <!-- Tabs row (h=59dp para llegar a y=800) -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,15 +17,6 @@
         android:orientation="horizontal">
 
         <!-- TAB 1: SUBASTAS (x=0-120, icon+texto+dot) -->
-=======
-    <!-- Tabs row (increased h=64dp for better spacing) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal">
-
-        <!-- TAB 1: SUBASTAS (indicator dot above text) -->
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
         <LinearLayout
             android:id="@+id/tab_subastas"
             android:layout_width="0dp"
@@ -51,7 +27,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-<<<<<<< HEAD
 =======
             <!-- Dot indicador activo -->
             <View
@@ -84,11 +59,6 @@
         </LinearLayout>
 
         <!-- TAB 2: MIS PUJAS (x=120-240) -->
-=======
-        </LinearLayout>
-
-        <!-- TAB 2: MIS PUJAS -->
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
         <LinearLayout
             android:id="@+id/tab_mis_pujas"
             android:layout_width="0dp"
@@ -99,7 +69,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-<<<<<<< HEAD
 =======
             <!-- Dot indicador activo -->
             <View
@@ -131,11 +100,6 @@
         </LinearLayout>
 
         <!-- TAB 3: PERFIL (x=240-360) -->
-=======
-        </LinearLayout>
-
-        <!-- TAB 3: PERFIL -->
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
         <LinearLayout
             android:id="@+id/tab_perfil"
             android:layout_width="0dp"

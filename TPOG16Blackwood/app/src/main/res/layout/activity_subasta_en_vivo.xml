@@ -16,22 +16,12 @@
 
         <TextView
             android:id="@+id/btn_back"
-<<<<<<< HEAD
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:gravity="center"
             android:clickable="true"
             android:focusable="true"
             android:layout_marginEnd="4dp"
-=======
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:paddingEnd="12dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
             android:text="←"
             android:textColor="#F4F1EA"
             android:textSize="24sp" />
@@ -119,19 +109,12 @@
                     android:layout_height="140dp">
                     
                     <ImageView
-<<<<<<< HEAD
                         android:id="@+id/iv_lote_imagen"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
                         android:background="#E0DEDA"
                         android:src="@drawable/logo_blackwood" />
-=======
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:background="#E0DEDA" />
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 
                     <!-- Placeholder texto imagen -->
                     <TextView
@@ -165,21 +148,7 @@
                     android:padding="14dp">
 
                     <TextView
-<<<<<<< HEAD
                         android:id="@+id/tv_lote_numero"
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lote #007 de 24"
-                        android:textColor="#C6A75E"
-                        android:textSize="12sp" />
-
-                    <TextView
-<<<<<<< HEAD
-                        android:id="@+id/tv_lote_titulo"
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -189,59 +158,7 @@
                         android:textStyle="normal" />
 
                     <TextView
-<<<<<<< HEAD
                         android:id="@+id/tv_lote_descripcion"
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Oro 18k · Cal. 27 SC · Certificado de autenticidad"
-                        android:textColor="#6B6B6B"
-                        android:textSize="11sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- CARD PUJA MAS ALTA -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/card_white"
-                android:backgroundTint="#1C2A21"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PUJA MÁS ALTA"
-                    android:textColor="#A7A9AC"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/tv_precio_actual"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="$ 3.200 USD"
-                    android:textColor="#C6A75E"
-                    android:textSize="28sp"
-                    android:textStyle="normal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <!-- Circulo avatar -->
-                    <TextView
-<<<<<<< HEAD
-                        android:id="@+id/tv_avatar_iniciales"
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:background="@drawable/circle_black"
@@ -260,126 +177,7 @@
                         android:layout_marginStart="8dp"
                         android:orientation="vertical">
                         <TextView
-<<<<<<< HEAD
                             android:id="@+id/tv_nombre_postor"
-=======
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="M. Rodríguez"
-                            android:textColor="#F4F1EA"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="hace 23 seg"
-                            android:textColor="#6B6B6B"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/chip_outline_gold_border"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="Líder"
-                        android:textColor="#C6A75E"
-                        android:textSize="10sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- CARD TIEMPO RESTANTE -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/card_white"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tiempo restante"
-                    android:textColor="#6B6B6B"
-                    android:textSize="11sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_tiempo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:text="04:37"
-                        android:textColor="#1A1A1A"
-                        android:textSize="24sp"
-                        android:textStyle="normal" />
-
-                    <!-- Progreso: usado aquí como progressPuja para compatibilidad, visualmente como timer progress -->
-                    <ProgressBar
-                        android:id="@+id/progress_puja"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="4dp"
-                        android:layout_weight="1"
-                        android:max="100"
-                        android:progress="60"
-                        android:progressTint="#C6A75E"
-                        android:progressBackgroundTint="#E0DEDA" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- CARD REALIZAR PUJA -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/card_white"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Realizar una puja"
-                    android:textColor="#6B6B6B"
-                    android:textSize="11sp" />
-
-                <!-- Stepper -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <!-- Menos -->
-                    <LinearLayout
-<<<<<<< HEAD
-                        android:id="@+id/btn_decrementar"
-                        android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        android:background="#F4F1EA"
-                        android:clickable="true"
-                        android:focusable="true"
-=======
-                        android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        android:background="#F4F1EA"
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
                         android:gravity="center">
                         <TextView
                             android:layout_width="wrap_content"
