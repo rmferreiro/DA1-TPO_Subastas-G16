@@ -63,7 +63,6 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.revisarProducto(id, request));
     }
 
-<<<<<<< HEAD
     @GetMapping(value = "/{id}/foto", produces = MediaType.IMAGE_JPEG_VALUE)
     @Operation(summary = "Obtener foto principal de un producto en formato raw (bytes)")
     public ResponseEntity<byte[]> getFoto(@PathVariable Integer id) {
@@ -72,7 +71,8 @@ public class ProductoController {
             return ResponseEntity.ok(foto);
         }
         return ResponseEntity.notFound().build();
-=======
+    }
+
     @PutMapping("/{id}/condiciones-duenio")
     @Operation(summary = "[DUEÑO] Aceptar o rechazar condiciones propuestas",
                description = "Decisión: 'ACEPTADO' o 'RECHAZADO'. Si el dueño acepta, el producto queda listo (ACEPTADO_DUENIO) para ir a catálogo.")
@@ -117,7 +117,6 @@ public class ProductoController {
             java.security.Principal principal) {
         java.math.BigDecimal montoAdicional = new java.math.BigDecimal(request.get("montoAdicional").toString());
         return ResponseEntity.ok(productoService.aumentarPoliza(id, montoAdicional, principal.getName()));
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
     }
 
     // ────────── Catálogos ──────────

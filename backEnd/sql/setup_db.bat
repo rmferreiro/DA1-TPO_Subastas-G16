@@ -3,11 +3,7 @@ SET MYSQL="C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
 SET USER=root
 SET PASS=uade
 SET DB=subastas_bd
-<<<<<<< HEAD
 SET SQL_DIR=%~dp0
-=======
-SET SQL_DIR=D:\Users\Rodri\Desktop\da1\DA1-TPO_Subastas-G16\backEnd\sql
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 
 echo.
 echo =========================================
@@ -43,13 +39,10 @@ echo [VERIFICACION] Tablas creadas en subastas_bd:
 %MYSQL% -u%USER% -p%PASS% %DB% -e "SHOW TABLES;" 2>nul
 
 echo.
-<<<<<<< HEAD
-=======
 echo [VERIFICACION] Conteo de registros principales:
 %MYSQL% -u%USER% -p%PASS% %DB% -e "SELECT 'paises' AS tabla, COUNT(*) AS registros FROM paises UNION SELECT 'personas', COUNT(*) FROM personas UNION SELECT 'clientes', COUNT(*) FROM clientes UNION SELECT 'productos', COUNT(*) FROM productos UNION SELECT 'subastas', COUNT(*) FROM subastas UNION SELECT 'usuarios_auth', COUNT(*) FROM usuarios_auth UNION SELECT 'medios_pago', COUNT(*) FROM medios_pago UNION SELECT 'notificaciones', COUNT(*) FROM notificaciones;" 2>nul
 
 echo.
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 echo =========================================
 echo  Setup completado exitosamente!
 echo  Ahora podemos levantar Spring Boot.

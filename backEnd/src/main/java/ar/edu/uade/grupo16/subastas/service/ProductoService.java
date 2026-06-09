@@ -250,7 +250,6 @@ public class ProductoService {
     }
 
     /**
-<<<<<<< HEAD
      * Obtiene los bytes de la primera foto del producto (si existe).
      */
     @Transactional(readOnly = true)
@@ -259,7 +258,9 @@ public class ProductoService {
                 .findFirst()
                 .map(Foto::getFoto)
                 .orElse(null);
-=======
+    }
+
+    /**
      * Lista los productos pertenecientes al usuario logueado (Panel Vendedor).
      */
     @Transactional(readOnly = true)
@@ -344,6 +345,5 @@ public class ProductoService {
                 "nuevoMontoCubierto", seguro.getMontoCubierto(),
                 "diferenciaAbonada", montoAdicional
         );
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
     }
 }

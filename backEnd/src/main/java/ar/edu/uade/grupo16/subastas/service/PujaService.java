@@ -214,20 +214,17 @@ public class PujaService {
 
     }
 
-<<<<<<< HEAD
-=======
+
     /**
      * Cierra la puja de un item: marca al ganador, genera el registro de subasta.
      * Si nadie pujó, la empresa compra el item al precio base (enunciado pág. 5).
      * Llamado por el subastador cuando termina de vender un item.
      */
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
     @Transactional
     public PujaResponse cerrarItem(Integer subastaId, Integer itemId, String emailSubastador) {
         ItemCatalogo item = itemCatalogoRepository.findById(itemId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Item no encontrado"));
 
-<<<<<<< HEAD
         // Verificar si ya fue cerrado por otra petición (concurrencia)
         if ("si".equalsIgnoreCase(item.getSubastado())) {
             Optional<Pujo> ganadorOpt = pujoRepository.findGanadorByItem(itemId);
@@ -250,35 +247,9 @@ public class PujaService {
         // Marcar item como subastado SIEMPRE
         item.setSubastado("si");
         itemCatalogoRepository.save(item);
-=======
-        if ("si".equalsIgnoreCase(item.getSubastado())) {
-            throw new PujaInvalidaException("Este item ya fue cerrado anteriormente");
-        }
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
 
         Subasta subasta = subastaRepository.findById(subastaId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Subasta no encontrada"));
-
-<<<<<<< HEAD
-        Optional<Pujo> ganadorOpt = pujoRepository.findGanadorByItem(itemId);
-
-        if (ganadorOpt.isEmpty()) {
-            return PujaResponse.builder()
-                    .itemId(itemId)
-                    .esGanadora(false)
-                    .mensaje("ITEM CERRADO SIN PUJAS")
-                    .build();
-        }
-
-        Pujo ganador = ganadorOpt.get();
-
-        BigDecimal comision = item.getComision() != null ? item.getComision() : BigDecimal.ZERO;
-
-        // Crear el registro de venta
-=======
-        // Marcar item como subastado en ambos casos
-        item.setSubastado("si");
-        itemCatalogoRepository.save(item);
 
         // ¿Hubo alguna puja ganadora?
         return pujoRepository.findGanadorByItem(itemId)
@@ -290,39 +261,24 @@ public class PujaService {
     private PujaResponse cerrarConGanador(Subasta subasta, ItemCatalogo item, Pujo ganador) {
         Cliente comprador = ganador.getAsistente().getCliente();
 
+        BigDecimal comision = item.getComision() != null ? item.getComision() : BigDecimal.ZERO;
         // Calcular costo de envío (fijo o basado en peso/volumen, usamos un dummy fijo según requerimiento)
         BigDecimal costoEnvio = new BigDecimal("5000.00");
 
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
         RegistroSubasta registro = RegistroSubasta.builder()
                 .subasta(subasta)
                 .duenio(item.getProducto().getDuenio())
                 .producto(item.getProducto())
                 .cliente(comprador)
                 .importe(ganador.getImporte())
-<<<<<<< HEAD
                 .comision(comision)
+                .costoEnvio(costoEnvio)
+                .compraEmpresa(false)
                 .pagado(false)
                 .build();
         registroSubastaRepository.save(registro);
 
-        // Notificar al ganador
-        notificacionService.crear(
-                ganador.getAsistente().getCliente(),
-                TipoNotificacion.PUJA_GANADA,
-                "¡Ganaste la subasta!",
-                "Ganaste '" + item.getProducto().getDescripcionCompleta() +
-                        "' por $" + ganador.getImporte() +
-                        ". Comisión: $" + comision,
-                (long) itemId, "ITEM"
-=======
-                .comision(item.getComision())
-                .costoEnvio(costoEnvio)
-                .compraEmpresa(false)
-                .build();
-        registroSubastaRepository.save(registro);
-
-        BigDecimal totalPagar = ganador.getImporte().add(item.getComision()).add(costoEnvio);
+        BigDecimal totalPagar = ganador.getImporte().add(comision).add(costoEnvio);
         String detalleFactura = String.format(
                 "Factura de Compra - Subasta %d\n" +
                 "Item: '%s'\n" +
@@ -333,10 +289,9 @@ public class PujaService {
                 subasta.getIdentificador(),
                 item.getProducto().getDescripcionCompleta(),
                 ganador.getImporte(),
-                item.getComision(),
+                comision,
                 costoEnvio,
                 totalPagar
->>>>>>> ca6dc94214080f53249763627adfc6a129c21c2d
         );
 
         // Notificación in-app al ganador
@@ -390,6 +345,7 @@ public class PujaService {
                 .importe(item.getPrecioBase())
                 .comision(BigDecimal.ZERO)
                 .compraEmpresa(true)
+                .pagado(false)
                 .build();
         registroSubastaRepository.save(registro);
 
@@ -406,7 +362,6 @@ public class PujaService {
                         item.getPrecioBase()))
                 .build();
     }
-
 
     private BigDecimal calcularReservaAnterior(Asistente asistente, ItemCatalogo item) {
         return pujoRepository.findByItemIdentificadorOrderByFechaHoraAsc(item.getIdentificador())
