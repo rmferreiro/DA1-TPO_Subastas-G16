@@ -115,7 +115,9 @@ public class MisPujasAdapter extends RecyclerView.Adapter<MisPujasAdapter.ViewHo
                 intent.putExtra("precio", puja.getMiPuja());
                 context.startActivity(intent);
             } else {
-                context.startActivity(new android.content.Intent(context, PermanecerSubastaActivity.class));
+                android.content.Intent intent = new android.content.Intent(context, SubastaEnVivoActivity.class);
+                intent.putExtra("SUBASTA_ID", puja.getSubastaId());
+                context.startActivity(intent);
             }
         });
     }
