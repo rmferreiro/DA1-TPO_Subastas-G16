@@ -42,7 +42,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".register.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.TPOG16Blackwood" />
 
@@ -57,7 +57,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".RegistroEnProcesoActivity"
+            android:name=".register.RegistroEnProcesoActivity"
             android:exported="false" />
 
         <activity android:name=".common.LoadingActivity" android:exported="false" />
@@ -67,7 +67,7 @@
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
-            android:name=".RegistroCompletadoActivity"
+            android:name=".register.RegistroCompletadoActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

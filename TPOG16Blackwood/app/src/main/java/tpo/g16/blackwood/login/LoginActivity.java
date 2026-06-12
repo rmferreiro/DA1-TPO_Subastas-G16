@@ -2,7 +2,7 @@ package tpo.g16.blackwood.login;
 
 import tpo.g16.blackwood.R;
 import tpo.g16.blackwood.register.RegisterActivity;
-import tpo.g16.blackwood.main.HomeActivity;
+import tpo.g16.blackwood.HomeActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
