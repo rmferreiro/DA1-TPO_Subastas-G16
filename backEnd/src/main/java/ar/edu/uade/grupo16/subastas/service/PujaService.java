@@ -432,7 +432,7 @@ public class PujaService {
                     if (gane) {
                         estadoStr = "GANADA";
                         // Verificar si está pagado
-                        List<RegistroSubasta> regs = registroSubastaRepository.findByProductoIdentificadorOrderByIdentificadorDesc(item.getProducto().getIdentificador());
+                        java.util.List<RegistroSubasta> regs = registroSubastaRepository.findByProductoIdentificadorOrderByIdentificadorDesc(item.getProducto().getIdentificador());
                         if (!regs.isEmpty() && Boolean.TRUE.equals(regs.get(0).getPagado())) {
                             estadoStr = "PAGADA";
                         }
@@ -468,7 +468,7 @@ public class PujaService {
         ItemCatalogo item = itemCatalogoRepository.findById(itemId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Item no encontrado: " + itemId));
                 
-        List<RegistroSubasta> registros = registroSubastaRepository.findByProductoIdentificadorOrderByIdentificadorDesc(item.getProducto().getIdentificador());
+        java.util.List<RegistroSubasta> registros = registroSubastaRepository.findByProductoIdentificadorOrderByIdentificadorDesc(item.getProducto().getIdentificador());
         if (registros.isEmpty()) {
             throw new RecursoNoEncontradoException("Registro de subasta no encontrado para el producto");
         }
