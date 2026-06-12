@@ -60,7 +60,7 @@ public class SubastasApplication {
 
 				// Agregar columna pagado si no existe
 				try {
-					jdbcTemplate.execute("ALTER TABLE registroDeSubasta ADD COLUMN pagado BOOLEAN DEFAULT FALSE");
+					jdbcTemplate.execute("ALTER TABLE registrosSubasta ADD COLUMN pagado BOOLEAN DEFAULT FALSE");
 				} catch (Exception e) {
 					// Ignorar si la columna ya existe
 				}
@@ -68,7 +68,7 @@ public class SubastasApplication {
 				// Resetear estado de todos los items
 				jdbcTemplate.update("UPDATE itemsCatalogo SET subastado='no'");
 				jdbcTemplate.update("DELETE FROM pujos");
-				jdbcTemplate.update("DELETE FROM registroDeSubasta");
+				jdbcTemplate.update("DELETE FROM registrosSubasta");
 
 				System.out.println("====== FIX APLICADO: Lotes creados, sincronizados y reseteados exitosamente ======");
 			} catch (Exception e) {
