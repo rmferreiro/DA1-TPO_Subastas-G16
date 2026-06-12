@@ -96,12 +96,22 @@ public class ConfirmarPagoActivity extends AppCompatActivity {
                     List<String> mediosNombres = new ArrayList<>();
 
                     for (Map<String, Object> mp : mediosPagoList) {
-                        Long id = ((Number) mp.get("identificador")).longValue();
-                        String tipo = (String) mp.get("tipo");
-                        String red = (String) mp.get("red");
-                        String num = (String) mp.get("numeroTarjeta");
+                        Long id = null;
+                        if (mp.get("id") != null) {
+                            id = ((Number) mp.get("id")).longValue();
+                        } else if (mp.get("identificador") != null) {
+                            id = ((Number) mp.get("identificador")).longValue();
+                        }
                         
-                        String nombre = tipo + " " + red + " terminada en " + num.substring(Math.max(0, num.length() - 4));
+                        if (id == null) continue;
+
+                        String tipo = (String) mp.get("tipo");
+                        String detalle = (String) mp.get("detalle");
+                        
+                        String nombre = tipo != null ? tipo : "Medio de Pago";
+                        if (detalle != null) {
+                            nombre += " - " + detalle;
+                        }
                         
                         mediosNombres.add(nombre);
                         mediosPagoIds.add(id);
