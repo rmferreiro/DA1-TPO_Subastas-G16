@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import tpo.g16.blackwood.network.RetrofitClient;
+import tpo.g16.blackwood.register.AddPaymentMethodFragment;
 
 public class MediosPagoFragment extends Fragment {
 
