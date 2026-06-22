@@ -36,13 +36,13 @@ public class Subasta {
     @Column(name = "ubicacion", length = 350)
     private String ubicacion;
 
-    @Column(name = "capacidadAsistentes")
+    @Column(name = "capacidad_asistentes")
     private Integer capacidadAsistentes;
 
-    @Column(name = "tieneDeposito", length = 2)
+    @Column(name = "tiene_deposito", length = 2)
     private String tieneDeposito; // 'si' o 'no'
 
-    @Column(name = "seguridadPropia", length = 2)
+    @Column(name = "seguridad_propia", length = 2)
     private String seguridadPropia; // 'si' o 'no'
 
     @Column(name = "categoria", length = 10)

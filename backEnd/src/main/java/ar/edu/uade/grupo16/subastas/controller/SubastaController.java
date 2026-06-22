@@ -1,5 +1,6 @@
 package ar.edu.uade.grupo16.subastas.controller;
 
+import ar.edu.uade.grupo16.subastas.dto.response.EstadoVivoResponse;
 import ar.edu.uade.grupo16.subastas.dto.response.SubastaResponse;
 import ar.edu.uade.grupo16.subastas.service.SubastaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,14 @@ public class SubastaController {
     @Operation(summary = "Detalle de subasta")
     public ResponseEntity<SubastaResponse> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(subastaService.getById(id));
+    }
+
+    @GetMapping("/{id}/estado-vivo")
+    @Operation(summary = "Estado en vivo de la subasta",
+               description = "Devuelve el item actual en subasta, la mejor oferta, los límites de la próxima puja " +
+                             "y las últimas 10 pujas del item. Llamar al entrar a la sala y refrescar periódicamente.")
+    public ResponseEntity<EstadoVivoResponse> getEstadoVivo(@PathVariable Integer id) {
+        return ResponseEntity.ok(subastaService.getEstadoVivo(id));
     }
 
     @PostMapping("/{id}/unirse")

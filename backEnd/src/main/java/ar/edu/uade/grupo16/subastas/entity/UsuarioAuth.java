@@ -61,8 +61,9 @@ public class UsuarioAuth {
         if (this.fechaRegistro == null) {
             this.fechaRegistro = LocalDateTime.now();
         }
+        // KYC externo eliminado: el usuario queda APROBADO automáticamente al registrarse.
         if (this.estado == null) {
-            this.estado = EstadoUsuario.PENDIENTE;
+            this.estado = EstadoUsuario.APROBADO;
         }
     }
 }

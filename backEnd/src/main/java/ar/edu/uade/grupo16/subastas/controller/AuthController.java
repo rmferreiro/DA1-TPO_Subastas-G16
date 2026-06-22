@@ -25,14 +25,11 @@ public class AuthController {
     }
 
     @PostMapping("/registro")
-    @Operation(summary = "Registrar nuevo usuario (Etapa 1)",
-               description = "Registra datos personales + fotos del documento. El usuario queda PENDIENTE de aprobación.")
-    public ResponseEntity<Map<String, Object>> registrar(@Valid @RequestBody RegistroRequest request) {
-        String uuid = authService.registrar(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                "mensaje", "Registro recibido exitosamente. Esperá el email de confirmación para poder ingresar.",
-                "uuid", uuid
-        ));
+    @Operation(summary = "Registrar nuevo usuario",
+               description = "Registra datos personales + fotos del documento. El usuario queda aprobado automáticamente con categoría 'común' y recibe sus tokens JWT de forma inmediata.")
+    public ResponseEntity<AuthResponse> registrar(@Valid @RequestBody RegistroRequest request) {
+        AuthResponse response = authService.registrar(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")

@@ -3,7 +3,7 @@ SET MYSQL="C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
 SET USER=root
 SET PASS=pochito
 SET DB=subastas_bd
-SET SQL_DIR=D:\Users\Rodri\Desktop\da1\DA1-TPO_Subastas-G16\sql
+SET SQL_DIR=D:\Users\Rodri\Desktop\da1\DA1-TPO_Subastas-G16\backEnd\sql
 
 echo.
 echo =========================================
@@ -43,7 +43,7 @@ echo [VERIFICACION] Tablas creadas en subastas_bd:
 
 echo.
 echo [VERIFICACION] Conteo de registros principales:
-%MYSQL% -u%USER% -p%PASS% %DB% -e "SELECT 'paises' AS tabla, COUNT(*) AS registros FROM paises UNION SELECT 'personas', COUNT(*) FROM personas UNION SELECT 'clientes', COUNT(*) FROM clientes UNION SELECT 'productos', COUNT(*) FROM productos UNION SELECT 'subastas', COUNT(*) FROM subastas UNION SELECT 'usuarios_auth', COUNT(*) FROM usuarios_auth UNION SELECT 'mediosPago', COUNT(*) FROM mediosPago UNION SELECT 'notificaciones', COUNT(*) FROM notificaciones;" 2>nul
+%MYSQL% -u%USER% -p%PASS% %DB% -e "SELECT 'paises' AS tabla, COUNT(*) AS registros FROM paises UNION SELECT 'personas', COUNT(*) FROM personas UNION SELECT 'clientes', COUNT(*) FROM clientes UNION SELECT 'productos', COUNT(*) FROM productos UNION SELECT 'subastas', COUNT(*) FROM subastas UNION SELECT 'usuarios_auth', COUNT(*) FROM usuarios_auth UNION SELECT 'medios_pago', COUNT(*) FROM medios_pago UNION SELECT 'notificaciones', COUNT(*) FROM notificaciones;" 2>nul
 
 echo.
 echo =========================================

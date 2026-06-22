@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Fondo cream/marfil — igual al fondo de la card -->
+    <solid android:color="@color/marfil"/>
+
+    <!-- Borde dorado -->
+    <stroke
+        android:width="1.5dp"
+        android:color="@color/gold"/>
+
+    <!-- Esquinas redondeadas (igual que button_black_gold) -->
+    <corners android:radius="10dp"/>
+
+</shape>

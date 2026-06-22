@@ -59,7 +59,25 @@ public class Producto {
     @Column(name = "motivo_rechazo", length = 500)
     private String motivoRechazo;
 
+    // Precio base propuesto por el empleado
+    @Column(name = "precio_base_propuesto", precision = 18, scale = 2)
+    private BigDecimal precioBasePropuesto;
+
+    // Comisión propuesta por el empleado
+    @Column(name = "comision_propuesta", precision = 18, scale = 2)
+    private BigDecimal comisionPropuesta;
+
+
     // Ubicación en depósito
     @Column(name = "ubicacion_deposito", length = 200)
     private String ubicacionDeposito;
+
+    // Datos de obra de arte (solo si tipoProducto = 'OBRA_ARTE')
+    @OneToOne(mappedBy = "producto", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
+    private ProductoObraArte productoObraArte;
+
+    // Cuenta declarada para cobrar el resultado de la venta
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuenta_cobro_id")
+    private MedioPago cuentaCobro;
 }

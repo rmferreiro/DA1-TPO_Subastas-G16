@@ -52,26 +52,53 @@ public class CatalogoService {
     }
 
     /**
+     * Obtiene el catálogo de una subasta para usuarios NO registrados (Público).
+     * Oculta el precioBase y comision según requerimiento del sistema.
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getCatalogoPublicoDeSubasta(Integer subastaId) {
+        Subasta subasta = subastaRepository.findById(subastaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Subasta no encontrada: " + subastaId));
+
+        return catalogoRepository.findBySubastaIdentificador(subastaId)
+                .stream()
+                .flatMap(cat -> itemCatalogoRepository
+                        .findByCatalogoIdentificador(cat.getIdentificador())
+                        .stream()
+                        .map(item -> {
+                            Map<String, Object> response = new java.util.HashMap<>(buildItemResponse(item, cat));
+                            response.remove("precioBase");
+                            response.remove("comision");
+                            return response;
+                        }))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Agrega un producto aprobado como item en un catálogo de una subasta.
-     * Requiere precio base y comisión.
+     * Utiliza el precio base y la comisión ya acordados con el dueño.
      * Valida que el producto tenga seguro vigente (requerimiento del enunciado).
      */
     @Transactional
     public Map<String, Object> agregarItemAlCatalogo(Integer subastaId, Map<String, Object> request) {
         Integer productoId = (Integer) request.get("productoId");
-        BigDecimal precioBase = new BigDecimal(request.get("precioBase").toString());
-        BigDecimal comision = new BigDecimal(
-                request.getOrDefault("comision", "0").toString());
         Integer orden = (Integer) request.getOrDefault("orden", 1);
 
         // Validar que el producto exista y esté aprobado
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado: " + productoId));
 
-        if (!"ACEPTADO".equals(producto.getEstadoRevision())) {
+        if (!"ACEPTADO_DUENIO".equals(producto.getEstadoRevision())) {
             throw new RegistroInvalidoException(
-                    "El producto debe estar en estado 'ACEPTADO' para ser subastado. " +
+                    "El producto debe estar en estado 'ACEPTADO_DUENIO' para ser subastado. " +
                     "Estado actual: " + producto.getEstadoRevision());
+        }
+
+        // Obtener condiciones acordadas
+        BigDecimal precioBase = producto.getPrecioBasePropuesto();
+        BigDecimal comision = producto.getComisionPropuesta();
+        if (precioBase == null || comision == null) {
+            throw new RegistroInvalidoException("El producto no tiene precio base o comisión asignados.");
         }
 
         // Validar seguro vigente

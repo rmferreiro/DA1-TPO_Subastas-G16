@@ -17,4 +17,11 @@
     </style>
 
     <style name="Theme.TPOG16Blackwood" parent="Base.Theme.TPOG16Blackwood" />
+
+    <!-- Estilo para la pantalla de inicio del sistema (Splash API) -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/green_bottle</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_blackwood_vector</item>
+        <item name="postSplashScreenTheme">@style/Theme.TPOG16Blackwood</item>
+    </style>
 </resources>
