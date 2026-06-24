@@ -21,15 +21,18 @@ public class ClienteService {
     private final UsuarioAuthRepository usuarioAuthRepository;
     private final MedioPagoRepository medioPagoRepository;
     private final PujoRepository pujoRepository;
+    private final ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository;
 
     public ClienteService(ClienteRepository clienteRepository,
                           UsuarioAuthRepository usuarioAuthRepository,
                           MedioPagoRepository medioPagoRepository,
-                          PujoRepository pujoRepository) {
+                          PujoRepository pujoRepository,
+                          ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository) {
         this.clienteRepository = clienteRepository;
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.medioPagoRepository = medioPagoRepository;
         this.pujoRepository = pujoRepository;
+        this.asistenteRepository = asistenteRepository;
     }
 
     @Transactional(readOnly = true)
@@ -82,9 +85,7 @@ public class ClienteService {
         long totalVictorias = pujoRepository.countVictoriasByCliente(clienteId);
         Long ofertado = pujoRepository.sumOfertadoByCliente(clienteId);
         Long pagado = pujoRepository.sumPagadoByCliente(clienteId);
-
-        // TODO: Agregar repositorios faltantes (AsistenteRepository, RegistroSubastaRepository) si se quiere hacerlo con count() directo
-        // Por ahora simularemos datos adicionales útiles para la App Android, basados en los counts reales
+        long subastasParticipadas = asistenteRepository.countByClienteIdentificador(clienteId);
 
         Map<String, Object> metricas = new HashMap<>();
         metricas.put("totalPujas", totalPujas);
@@ -95,9 +96,8 @@ public class ClienteService {
         metricas.put("subastasGanadas", totalVictorias);
         metricas.put("tasaVictorias", totalPujas > 0
                 ? String.format("%.1f%%", (double) totalVictorias / totalPujas * 100) : "0%");
-        metricas.put("subastasParticipadas", totalPujas > 0 ? (totalPujas / 2) + 1 : 0); // Simulamos que hizo ~2 pujas por subasta
+        metricas.put("subastasParticipadas", subastasParticipadas);
         metricas.put("importeTotalPagado", totalVictorias * 50000.0); // Simulación para la UI
-
 
         return metricas;
     }

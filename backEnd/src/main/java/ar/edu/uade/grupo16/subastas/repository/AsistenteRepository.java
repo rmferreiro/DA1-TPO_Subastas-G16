@@ -12,4 +12,5 @@ public interface AsistenteRepository extends JpaRepository<Asistente, Integer> {
     List<Asistente> findByClienteIdentificador(Integer clienteId);
     Optional<Asistente> findByClienteIdentificadorAndSubastaIdentificador(Integer clienteId, Integer subastaId);
     long countBySubastaIdentificador(Integer subastaId);
+    long countByClienteIdentificador(Integer clienteId);
 }

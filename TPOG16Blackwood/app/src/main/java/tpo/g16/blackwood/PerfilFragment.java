@@ -116,16 +116,16 @@ public class PerfilFragment extends Fragment {
                     Map<String, Object> metricas = response.body();
                     
                     Object victoriasObj = metricas.get("totalVictorias");
-                    Object pujasObj = metricas.get("totalPujas");
+                    Object participacionesObj = metricas.get("subastasParticipadas");
                     Object ofertadoObj = metricas.get("totalOfertado");
                     Object pagadoObj = metricas.get("totalPagado");
                     
                     if (victoriasObj != null) {
                         tvGanadas.setText(String.valueOf(((Number) victoriasObj).intValue()));
                     }
-                    if (pujasObj != null) {
-                        int pujas = ((Number) pujasObj).intValue();
-                        tvParticipaciones.setText(pujas + " finalizadas");
+                    if (participacionesObj != null) {
+                        int participaciones = ((Number) participacionesObj).intValue();
+                        tvParticipaciones.setText(participaciones + " finalizadas");
                     }
                     
                     int ofertado = ofertadoObj != null ? ((Number) ofertadoObj).intValue() : 0;
