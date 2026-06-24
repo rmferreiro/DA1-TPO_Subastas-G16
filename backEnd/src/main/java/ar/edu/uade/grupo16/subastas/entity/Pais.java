@@ -14,7 +14,7 @@ public class Pais {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "identificador")
+    @Column(name = "numero")
     private Integer numero;
 
     @Column(name = "descripcion", nullable = false, length = 100)
