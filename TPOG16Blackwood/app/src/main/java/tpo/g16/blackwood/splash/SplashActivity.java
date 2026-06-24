@@ -17,6 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 import tpo.g16.blackwood.network.ApiConfig;
 
+import tpo.g16.blackwood.network.RetrofitClient;
+import tpo.g16.blackwood.network.models.AuthResponse;
+import tpo.g16.blackwood.network.models.LoginRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SplashActivity extends AppCompatActivity {
 
     // Durations (ms)
@@ -66,6 +73,22 @@ public class SplashActivity extends AppCompatActivity {
         // Estado inicial: texto invisible
         textTitle.setAlpha(0f);
         textSubtitle.setAlpha(0f);
+
+        // Login silencioso para pruebas
+        RetrofitClient.getApiService().login(new LoginRequest("juan.rodriguez@email.com", "uade"))
+                .enqueue(new Callback<AuthResponse>() {
+                    @Override
+                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            RetrofitClient.setAuthToken(response.body().getAccessToken());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AuthResponse> call, Throwable t) {
+                        // Omitir en desarrollo
+                    }
+                });
 
         startSplashAnimation();
     }

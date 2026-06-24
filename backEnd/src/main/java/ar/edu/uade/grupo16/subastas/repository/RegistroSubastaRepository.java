@@ -10,4 +10,5 @@ public interface RegistroSubastaRepository extends JpaRepository<RegistroSubasta
     List<RegistroSubasta> findBySubastaIdentificador(Integer subastaId);
     List<RegistroSubasta> findByClienteIdentificador(Integer clienteId);
     List<RegistroSubasta> findByDuenioIdentificador(Integer duenioId);
+    List<RegistroSubasta> findByProductoIdentificadorOrderByIdentificadorDesc(Integer productoId);
 }

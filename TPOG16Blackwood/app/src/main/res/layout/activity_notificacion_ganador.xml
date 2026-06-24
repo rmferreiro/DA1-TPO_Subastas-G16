@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <!-- HEADER -->
     <LinearLayout
@@ -53,19 +54,21 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_estado_titulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="Ganaste múltiples lotes"
+                    android:text="Ganaste un lote"
                     android:textColor="#C6A75E"
                     android:textSize="18sp"
                     android:textStyle="normal" />
 
                 <TextView
+                    android:id="@+id/tv_estado_subtitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="3 lotes adjudicados en esta subasta"
+                    android:text="Lote adjudicado en subasta"
                     android:textColor="#6B6B6B"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -91,61 +94,24 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/tv_lote_nombre"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Juego de té antiguo"
+                        android:text="Cargando..."
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                     <TextView
+                        android:id="@+id/tv_lote_precio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$820"
+                        android:text="$0"
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Reloj vintage"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$450"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cuadro óleo"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$600"
-                        android:textColor="#1A1A1A"
-                        android:textSize="12sp" />
-                </LinearLayout>
             </LinearLayout>
 
             <!-- CARD 3: RESUMEN DE PAGO -->
@@ -179,9 +145,10 @@
                         android:textColor="#6B6B6B"
                         android:textSize="12sp" />
                     <TextView
+                        android:id="@+id/tv_subtotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$1870"
+                        android:text="$0"
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -195,13 +162,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Comisión"
+                        android:text="Comisión (10%)"
                         android:textColor="#6B6B6B"
                         android:textSize="12sp" />
                     <TextView
+                        android:id="@+id/tv_comision"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$187"
+                        android:text="$0"
                         android:textColor="#1A1A1A"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -215,10 +183,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Envío"
+                        android:text="Envío (Fijo)"
                         android:textColor="#6B6B6B"
                         android:textSize="12sp" />
                     <TextView
+                        android:id="@+id/tv_envio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$120"
@@ -240,14 +209,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Total"
+                        android:text="Total a debitar"
                         android:textColor="#1A1A1A"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tv_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$2177"
+                        android:text="$0"
                         android:textColor="#C6A75E"
                         android:textSize="14sp"
                         android:textStyle="bold" />

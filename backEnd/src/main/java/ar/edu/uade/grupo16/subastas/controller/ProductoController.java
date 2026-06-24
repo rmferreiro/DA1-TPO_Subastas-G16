@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +61,16 @@ public class ProductoController {
             @PathVariable Integer id,
             @RequestBody Map<String, Object> request) {
         return ResponseEntity.ok(productoService.revisarProducto(id, request));
+    }
+
+    @GetMapping(value = "/{id}/foto", produces = MediaType.IMAGE_JPEG_VALUE)
+    @Operation(summary = "Obtener foto principal de un producto en formato raw (bytes)")
+    public ResponseEntity<byte[]> getFoto(@PathVariable Integer id) {
+        byte[] foto = productoService.getFotoPrincipal(id);
+        if (foto != null) {
+            return ResponseEntity.ok(foto);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}/condiciones-duenio")
@@ -130,5 +141,11 @@ public class ProductoController {
             @RequestBody Map<String, Object> request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(catalogoService.agregarItemAlCatalogo(subastaId, request));
+    }
+
+    @GetMapping("/catalogo/items/{itemId}")
+    @Operation(summary = "Obtener detalles completos de un ítem del catálogo")
+    public ResponseEntity<Map<String, Object>> getItemDetalle(@PathVariable Integer itemId) {
+        return ResponseEntity.ok(catalogoService.getItemDetalle(itemId));
     }
 }

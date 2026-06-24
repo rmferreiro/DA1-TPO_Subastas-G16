@@ -223,12 +223,8 @@ public class SubastaService {
                     "Tenés una multa pendiente. Debés pagarla antes de participar en subastas.");
         }
 
-        // Verificar medio de pago verificado
-        if (!medioPagoRepository.existsByClienteIdentificadorAndVerificadoTrueAndActivoTrue(
-                cliente.getIdentificador())) {
-            throw new SubastaNoDisponibleException(
-                    "Necesitás al menos un medio de pago verificado para participar.");
-        }
+        // Eliminamos el bloqueo estricto de medio de pago para permitir Modo Espectador.
+        // El chequeo se hará en el Frontend y al intentar procesar la puja.
 
         // Verificar capacidad
         long asistentesActuales = asistenteRepository.countBySubastaIdentificador(subastaId);

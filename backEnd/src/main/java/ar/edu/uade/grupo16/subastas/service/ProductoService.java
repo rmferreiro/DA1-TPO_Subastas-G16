@@ -250,6 +250,17 @@ public class ProductoService {
     }
 
     /**
+     * Obtiene los bytes de la primera foto del producto (si existe).
+     */
+    @Transactional(readOnly = true)
+    public byte[] getFotoPrincipal(Integer productoId) {
+        return fotoRepository.findByProductoIdentificador(productoId).stream()
+                .findFirst()
+                .map(Foto::getFoto)
+                .orElse(null);
+    }
+
+    /**
      * Lista los productos pertenecientes al usuario logueado (Panel Vendedor).
      */
     @Transactional(readOnly = true)

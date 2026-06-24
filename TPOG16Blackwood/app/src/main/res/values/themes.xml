@@ -10,6 +10,12 @@
 
         <!-- Color de los elementos del dropdown y controles -->
         <item name="colorSecondary">@color/gold</item>
+
+        <!-- Forzar colores de barra de estado y navegación -->
+        <item name="android:statusBarColor">@color/green_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="Theme.TPOG16Blackwood" parent="Base.Theme.TPOG16Blackwood" />
@@ -20,4 +26,4 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_blackwood_vector</item>
         <item name="postSplashScreenTheme">@style/Theme.TPOG16Blackwood</item>
     </style>
-</resources>
+</resources>

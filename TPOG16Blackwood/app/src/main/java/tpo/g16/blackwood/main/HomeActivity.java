@@ -14,8 +14,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import tpo.g16.blackwood.R;
-import tpo.g16.blackwood.subastas.ListaSubastasFragment;
-import tpo.g16.blackwood.subastas.MisPujasFragment;
+import tpo.g16.blackwood.ListaSubastasFragment;
+import tpo.g16.blackwood.MisPujasFragment;
+import tpo.g16.blackwood.PerfilFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -110,14 +111,14 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 selectedFragment = new MisPujasFragment();
                 break;
-            case 2: // Perfil (Ignorado por diseño actual, solo cambia el estado visual si se hace clic)
+            case 2: // Perfil
                 labelPerfil.setTextColor(Color.parseColor("#1C2A21"));
                 labelPerfil.setTypeface(null, Typeface.BOLD);
                 dotPerfil.setVisibility(View.VISIBLE);
                 if (homeHeaderSubtitle != null) {
                     homeHeaderSubtitle.setText("Mi Perfil");
                 }
-                // No cargamos ningún fragment para Perfil ya que no está implementado
+                selectedFragment = new PerfilFragment();
                 break;
         }
 

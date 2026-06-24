@@ -11,8 +11,9 @@ import java.util.Optional;
 @Repository
 public interface PujoRepository extends JpaRepository<Pujo, Integer> {
     List<Pujo> findByItemIdentificadorOrderByFechaHoraAsc(Integer itemId);
-
     List<Pujo> findByAsistenteIdentificadorOrderByFechaHoraDesc(Integer asistenteId);
+
+    List<Pujo> findByAsistenteClienteIdentificadorOrderByFechaHoraDesc(Integer clienteId);
 
     @Query("SELECT p FROM Pujo p WHERE p.item.identificador = :itemId ORDER BY p.importe DESC")
     List<Pujo> findByItemOrderByImporteDesc(@Param("itemId") Integer itemId);
@@ -28,4 +29,10 @@ public interface PujoRepository extends JpaRepository<Pujo, Integer> {
 
     @Query("SELECT COUNT(p) FROM Pujo p WHERE p.asistente.cliente.identificador = :clienteId AND p.ganador = 'si'")
     long countVictoriasByCliente(@Param("clienteId") Integer clienteId);
+
+    @Query("SELECT SUM(p.importe) FROM Pujo p WHERE p.asistente.cliente.identificador = :clienteId AND p.ganador = 'si'")
+    Long sumPagadoByCliente(@Param("clienteId") Integer clienteId);
+
+    @Query(value = "SELECT COALESCE(SUM(maxPuja), 0) FROM (SELECT MAX(importe) as maxPuja FROM pujos p JOIN asistentes a ON p.asistente = a.identificador WHERE a.cliente = :clienteId GROUP BY p.item) as sub", nativeQuery = true)
+    Long sumOfertadoByCliente(@Param("clienteId") Integer clienteId);
 }
