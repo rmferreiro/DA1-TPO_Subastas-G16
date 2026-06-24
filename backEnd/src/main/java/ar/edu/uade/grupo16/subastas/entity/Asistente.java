@@ -17,7 +17,7 @@ public class Asistente {
     @Column(name = "identificador")
     private Integer identificador;
 
-    @Column(name = "numero_postor", nullable = false)
+    @Column(name = "numeroPostor", nullable = false)
     private Integer numeroPostor;
 
     @ManyToOne(fetch = FetchType.LAZY)

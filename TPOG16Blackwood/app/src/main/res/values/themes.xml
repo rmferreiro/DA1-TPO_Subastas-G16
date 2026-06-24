@@ -11,6 +11,12 @@
         <!-- Color de los elementos del dropdown y controles -->
         <item name="colorSecondary">@color/gold</item>
 
+        <!-- Forzar colores de barra de estado y navegación -->
+        <item name="android:statusBarColor">@color/green_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
         <item name="colorPrimaryDark">#1C2A21</item>
         <item name="colorAccent">#C6A75E</item>
         <item name="android:navigationBarColor">#1C2A21</item>

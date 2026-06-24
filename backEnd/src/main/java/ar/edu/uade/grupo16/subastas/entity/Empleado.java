@@ -24,6 +24,7 @@ public class Empleado {
     @Column(name = "cargo", length = 100)
     private String cargo;
 
-    @Column(name = "sector", length = 100)
-    private String sector;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sector")
+    private Sector sector;
 }

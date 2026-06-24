@@ -18,6 +18,8 @@ import tpo.g16.blackwood.network.api.MedioPagoApiService;
 
 public class RetrofitClient {
 
+    public static final String BASE_URL = "http://10.0.2.2:8080/";
+
     private static RetrofitClient instance;
     private final Retrofit retrofitPublic;
     private final Retrofit retrofitAuth;
@@ -89,5 +91,51 @@ public class RetrofitClient {
 
     public MedioPagoApiService getMedioPagoApiService() {
         return retrofitAuth.create(MedioPagoApiService.class);
+    }
+
+    // ============================================
+    // OLD STATIC APPROACH (HEAD)
+    // ============================================
+    private static Retrofit retrofit = null;
+    private static String authToken = null;
+
+    public static void setAuthToken(String token) {
+        authToken = token;
+    }
+
+    public static Retrofit getClient() {
+        if (retrofit == null) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            httpClient.addInterceptor(logging);
+
+            httpClient.addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request original = chain.request();
+                    Request.Builder requestBuilder = original.newBuilder();
+
+                    if (authToken != null && !authToken.isEmpty()) {
+                        requestBuilder.header("Authorization", "Bearer " + authToken);
+                    }
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            });
+
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient.build())
+                    .build();
+        }
+        return retrofit;
+    }
+
+    public static SubastasApiService getApiService() {
+        return getClient().create(SubastasApiService.class);
     }
 }
