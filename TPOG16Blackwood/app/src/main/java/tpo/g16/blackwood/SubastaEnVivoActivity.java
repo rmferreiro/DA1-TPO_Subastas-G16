@@ -46,8 +46,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
 
     private int precioActual = 0;
     private int miPuja = 0;
-    private static final int INCREMENTO = 100;
-    private static final int PRECIO_MAX = 100000;
+    private int precioBaseValue = 1000;
+    private boolean isOroOrPlatino = true; // Por defecto true para no bloquear erróneamente
 
     private ImageView ivLoteImagen;
     private ProgressBar progressPuja;
@@ -91,9 +91,9 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         LinearLayout btnDecrementar = findViewById(R.id.btn_decrementar);
         if (btnDecrementar != null) {
             btnDecrementar.setOnClickListener(v -> {
-                // No permitir bajar de la puja mínima posible (precioActual + incremento mínimo)
-                if (miPuja > precioActual + INCREMENTO) {
-                    miPuja -= INCREMENTO;
+                int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
+                if (miPuja > precioActual + incrementoMinimo) {
+                    miPuja -= incrementoMinimo; // Bajar de a saltos del 1%
                     actualizarUITextos();
                 }
             });
@@ -102,7 +102,16 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         LinearLayout btnIncrementar = findViewById(R.id.btn_incrementar);
         if (btnIncrementar != null) {
             btnIncrementar.setOnClickListener(v -> {
-                miPuja += INCREMENTO;
+                int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
+                int limiteMaximo = precioActual + (int)(precioBaseValue * 0.20);
+                
+                // Si es Oro o Platino no hay limite maximo (para simplificar en frontend, si es >= maximo lo dejamos subir)
+                // Pero si queremos ser estrictos para comun/plata, limitamos:
+                if (isOroOrPlatino || miPuja + incrementoMinimo <= limiteMaximo) {
+                    miPuja += incrementoMinimo;
+                } else if (!isOroOrPlatino && miPuja < limiteMaximo) {
+                    miPuja = limiteMaximo; // Toparlo al 20%
+                }
                 actualizarUITextos();
             });
         }
@@ -137,9 +146,18 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                         }
                     }
                     if (miMedioPagoId == null) {
-                        Toast.makeText(SubastaEnVivoActivity.this, "Necesitás un medio de pago verificado", Toast.LENGTH_LONG).show();
-                        finish();
-                        return;
+                        Toast.makeText(SubastaEnVivoActivity.this, "Modo Espectador: Solo podés ver la subasta", Toast.LENGTH_LONG).show();
+                        android.view.ViewParent parent = findViewById(R.id.btn_decrementar).getParent();
+                        if (parent instanceof LinearLayout) {
+                            ((LinearLayout)parent).setVisibility(android.view.View.GONE);
+                        }
+                        if (tvBtnPujar != null) {
+                            tvBtnPujar.setText("MODO ESPECTADOR");
+                        }
+                        if (findViewById(R.id.btn_pujar) != null) {
+                            findViewById(R.id.btn_pujar).setEnabled(false);
+                            findViewById(R.id.btn_pujar).setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.GRAY));
+                        }
                     }
                     // 2. Obtener el item actual
                     fetchItemActual();
@@ -162,7 +180,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().isEmpty()) {
                         Toast.makeText(SubastaEnVivoActivity.this, "Subasta finalizada. No hay más lotes.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SubastaEnVivoActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(SubastaEnVivoActivity.this, tpo.g16.blackwood.main.HomeActivity.class);
                         intent.putExtra("TAB_INDEX", 1);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
@@ -230,7 +248,13 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                     } else {
                         precioActual = 1000;
                     }
-                    miPuja = precioActual + INCREMENTO;
+                    
+                    if (body.containsKey("precioBase") && body.get("precioBase") != null) {
+                        precioBaseValue = ((Number) body.get("precioBase")).intValue();
+                    }
+                    
+                    int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
+                    miPuja = precioActual + incrementoMinimo;
                     actualizarUITextos();
                     
                     // Iniciar timer inmediatamente (por si el WS tarda o falla)
@@ -376,7 +400,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                     if (json.has("itemId") && json.get("itemId").getAsInt() == currentItemId) {
                         if (json.has("importe")) {
                             precioActual = json.get("importe").getAsInt();
-                            miPuja = precioActual + INCREMENTO;
+                            int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
+                            miPuja = precioActual + incrementoMinimo;
                             
                             String nombrePostor = json.has("nombrePostor") ? json.get("nombrePostor").getAsString() : "Postor Anonimo";
                             if (tvNombrePostor != null) tvNombrePostor.setText(nombrePostor);
@@ -429,8 +454,9 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
     }
 
     private void actualizarUITextos() {
+        int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
         if (miPuja <= precioActual) {
-            miPuja = precioActual + INCREMENTO;
+            miPuja = precioActual + incrementoMinimo;
         }
 
         String montoStr = "$ " + formatear(miPuja);
@@ -474,7 +500,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         LinearLayout tabPerfil = findViewById(R.id.tab_perfil);
         if (tabSubastas != null) {
             tabSubastas.setOnClickListener(v -> {
-                Intent intent = new Intent(this, HomeActivity.class);
+                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
                 intent.putExtra("TAB_INDEX", 0);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -483,7 +509,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         }
         if (tabPujas != null) {
             tabPujas.setOnClickListener(v -> {
-                Intent intent = new Intent(this, HomeActivity.class);
+                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
                 intent.putExtra("TAB_INDEX", 1);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -492,7 +518,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         }
         if (tabPerfil != null) {
             tabPerfil.setOnClickListener(v -> {
-                Intent intent = new Intent(this, HomeActivity.class);
+                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
                 intent.putExtra("TAB_INDEX", 2);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);

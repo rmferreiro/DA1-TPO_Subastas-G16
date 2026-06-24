@@ -37,9 +37,9 @@ INSERT INTO subastas (identificador, fecha, hora, estado, subastador, ubicacion,
 INSERT INTO catalogos (identificador, descripcion, subasta, responsable) VALUES
 (1, 'Catálogo Principal', 1, 2);
 
-INSERT INTO itemsCatalogo (identificador, catalogo, producto, precioBase, comision, subastado) VALUES
-(1, 1, 1, 25000.00, 5.00, 'no'),
-(2, 1, 2, 10000.00, 5.00, 'no');
+INSERT INTO itemsCatalogo (identificador, catalogo, producto, precioBase, comision, subastado, orden) VALUES
+(1, 1, 1, 25000.00, 5.00, 'no', 1),
+(2, 1, 2, 10000.00, 5.00, 'no', 2);
 
 INSERT INTO asistentes (identificador, numeroPostor, cliente, subasta) VALUES
 (1, 101, 1, 1);

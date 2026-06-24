@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F1EA"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <!-- HEADER (h=70dp, fill=#1C2A21) -->
@@ -64,8 +64,8 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_nav_include" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <include
         android:id="@+id/bottom_nav_include"

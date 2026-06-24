@@ -148,7 +148,7 @@ public class ConfirmarPagoActivity extends AppCompatActivity {
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(ConfirmarPagoActivity.this, "¡Pago procesado exitosamente!", Toast.LENGTH_LONG).show();
-                    android.content.Intent intent = new android.content.Intent(ConfirmarPagoActivity.this, HomeActivity.class);
+                    android.content.Intent intent = new android.content.Intent(ConfirmarPagoActivity.this, tpo.g16.blackwood.main.HomeActivity.class);
                     intent.putExtra("TAB_INDEX", 1);
                     intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

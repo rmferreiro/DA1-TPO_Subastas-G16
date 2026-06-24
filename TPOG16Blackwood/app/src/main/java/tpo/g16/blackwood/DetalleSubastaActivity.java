@@ -115,7 +115,7 @@ public class DetalleSubastaActivity extends AppCompatActivity {
 
         if (tabSubastas != null) {
             tabSubastas.setOnClickListener(v -> {
-                Intent intent = new Intent(this, HomeActivity.class);
+                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
                 intent.putExtra("TAB_INDEX", 0);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -123,7 +123,7 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         }
         if (tabPujas != null) {
             tabPujas.setOnClickListener(v -> {
-                Intent intent = new Intent(this, HomeActivity.class);
+                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
                 intent.putExtra("TAB_INDEX", 1);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -131,7 +131,7 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         }
         if (tabPerfil != null) {
             tabPerfil.setOnClickListener(v -> {
-                Intent intent = new Intent(this, HomeActivity.class);
+                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
                 intent.putExtra("TAB_INDEX", 2);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
