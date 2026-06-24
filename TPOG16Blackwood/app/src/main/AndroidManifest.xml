@@ -43,6 +43,12 @@
 
         <activity
             android:name=".register.RegisterActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
+            android:name=".register.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.TPOG16Blackwood" />
 
@@ -50,7 +56,7 @@
             android:name=".DetalleLoteActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-            
+
         <activity
             android:name=".ConfirmarPagoActivity"
             android:exported="false"
@@ -66,33 +72,54 @@
             android:name=".register.RegistroPaso2Activity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
-        <activity
-            android:name=".register.RegistroCompletadoActivity"
-            android:exported="false" />
+
+        <activity android:name=".register.RegistroCompletadoActivity" android:exported="false" />
+        <activity android:name=".register.RegistroEnProcesoActivity" android:exported="false" />
         <!-- FLUJO COMPRA DE LOTES -->
         <activity
-            android:name=".HomeActivity"
-            android:exported="true">
+            android:name=".main.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".subastas.DetalleSubastaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".subastas.SubastaEnVivoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".subastas.PermanecerSubastaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".subastas.NotificacionGanadorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".subastas.NotificacionPerdedorActivity"
+            android:exported="false" />
+        <activity
+                android:name=".register.RegistroCompletadoActivity"
+                android:exported="false" />
+        <!-- FLUJO COMPRA DE LOTES -->
+        <activity
+                android:name=".HomeActivity"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetalleSubastaActivity"
-            android:exported="false" />
+                android:name=".DetalleSubastaActivity"
+                android:exported="false" />
         <activity
-            android:name=".SubastaEnVivoActivity"
-            android:exported="false" />
+                android:name=".SubastaEnVivoActivity"
+                android:exported="false" />
         <activity
-            android:name=".PermanecerSubastaActivity"
-            android:exported="false" />
+                android:name=".PermanecerSubastaActivity"
+                android:exported="false" />
         <activity
-            android:name=".NotificacionGanadorActivity"
-            android:exported="false" />
+                android:name=".NotificacionGanadorActivity"
+                android:exported="false" />
         <activity
-            android:name=".NotificacionPerdedorActivity"
-            android:exported="false" />
-
+                android:name=".NotificacionPerdedorActivity"
+                android:exported="false" />
     </application>
 </manifest>

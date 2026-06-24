@@ -19,15 +19,17 @@ import tpo.g16.blackwood.network.api.MedioPagoApiService;
 public class RetrofitClient {
 
     public static final String BASE_URL = "http://10.0.2.2:8080/";
-    
+
     private static RetrofitClient instance;
     private final Retrofit retrofitPublic;
     private final Retrofit retrofitAuth;
 
     private RetrofitClient(Context context) {
+        // Logging para ver requests en el Logcat
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+        // Cliente público (Sin token)
         OkHttpClient publicClient = new OkHttpClient.Builder()
                 .connectTimeout(ApiConfig.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(ApiConfig.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -41,6 +43,7 @@ public class RetrofitClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        // Interceptor para agregar el JWT
         Interceptor authInterceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -59,6 +62,7 @@ public class RetrofitClient {
             }
         };
 
+        // Cliente autenticado (Con token)
         OkHttpClient authClient = new OkHttpClient.Builder()
                 .connectTimeout(ApiConfig.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(ApiConfig.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -112,11 +116,11 @@ public class RetrofitClient {
                 public Response intercept(Chain chain) throws IOException {
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder();
-                    
+
                     if (authToken != null && !authToken.isEmpty()) {
                         requestBuilder.header("Authorization", "Bearer " + authToken);
                     }
-                    
+
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
                 }

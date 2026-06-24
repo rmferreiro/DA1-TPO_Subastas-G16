@@ -26,4 +26,4 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_blackwood_vector</item>
         <item name="postSplashScreenTheme">@style/Theme.TPOG16Blackwood</item>
     </style>
-</resources>
+</resources>
