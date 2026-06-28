@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/marfil"
+    android:importantForAutofill="noExcludeDescendants">
+
+    <!-- HEADER REUTILIZABLE -->
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header" />
+
+    <!-- CONTENIDO CENTRADO -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- CÍRCULO CON CRUZ ROJA -->
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="24dp">
+
+            <!-- Círculo negro con borde gris (Fondo) -->
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_black" />
+
+            <!-- Cruz Roja Vectorial (ic_delete de android como fallback seguro de cruz) -->
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_delete"
+                app:tint="#D32F2F" />
+        </FrameLayout>
+
+        <!-- TÍTULO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registro rechazado"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/charcoal"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- DESCRIPCIÓN -->
+        <TextView
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:text="Tu solicitud fue rechazada por nuestro equipo de verificacion y seguridad. Te recomendamos contactarte con nuestro soporte para más información."
+            android:textColor="@color/gray_light"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"/>
+
+    </LinearLayout>
+
+    <!-- BOTÓN INFERIOR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_volver_inicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Volver al inicio"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/charcoal"
+            app:cornerRadius="8dp"
+            app:elevation="0dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp" />
+    </LinearLayout>
+
+</LinearLayout>

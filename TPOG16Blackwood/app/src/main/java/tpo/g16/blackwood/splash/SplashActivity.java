@@ -138,6 +138,8 @@ public class SplashActivity extends AppCompatActivity {
                 intent = new Intent(SplashActivity.this, tpo.g16.blackwood.register.RegistroEnProcesoActivity.class);
             } else if ("APROBADO_PENDIENTE_PASS".equals(regState)) {
                 intent = new Intent(SplashActivity.this, tpo.g16.blackwood.register.RegistroPaso2Activity.class);
+            } else if ("RECHAZADO".equals(regState)) {
+                intent = new Intent(SplashActivity.this, tpo.g16.blackwood.register.RegistroRechazadoActivity.class);
             } else if (token != null && !token.isEmpty()) {
                 intent = new Intent(SplashActivity.this, tpo.g16.blackwood.main.HomeActivity.class);
             } else {

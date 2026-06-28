@@ -208,6 +208,35 @@
           "response": []
         },
         {
+          "name": "[KYC] Rechazar Usuario Externamente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/registro/rechazar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@email.com\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Listar Usuarios Pendientes",
           "request": {
             "method": "GET",

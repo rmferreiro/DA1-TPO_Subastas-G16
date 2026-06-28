@@ -161,6 +161,26 @@ public class AuthService {
     }
 
     @Transactional
+    public Map<String, Object> rechazarUsuarioExterno(String email) {
+        UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RegistroInvalidoException("Usuario no encontrado"));
+        
+        usuario.setEstado(EstadoUsuario.RECHAZADO);
+        usuarioAuthRepository.save(usuario);
+
+        Cliente cliente = clienteRepository.findById(usuario.getPersona().getIdentificador())
+                .orElseThrow(() -> new RegistroInvalidoException("Cliente no asociado a la persona"));
+        cliente.setAdmitido("no");
+        clienteRepository.save(cliente);
+
+        return Map.of(
+                "mensaje", "Usuario rechazado con éxito",
+                "email", email,
+                "estado", EstadoUsuario.RECHAZADO.name()
+        );
+    }
+
+    @Transactional
     public AuthResponse completarRegistro(String email, String password, List<ar.edu.uade.grupo16.subastas.dto.request.MedioPagoRequest> mediosPago) {
         UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
                 .orElseThrow(() -> new RegistroInvalidoException("Usuario no encontrado"));

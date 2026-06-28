@@ -61,6 +61,10 @@
             android:name=".register.RegistroEnProcesoActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".register.RegistroRechazadoActivity"
+            android:exported="false" />
+
         <activity android:name=".common.LoadingActivity" android:exported="false" />
 
         <activity

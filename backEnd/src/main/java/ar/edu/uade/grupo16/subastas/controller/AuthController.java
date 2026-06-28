@@ -65,6 +65,14 @@ public class AuthController {
         return ResponseEntity.ok(authService.aprobarUsuarioExterno(email, categoria));
     }
 
+    @PostMapping("/registro/rechazar")
+    @Operation(summary = "[ADMIN/EXTERNO] Rechazar un usuario registrado",
+               description = "Permite rechazar externamente un usuario pendiente mediante su email.")
+    public ResponseEntity<Map<String, Object>> rechazarUsuarioExterno(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        return ResponseEntity.ok(authService.rechazarUsuarioExterno(email));
+    }
+
     @PostMapping("/registro/completar")
     @Operation(summary = "Completar registro con contraseña y medios de pago",
                description = "Guarda la contraseña y opcionalmente los medios de pago para un usuario previamente aprobado.")

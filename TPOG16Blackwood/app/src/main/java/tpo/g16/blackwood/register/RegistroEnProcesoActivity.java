@@ -96,6 +96,16 @@ public class RegistroEnProcesoActivity extends AppCompatActivity {
                                 Intent intent = new Intent(RegistroEnProcesoActivity.this, RegistroPaso2Activity.class);
                                 startActivity(intent);
                                 finish();
+                            } else if ("RECHAZADO".equals(estado)) {
+                                SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
+                                prefs.edit()
+                                        .putString(ApiConfig.KEY_REGISTRATION_STATE, "RECHAZADO")
+                                        .apply();
+
+                                handler.removeCallbacks(pollingRunnable);
+                                Intent intent = new Intent(RegistroEnProcesoActivity.this, RegistroRechazadoActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }
                     }
