@@ -271,7 +271,8 @@ public class SubastaService {
             asistenteRepository.save(asistente);
         }
 
-        // Registrar sesión activa
+        // Registrar sesión activa — eliminar cualquier sesión anterior primero para evitar duplicados
+        sesionSubastaRepository.deleteByClienteIdentificador(cliente.getIdentificador());
         SesionSubasta sesion = SesionSubasta.builder()
                 .cliente(cliente)
                 .subasta(subasta)

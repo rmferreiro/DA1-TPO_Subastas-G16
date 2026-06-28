@@ -11,5 +11,10 @@ public class AuthResponse {
 
     public String getAccessToken() { return accessToken; }
     public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
-    // Add other getters if needed
+    public String getRefreshToken() { return refreshToken; }
+    public String getEmail() { return email; }
+    public String getNombre() { return nombre; }
+    public String getCategoria() { return categoria; }
+    public String getEstado() { return estado; }
+    public String getTokenType() { return tokenType; }
 }

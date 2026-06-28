@@ -40,9 +40,14 @@ public class ListaSubastasFragment extends Fragment {
         recyclerSubastas.setAdapter(adapter);
 
         configurarFiltros(view);
-        cargarSubastas();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargarSubastas();
     }
 
     private void configurarFiltros(View view) {

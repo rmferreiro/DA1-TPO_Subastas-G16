@@ -18,13 +18,15 @@ import tpo.g16.blackwood.network.api.MedioPagoApiService;
 
 public class RetrofitClient {
 
-    public static final String BASE_URL = "http://10.0.2.2:8080/";
+    public static final String BASE_URL = ApiConfig.BASE_URL;
 
     private static RetrofitClient instance;
+    private static Context appContext = null;
     private final Retrofit retrofitPublic;
     private final Retrofit retrofitAuth;
 
     private RetrofitClient(Context context) {
+        appContext = context.getApplicationContext();
         // Logging para ver requests en el Logcat
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -81,6 +83,8 @@ public class RetrofitClient {
     public static synchronized RetrofitClient getInstance(Context context) {
         if (instance == null) {
             instance = new RetrofitClient(context.getApplicationContext());
+        } else {
+            appContext = context.getApplicationContext();
         }
         return instance;
     }
@@ -117,8 +121,14 @@ public class RetrofitClient {
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder();
 
-                    if (authToken != null && !authToken.isEmpty()) {
-                        requestBuilder.header("Authorization", "Bearer " + authToken);
+                    String token = authToken;
+                    if (token == null && appContext != null) {
+                        SharedPreferences prefs = appContext.getSharedPreferences(ApiConfig.PREFS_NAME, Context.MODE_PRIVATE);
+                        token = prefs.getString(ApiConfig.KEY_ACCESS_TOKEN, null);
+                    }
+
+                    if (token != null && !token.isEmpty()) {
+                        requestBuilder.header("Authorization", "Bearer " + token);
                     }
 
                     Request request = requestBuilder.build();

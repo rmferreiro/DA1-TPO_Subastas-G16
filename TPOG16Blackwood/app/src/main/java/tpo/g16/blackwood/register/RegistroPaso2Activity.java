@@ -173,45 +173,46 @@ public class RegistroPaso2Activity extends AppCompatActivity {
 
     private void realizarRegistroBackend() {
         btnFinalizar.setEnabled(false);
-        btnFinalizar.setText("Registrando...");
+        btnFinalizar.setText("Completando registro...");
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) return;
-
-        String nombreCompleto = extras.getString("nombreCompleto", "");
-        String documento = extras.getString("documento", "");
-        String direccion = extras.getString("direccion", "");
-        Integer paisId = extras.getInt("paisId", 1);
-        
-        String email = extras.getString("email", "");
+        SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, Context.MODE_PRIVATE);
+        String email = prefs.getString(ApiConfig.KEY_REGISTRATION_EMAIL, null);
         String password = etPassword.getText().toString();
 
-        String uriFrente = extras.getString("fotoFrenteUri");
-        String uriDorso = extras.getString("fotoDorsoUri");
-        String base64Frente = uriFrente != null ? uriToBase64(Uri.parse(uriFrente)) : "";
-        String base64Dorso = uriDorso != null ? uriToBase64(Uri.parse(uriDorso)) : "";
+        if (email == null || email.isEmpty()) {
+            Toast.makeText(this, "Error de inconsistencia: Email no encontrado en preferencias.", Toast.LENGTH_LONG).show();
+            btnFinalizar.setEnabled(true);
+            btnFinalizar.setText(R.string.final_reg);
+            return;
+        }
 
-        RegistroRequest request = new RegistroRequest(
-                nombreCompleto, documento, direccion, paisId, email, password, base64Frente, base64Dorso
-        );
+        tpo.g16.blackwood.network.model.CompletarRegistroRequest request = 
+                new tpo.g16.blackwood.network.model.CompletarRegistroRequest(email, password, mediosPagoList);
 
         RetrofitClient.getInstance(this).getAuthApiService()
-                .registrar(request)
+                .completarRegistro(request)
                 .enqueue(new Callback<AuthResponse>() {
                     @Override
                     public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            AuthResponse auth = response.body();
-                            SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, Context.MODE_PRIVATE);
-                            prefs.edit()
-                                 .putString(ApiConfig.KEY_ACCESS_TOKEN, auth.getAccessToken())
-                                 .putString(ApiConfig.KEY_REFRESH_TOKEN, auth.getRefreshToken())
-                                 .putString(ApiConfig.KEY_USER_EMAIL, auth.getEmail())
-                                 .putString(ApiConfig.KEY_USER_NOMBRE, auth.getNombre())
-                                 .putString(ApiConfig.KEY_USER_CATEGORIA, auth.getCategoria())
-                                 .apply();
-                            
-                            enviarMediosPagoYContinuar();
+                            // Limpiar las llaves de estado de registro
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.remove(ApiConfig.KEY_REGISTRATION_STATE);
+                            editor.remove(ApiConfig.KEY_REGISTRATION_EMAIL);
+                            editor.remove(ApiConfig.KEY_REGISTRATION_NOMBRE);
+                            editor.remove(ApiConfig.KEY_REGISTRATION_APELLIDO);
+                            editor.apply();
+
+                            // Mostrar Toast largo de éxito solicitado
+                            Toast.makeText(RegistroPaso2Activity.this, 
+                                    "Usuario creado con éxito, usa tus credenciales para hacer login", 
+                                    Toast.LENGTH_LONG).show();
+
+                            // Redirigir a la pantalla principal de Login limpiando la pila
+                            Intent intent = new Intent(RegistroPaso2Activity.this, tpo.g16.blackwood.login.LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
                         } else {
                             btnFinalizar.setEnabled(true);
                             btnFinalizar.setText(R.string.final_reg);
@@ -221,7 +222,7 @@ public class RegistroPaso2Activity extends AppCompatActivity {
                                     Toast.makeText(RegistroPaso2Activity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             } catch (Exception e) {
-                                Toast.makeText(RegistroPaso2Activity.this, "Error en el registro", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistroPaso2Activity.this, "Error al completar el registro", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -231,32 +232,6 @@ public class RegistroPaso2Activity extends AppCompatActivity {
                         btnFinalizar.setEnabled(true);
                         btnFinalizar.setText(R.string.final_reg);
                         Toast.makeText(RegistroPaso2Activity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-    private void enviarMediosPagoYContinuar() {
-        if (mediosPagoList.isEmpty()) {
-            navegarACompletado();
-            return;
-        }
-
-        // Para simplificar, enviamos el primer medio de pago. 
-        // Si hay varios, habría que hacer callbacks anidados o usar corrutinas.
-        MedioPagoRequest mpRequest = mediosPagoList.get(0);
-        
-        RetrofitClient.getInstance(this).getMedioPagoApiService()
-                .registrarMedioPago(mpRequest)
-                .enqueue(new Callback<Map<String, Object>>() {
-                    @Override
-                    public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                        // Aunque falle el medio de pago, el registro ya se hizo. Continuamos igual.
-                        navegarACompletado();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                        navegarACompletado();
                     }
                 });
     }

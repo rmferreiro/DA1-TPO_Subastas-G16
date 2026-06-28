@@ -28,7 +28,6 @@ public class RegistroRequest {
     @Email(message = "El formato del email no es válido")
     private String email;
 
-    @NotBlank(message = "El password es obligatorio")
     private String password;
 
     // Las fotos del documento se envían como Base64 strings

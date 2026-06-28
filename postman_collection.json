@@ -1,0 +1,1340 @@
+{
+  "info": {
+    "name": "Subastas G16 API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Autenticación y Registro",
+      "item": [
+        {
+          "name": "Registrar Cliente (KYC Simplificado)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/registro",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"documento\": \"35123456\",\n  \"direccion\": \"Av. Corrientes 1234\",\n  \"paisId\": 1,\n  \"email\": \"juan.perez@email.com\",\n  \"password\": \"Password123!\",\n  \"fotoDocFrente\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"fotoDocDorso\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar Estado de Registro (Polling)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/registro/estado",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": [],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "juan.perez@email.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Completar Registro (Contraseña y Pago)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/registro/completar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@email.com\",\n  \"password\": \"Password123!\",\n  \"mediosPago\": [\n    {\n      \"tipo\": \"TARJETA_CREDITO\",\n      \"moneda\": \"ARS\",\n      \"numeroTarjeta\": \"4509123456789012\",\n      \"titular\": \"Juan Pérez\",\n      \"vencimiento\": \"12/29\",\n      \"esTarjetaInternacional\": false\n    }\n  ]\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login como Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@email.com\",\n  \"password\": \"Password123!\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login como Admin / Empleado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@subastas.com\",\n  \"password\": \"adminPassword123\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refrescar Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{client_refresh_token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Administración y Verificación",
+      "item": [
+        {
+          "name": "[KYC] Aprobar Usuario Externamente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/registro/aprobar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan.perez@email.com\",\n  \"categoria\": \"oro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Usuarios Pendientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/usuarios/pendientes",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aprobar Usuario (Asignar Categoría)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/usuarios/{{default_uuid}}/aprobar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoria\": \"plata\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rechazar Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/usuarios/{{default_uuid}}/rechazar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Clientes (Perfil y Métricas)",
+      "item": [
+        {
+          "name": "Obtener Perfil Autenticado",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/perfil",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Métricas del Cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/metricas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar Habilitación para Subasta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/info-subasta",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Medios de Pago",
+      "item": [
+        {
+          "name": "Registrar Cuenta Bancaria (Nacional)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"CUENTA_BANCARIA\",\n  \"moneda\": \"ARS\",\n  \"banco\": \"Banco Nación\",\n  \"numeroCuenta\": \"0012345678\",\n  \"cbuSwift\": \"0110123456789012345678\",\n  \"esInternacional\": false\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Cuenta Bancaria (Internacional - USD)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"CUENTA_BANCARIA\",\n  \"moneda\": \"USD\",\n  \"banco\": \"Chase Bank\",\n  \"numeroCuenta\": \"9876543210\",\n  \"cbuSwift\": \"CHASUS33XXX\",\n  \"esInternacional\": true\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Tarjeta de Crédito",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"TARJETA_CREDITO\",\n  \"moneda\": \"USD\",\n  \"numeroTarjeta\": \"4111111111111111\",\n  \"titular\": \"JUAN PEREZ\",\n  \"vencimiento\": \"12/28\",\n  \"esTarjetaInternacional\": true\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar Cheque Certificado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"CHEQUE_CERTIFICADO\",\n  \"moneda\": \"ARS\",\n  \"numeroCheque\": \"99882233\",\n  \"bancoEmisor\": \"Banco Galicia\",\n  \"montoCertificado\": 150000.00\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Mis Medios de Pago",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Medio de Pago",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago/{{ _.test_medio_pago_id }}",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[ADMIN] Verificar Medio de Pago",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/medios-pago/admin/{{ _.test_medio_pago_id }}/verificar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Panel Vendedor (Dueño)",
+      "item": [
+        {
+          "name": "Ofrecer Producto para Subasta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/solicitar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duenioId\": 1,\n  \"descripcion\": \"Estupenda mesa de roble macizo del siglo XIX con incrustaciones de nácar.\",\n  \"declaracionJurada\": true,\n  \"fotos\": [\n    \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n    \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\"\n  ]\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Mis Productos Ofrecidos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/mis-productos",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Declarar Cuenta para Cobro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{test_producto_id}}/cuenta-cobro",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medioPagoId\": \"{{ _.test_medio_pago_id }}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aumentar Seguro de la Pieza",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{test_producto_id}}/seguro/aumentar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"montoAdicional\": 25000.00\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aceptar/Rechazar Condiciones Propuestas",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{test_producto_id}}/condiciones-duenio",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"ACEPTADO\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Operaciones Empleado / Catálogo",
+      "item": [
+        {
+          "name": "Ver Productos Pendientes de Revisión",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/pendientes",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Productos Aprobados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/aprobados",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Detalle del Producto (Con Seguro)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{test_producto_id}}",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revisar Producto (Aprobar/Rechazar)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{test_producto_id}}/revisar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"ACEPTADO\",\n  \"precioBase\": 85000.00,\n  \"comision\": 10.0\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Ubicación en Depósito",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/{{test_producto_id}}/ubicacion",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ubicacion\": \"Depósito Central - Estante B-12\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Producto al Catálogo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/catalogo/{{test_subasta_id}}/items",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": \"{{ _.test_producto_id }}\",\n  \"precioBase\": 90000.00,\n  \"comision\": 12.5\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Catálogo Completo (Privado)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/catalogo/{{test_subasta_id}}",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Items Disponibles (No Subastados Aún)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/productos/catalogo/{{test_subasta_id}}/disponibles",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Subastas y Salas",
+      "item": [
+        {
+          "name": "Listar Subastas Disponibles para Mí",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[ADMIN] Listar Todas las Subastas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/admin/todas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Detalle de Subasta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unirse a la Subasta (Entrar a Sala)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/unirse",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Salir de la Subasta (Abandonar Sala)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/salir",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Estado en Vivo (Polling)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/estado-vivo",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Motor de Pujas en Vivo",
+      "item": [
+        {
+          "name": "Realizar Puja",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/pujas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemId\": \"{{ _.test_item_id }}\",\n  \"importe\": 95000.00,\n  \"medioPagoId\": \"{{ _.test_medio_pago_id }}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Mejor Oferta Actual del Item",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/pujas/items/{{test_item_id}}/mejor",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Historial de Pujas del Item",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/pujas/items/{{test_item_id}}/historial",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[ADMIN] Cerrar Item y Declarar Ganador",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subastas/{{test_subasta_id}}/pujas/items/{{test_item_id}}/cerrar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. Multas",
+      "item": [
+        {
+          "name": "Listar Todas Mis Multas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/multas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Mis Multas Pendientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/multas/pendientes",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pagar Multa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/multas/{{ _.test_multa_id }}/pagar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[ADMIN] Generar Multa Manual",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/multas/admin/generar",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"subastaId\": \"{{ _.test_subasta_id }}\",\n  \"itemId\": \"{{ _.test_item_id }}\",\n  \"montoOfertado\": 150000.00\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10. Notificaciones",
+      "item": [
+        {
+          "name": "Listar Mis Notificaciones Paginadas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": [],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar Cantidad de Alertas No Leídas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones/no-leidas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar Todas como Leídas",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{client_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones/marcar-leidas",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11. Endpoints Públicos / Auxiliares",
+      "item": [
+        {
+          "name": "Ver Catálogo Público (Sin Precios Base)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/public/catalogo/{{test_subasta_id}}",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Países Disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/paises",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

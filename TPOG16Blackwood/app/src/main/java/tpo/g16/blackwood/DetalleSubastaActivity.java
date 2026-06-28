@@ -64,17 +64,20 @@ public class DetalleSubastaActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     java.util.List<java.util.Map<String, Object>> items = response.body();
                     
-                    if (items.size() > 0) {
+                    if (items.size() > 0 && items.get(0) != null && items.get(0).get("itemId") != null) {
                         int id1 = ((Number) items.get(0).get("itemId")).intValue();
-                        findViewById(R.id.card_lote_1).setOnClickListener(v -> abrirDetalle(id1));
+                        View card = findViewById(R.id.card_lote_1);
+                        if (card != null) card.setOnClickListener(v -> abrirDetalle(id1));
                     }
-                    if (items.size() > 1) {
+                    if (items.size() > 1 && items.get(1) != null && items.get(1).get("itemId") != null) {
                         int id2 = ((Number) items.get(1).get("itemId")).intValue();
-                        findViewById(R.id.card_lote_2).setOnClickListener(v -> abrirDetalle(id2));
+                        View card = findViewById(R.id.card_lote_2);
+                        if (card != null) card.setOnClickListener(v -> abrirDetalle(id2));
                     }
-                    if (items.size() > 2) {
+                    if (items.size() > 2 && items.get(2) != null && items.get(2).get("itemId") != null) {
                         int id3 = ((Number) items.get(2).get("itemId")).intValue();
-                        findViewById(R.id.card_lote_3).setOnClickListener(v -> abrirDetalle(id3));
+                        View card = findViewById(R.id.card_lote_3);
+                        if (card != null) card.setOnClickListener(v -> abrirDetalle(id3));
                     }
                 }
             }

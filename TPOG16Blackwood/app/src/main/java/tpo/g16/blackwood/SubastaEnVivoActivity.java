@@ -38,7 +38,7 @@ import ua.naiksoftware.stomp.StompClient;
 public class SubastaEnVivoActivity extends AppCompatActivity {
 
     private static final String TAG = "SubastaEnVivoActivity";
-    private static final String WS_URL = "ws://10.0.2.2:8080/ws/subasta/websocket";
+    private String wsUrl;
 
     private int subastaId;
     private int currentItemId = -1;
@@ -58,7 +58,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
     private StompClient stompClient;
     private CompositeDisposable compositeDisposable;
     private CountDownTimer countDownTimer;
-    private static final long TIEMPO_SUBASTA_MS = 10 * 1000; // 10 segundos
+    private static final long TIEMPO_SUBASTA_MS = 60 * 1000; // 60 segundos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,14 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Registrar contexto para el cliente Retrofit estático
+        tpo.g16.blackwood.network.RetrofitClient.getInstance(this);
+
+        // Armar URL de WebSockets dinámicamente según la IP configurada
+        wsUrl = tpo.g16.blackwood.network.ApiConfig.BASE_URL
+                .replace("http://", "ws://")
+                .replace("https://", "wss://") + "ws/subasta/websocket";
 
         tvPrecio = findViewById(R.id.tv_precio_actual);
         tvOferta = findViewById(R.id.tv_oferta_input);
@@ -208,16 +216,12 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                     // Cargar imagen dinámicamente con Glide
                     if (ivLoteImagen != null && item.get("productoId") != null) {
                         int prodId = ((Number) item.get("productoId")).intValue();
-                        String imageUrl = "http://10.0.2.2:8080/api/productos/" + prodId + "/foto";
-                        new Thread(() -> {
-                            try {
-                                InputStream in = new URL(imageUrl).openStream();
-                                Bitmap bmp = BitmapFactory.decodeStream(in);
-                                runOnUiThread(() -> ivLoteImagen.setImageBitmap(bmp));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }).start();
+                        String imageUrl = tpo.g16.blackwood.network.RetrofitClient.BASE_URL + "api/productos/" + prodId + "/foto";
+                        com.bumptech.glide.Glide.with(SubastaEnVivoActivity.this)
+                                .load(imageUrl)
+                                .placeholder(android.R.drawable.ic_menu_gallery)
+                                .error(android.R.drawable.ic_menu_report_image)
+                                .into(ivLoteImagen);
                     }
 
                     fetchMejorPuja();
@@ -367,7 +371,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
 
     @SuppressLint("CheckResult")
     private void connectWebSocket() {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, WS_URL);
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, wsUrl);
         
         compositeDisposable.add(stompClient.lifecycle()
                 .subscribeOn(Schedulers.io())

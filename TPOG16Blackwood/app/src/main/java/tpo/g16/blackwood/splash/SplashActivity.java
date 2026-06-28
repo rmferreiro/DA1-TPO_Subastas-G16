@@ -46,10 +46,6 @@ public class SplashActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        // Limpiar preferences al inicio para forzar relogin en cold starts
-        SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
-        prefs.edit().clear().apply();
-
         // Remover el splash del sistema inmediatamente cuando la actividad esté lista
         splashScreen.setOnExitAnimationListener(splashScreenProvider -> {
             splashScreenProvider.remove();
@@ -74,21 +70,8 @@ public class SplashActivity extends AppCompatActivity {
         textTitle.setAlpha(0f);
         textSubtitle.setAlpha(0f);
 
-        // Login silencioso para pruebas
-        RetrofitClient.getApiService().login(new LoginRequest("juan.rodriguez@email.com", "uade"))
-                .enqueue(new Callback<AuthResponse>() {
-                    @Override
-                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            RetrofitClient.setAuthToken(response.body().getAccessToken());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AuthResponse> call, Throwable t) {
-                        // Omitir en desarrollo
-                    }
-                });
+        // Inicializar RetrofitClient con el contexto de la aplicación
+        tpo.g16.blackwood.network.RetrofitClient.getInstance(this);
 
         startSplashAnimation();
     }
@@ -145,9 +128,22 @@ public class SplashActivity extends AppCompatActivity {
             phase1.start();
         });
 
-        // ── Navegar a LoginActivity después del tiempo total ───────────────
+        // ── Navegar a la pantalla correcta después del tiempo total ───────────────
         logoView.postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
+            String regState = prefs.getString(ApiConfig.KEY_REGISTRATION_STATE, null);
+            String token = prefs.getString(ApiConfig.KEY_ACCESS_TOKEN, null);
+            Intent intent;
+            if ("ESPERANDO_APROBACION".equals(regState)) {
+                intent = new Intent(SplashActivity.this, tpo.g16.blackwood.register.RegistroEnProcesoActivity.class);
+            } else if ("APROBADO_PENDIENTE_PASS".equals(regState)) {
+                intent = new Intent(SplashActivity.this, tpo.g16.blackwood.register.RegistroPaso2Activity.class);
+            } else if (token != null && !token.isEmpty()) {
+                intent = new Intent(SplashActivity.this, tpo.g16.blackwood.main.HomeActivity.class);
+            } else {
+                intent = new Intent(SplashActivity.this, LoginActivity.class);
+            }
+            startActivity(intent);
             finish();
         }, NEXT_DELAY);
     }

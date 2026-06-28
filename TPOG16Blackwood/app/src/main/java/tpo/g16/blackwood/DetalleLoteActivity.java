@@ -100,8 +100,15 @@ public class DetalleLoteActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Map<String, Object> body = response.body();
                     
-                    subastaId = ((Number) body.get("subastaId")).intValue();
-                    int productoId = ((Number) body.get("productoId")).intValue();
+                    Object subastaIdObj = body.get("subastaId");
+                    Object productoIdObj = body.get("productoId");
+                    if (subastaIdObj != null) {
+                        subastaId = ((Number) subastaIdObj).intValue();
+                    }
+                    int productoId = -1;
+                    if (productoIdObj != null) {
+                        productoId = ((Number) productoIdObj).intValue();
+                    }
                     
                     tvTitulo.setText((String) body.get("descripcionBreve"));
                     tvSubtitulo.setText((String) body.get("descripcionBreve"));

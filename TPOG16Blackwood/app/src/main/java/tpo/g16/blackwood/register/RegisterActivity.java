@@ -344,6 +344,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void enviarRegistro() {
         btnEnviar.setEnabled(false);
+        btnEnviar.setText("Registrando...");
 
         String email = etEmail.getText().toString().trim();
         String nombreCompleto = etNombre.getText().toString().trim() + " " + etApellido.getText().toString().trim();
@@ -351,22 +352,71 @@ public class RegisterActivity extends AppCompatActivity {
         String direccion = etDomicilio.getText().toString().trim();
         Integer paisId = getPaisId(etPais.getText().toString().trim());
         
-        Intent intent = new Intent(this, RegistroEnProcesoActivity.class);
-        intent.putExtra("email", email);
-        intent.putExtra("nombreCompleto", nombreCompleto);
-        intent.putExtra("documento", documento);
-        intent.putExtra("direccion", direccion);
-        intent.putExtra("paisId", paisId);
-        
-        if (photoFrenteUri != null) {
-            intent.putExtra("fotoFrenteUri", photoFrenteUri.toString());
-        }
-        if (photoDorsoUri != null) {
-            intent.putExtra("fotoDorsoUri", photoDorsoUri.toString());
-        }
+        String base64Frente = photoFrenteUri != null ? uriToBase64(photoFrenteUri) : "";
+        String base64Dorso = photoDorsoUri != null ? uriToBase64(photoDorsoUri) : "";
 
-        startActivity(intent);
-        finish();
+        RegistroRequest request = new RegistroRequest(
+                nombreCompleto, documento, direccion, paisId, email, "", base64Frente, base64Dorso
+        );
+
+        RetrofitClient.getInstance(this).getAuthApiService()
+                .registrar(request)
+                .enqueue(new Callback<AuthResponse>() {
+                    @Override
+                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, Context.MODE_PRIVATE);
+                            prefs.edit()
+                                    .putString(ApiConfig.KEY_REGISTRATION_STATE, "ESPERANDO_APROBACION")
+                                    .putString(ApiConfig.KEY_REGISTRATION_EMAIL, email)
+                                    .putString(ApiConfig.KEY_REGISTRATION_NOMBRE, etNombre.getText().toString().trim())
+                                    .putString(ApiConfig.KEY_REGISTRATION_APELLIDO, etApellido.getText().toString().trim())
+                                    .apply();
+
+                            Intent intent = new Intent(RegisterActivity.this, RegistroEnProcesoActivity.class);
+                            intent.putExtra("email", email);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            btnEnviar.setEnabled(true);
+                            btnEnviar.setText("Enviar solicitud");
+                            try {
+                                if (response.errorBody() != null) {
+                                    ApiError error = new Gson().fromJson(response.errorBody().string(), ApiError.class);
+                                    Toast.makeText(RegisterActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(RegisterActivity.this, "Error al registrar datos", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AuthResponse> call, Throwable t) {
+                        btnEnviar.setEnabled(true);
+                        btnEnviar.setText("Enviar solicitud");
+                        Toast.makeText(RegisterActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private String uriToBase64(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream == null) return "";
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[16384];
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            byte[] bytes = buffer.toByteArray();
+            return Base64.encodeToString(bytes, Base64.NO_WRAP);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private Integer getPaisId(String nombre) {

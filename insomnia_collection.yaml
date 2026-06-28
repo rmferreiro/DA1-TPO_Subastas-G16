@@ -203,6 +203,79 @@ resources:
     metaSortKey: 1100
     type: request
 
+  - _id: req_auth_registro_estado
+    parentId: fld_1_auth
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/registro/estado"
+    name: Consultar Estado de Registro (Polling)
+    description: Consulta el estado de aprobación de un usuario pendiente a partir de su email.
+    method: GET
+    body: {}
+    parameters:
+      - name: email
+        value: juan.perez@email.com
+    headers: []
+    authentication: {}
+    metaSortKey: 1110
+    type: request
+
+  - _id: req_auth_registro_aprobar
+    parentId: fld_2_admin
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/registro/aprobar"
+    name: "[KYC] Aprobar Usuario Externamente"
+    description: Endpoint administrativo externo para verificar a un usuario y asignarle su categoría ("comun", "especial", "plata", "oro", "platino").
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "juan.perez@email.com",
+          "categoria": "oro"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: 2150
+    type: request
+
+  - _id: req_auth_registro_completar
+    parentId: fld_1_auth
+    modified: 1717200000000
+    created: 1717200000000
+    url: "{{ _.base_url }}/api/auth/registro/completar"
+    name: Completar Registro (Contraseña y Pago)
+    description: Fase 2 del registro. Solo funciona para usuarios previamente aprobados. Guarda contraseña definitiva y medios de pago.
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "juan.perez@email.com",
+          "password": "Password123!",
+          "mediosPago": [
+            {
+              "tipo": "TARJETA_CREDITO",
+              "moneda": "ARS",
+              "numeroTarjeta": "4509123456789012",
+              "titular": "Juan Pérez",
+              "vencimiento": "12/29",
+              "esTarjetaInternacional": false
+            }
+          ]
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: 1120
+    type: request
+
   - _id: req_auth_login_client
     parentId: fld_1_auth
     modified: 1717200000000

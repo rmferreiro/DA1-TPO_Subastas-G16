@@ -48,4 +48,28 @@ public class AuthController {
         AuthResponse response = authService.refreshToken(refreshToken);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/registro/estado")
+    @Operation(summary = "Obtener estado del trámite de registro",
+               description = "Consulta el estado actual de aprobación del usuario mediante su email.")
+    public ResponseEntity<Map<String, Object>> obtenerEstadoRegistro(@RequestParam String email) {
+        return ResponseEntity.ok(authService.obtenerEstadoRegistro(email));
+    }
+
+    @PostMapping("/registro/aprobar")
+    @Operation(summary = "[ADMIN/EXTERNO] Aprobar un usuario registrado",
+               description = "Permite aprobar externamente un usuario y asignarle su categoría correspondiente.")
+    public ResponseEntity<Map<String, Object>> aprobarUsuarioExterno(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String categoria = request.get("categoria");
+        return ResponseEntity.ok(authService.aprobarUsuarioExterno(email, categoria));
+    }
+
+    @PostMapping("/registro/completar")
+    @Operation(summary = "Completar registro con contraseña y medios de pago",
+               description = "Guarda la contraseña y opcionalmente los medios de pago para un usuario previamente aprobado.")
+    public ResponseEntity<AuthResponse> completarRegistro(@Valid @RequestBody ar.edu.uade.grupo16.subastas.dto.request.CompletarRegistroRequest request) {
+        AuthResponse response = authService.completarRegistro(request.getEmail(), request.getPassword(), request.getMediosPago());
+        return ResponseEntity.ok(response);
+    }
 }

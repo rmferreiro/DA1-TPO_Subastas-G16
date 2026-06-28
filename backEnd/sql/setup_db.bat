@@ -1,7 +1,7 @@
 @echo off
 SET MYSQL="C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
 SET USER=root
-SET PASS=uade
+SET PASS=pochito
 SET DB=subastas_bd
 SET SQL_DIR=%~dp0
 

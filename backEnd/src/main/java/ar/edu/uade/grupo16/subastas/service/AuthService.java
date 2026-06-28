@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuthService {
@@ -34,6 +36,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MedioPagoService medioPagoService;
 
     public AuthService(UsuarioAuthRepository usuarioAuthRepository,
                        PersonaRepository personaRepository,
@@ -42,7 +45,8 @@ public class AuthService {
                        PaisRepository paisRepository,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager,
-                       JwtTokenProvider jwtTokenProvider) {
+                       JwtTokenProvider jwtTokenProvider,
+                       MedioPagoService medioPagoService) {
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.personaRepository = personaRepository;
         this.clienteRepository = clienteRepository;
@@ -51,6 +55,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.medioPagoService = medioPagoService;
     }
 
     @Transactional
@@ -79,9 +84,7 @@ public class AuthService {
                 .build();
         persona = personaRepository.save(persona);
 
-        // 2. Crear Cliente — KYC eliminado: admitido y con categoría 'comun' de inmediato.
-        //    El campo 'verificador' del legacy es NOT NULL; se asigna el primer empleado del sistema
-        //    o se deja null si la BD lo permite. Como el legacy lo exige, buscamos uno.
+        // 2. Crear Cliente — Inicialmente no admitido y sin categoría asignada (Etapa 1)
         Empleado verificador = empleadoRepository.findAll().stream()
                 .findFirst()
                 .orElse(null);
@@ -89,13 +92,13 @@ public class AuthService {
         Cliente cliente = Cliente.builder()
                 .persona(persona)
                 .pais(pais)
-                .admitido("si")          // auto-aprobado
-                .categoria("oro")      // categoría inicial por defecto
+                .admitido("no")          // No admitido aún (pendiente de aprobación)
+                .categoria(null)         // Sin categoría hasta la aprobación externa
                 .verificador(verificador)
                 .build();
         clienteRepository.save(cliente);
 
-        // 3. Crear UsuarioAuth — @PrePersist setea estado=APROBADO automáticamente
+        // 3. Crear UsuarioAuth en estado PENDIENTE y sin password real
         byte[] fotoFrente = null;
         byte[] fotoDorso  = null;
         if (request.getFotoDocFrente() != null && !request.getFotoDocFrente().isBlank()) {
@@ -108,23 +111,89 @@ public class AuthService {
         UsuarioAuth auth = UsuarioAuth.builder()
                 .persona(persona)
                 .email(request.getEmail())
-                .passwordHash(passwordEncoder.encode(request.getPassword()))
+                .passwordHash("") // Vacío en etapa 1, se asigna al completar
+                .estado(EstadoUsuario.PENDIENTE) // Estado PENDIENTE obligatoriamente
                 .fotoDocFrente(fotoFrente)
                 .fotoDocDorso(fotoDorso)
                 .build();
         auth = usuarioAuthRepository.save(auth);
 
-        // 4. Generar tokens directamente (el usuario ya está aprobado)
-        String accessToken  = jwtTokenProvider.generateAccessToken(auth.getEmail());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(auth.getEmail());
+        return AuthResponse.builder()
+                .accessToken(null)
+                .refreshToken(null)
+                .email(auth.getEmail())
+                .nombre(persona.getNombre())
+                .categoria(null)
+                .estado(EstadoUsuario.PENDIENTE.name())
+                .tokenType(null)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> obtenerEstadoRegistro(String email) {
+        UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RegistroInvalidoException("Usuario no encontrado"));
+        return Map.of(
+                "email", email,
+                "estado", usuario.getEstado().name()
+        );
+    }
+
+    @Transactional
+    public Map<String, Object> aprobarUsuarioExterno(String email, String categoria) {
+        UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RegistroInvalidoException("Usuario no encontrado"));
+        
+        usuario.setEstado(EstadoUsuario.APROBADO);
+        usuarioAuthRepository.save(usuario);
+
+        Cliente cliente = clienteRepository.findById(usuario.getPersona().getIdentificador())
+                .orElseThrow(() -> new RegistroInvalidoException("Cliente no asociado a la persona"));
+        cliente.setAdmitido("si");
+        cliente.setCategoria(categoria.toLowerCase());
+        clienteRepository.save(cliente);
+
+        return Map.of(
+                "mensaje", "Usuario aprobado con éxito",
+                "email", email,
+                "categoria", categoria
+        );
+    }
+
+    @Transactional
+    public AuthResponse completarRegistro(String email, String password, List<ar.edu.uade.grupo16.subastas.dto.request.MedioPagoRequest> mediosPago) {
+        UsuarioAuth usuario = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RegistroInvalidoException("Usuario no encontrado"));
+
+        if (usuario.getEstado() != EstadoUsuario.APROBADO) {
+            throw new RegistroInvalidoException("El usuario aún no ha sido aprobado por administración.");
+        }
+
+        // Asignar contraseña real hasheada
+        usuario.setPasswordHash(passwordEncoder.encode(password));
+        usuarioAuthRepository.save(usuario);
+
+        Cliente cliente = clienteRepository.findById(usuario.getPersona().getIdentificador())
+                .orElseThrow(() -> new RegistroInvalidoException("Cliente no encontrado"));
+
+        // Registrar medios de pago si se envían
+        if (mediosPago != null && !mediosPago.isEmpty()) {
+            for (var mpRequest : mediosPago) {
+                medioPagoService.registrar(cliente.getIdentificador(), mpRequest);
+            }
+        }
+
+        // Generar tokens para iniciar sesión directamente
+        String accessToken  = jwtTokenProvider.generateAccessToken(usuario.getEmail());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(usuario.getEmail());
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .email(auth.getEmail())
-                .nombre(persona.getNombre())
-                .categoria("comun")
-                .estado(EstadoUsuario.APROBADO.name())
+                .email(usuario.getEmail())
+                .nombre(usuario.getPersona().getNombre())
+                .categoria(cliente.getCategoria())
+                .estado(usuario.getEstado().name())
                 .tokenType("Bearer")
                 .build();
     }

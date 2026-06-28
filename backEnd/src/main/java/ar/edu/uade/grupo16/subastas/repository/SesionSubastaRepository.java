@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface SesionSubastaRepository extends JpaRepository<SesionSubasta, Long> {
     Optional<SesionSubasta> findByClienteIdentificador(Integer clienteId);
     boolean existsByClienteIdentificador(Integer clienteId);
+    @org.springframework.transaction.annotation.Transactional
     void deleteByClienteIdentificador(Integer clienteId);
     long countBySubastaIdentificador(Integer subastaId);
 }

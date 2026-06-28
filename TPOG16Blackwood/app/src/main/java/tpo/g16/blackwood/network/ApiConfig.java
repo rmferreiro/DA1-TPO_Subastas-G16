@@ -6,8 +6,8 @@ public final class ApiConfig {
     // Emulador Android: 10.0.2.2 es el alias del host
     // Dispositivo físico: reemplazar por la IP de PC en la red local
     // ─────────────────────────────────────────────────────────────────────────
-    public static final String BASE_URL = "http://10.0.2.2:8080/";
-    //public static final String BASE_URL = "http://192.168.1.8:8080/";
+    //public static final String BASE_URL = "http://10.0.2.2:8080/";
+    public static final String BASE_URL = "http://192.168.1.8:8080/";
 
     // Timeouts
     public static final int CONNECT_TIMEOUT_SECONDS = 15;
@@ -21,6 +21,12 @@ public final class ApiConfig {
     public static final String KEY_USER_EMAIL     = "user_email";
     public static final String KEY_USER_NOMBRE    = "user_nombre";
     public static final String KEY_USER_CATEGORIA = "user_categoria";
+
+    // Claves de la máquina de estados de registro (Etapa 1 + 2)
+    public static final String KEY_REGISTRATION_STATE     = "registration_state";
+    public static final String KEY_REGISTRATION_EMAIL     = "registration_email";
+    public static final String KEY_REGISTRATION_NOMBRE    = "registration_nombre";
+    public static final String KEY_REGISTRATION_APELLIDO  = "registration_apellido";
 
     private ApiConfig() {}
 }

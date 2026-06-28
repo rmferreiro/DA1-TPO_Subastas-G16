@@ -35,16 +35,16 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos (sin auth)
                 .requestMatchers("/api/auth/**", "/api/public/**").permitAll()
-                // Admin sin auth por ahora (temporal)
-                .requestMatchers("/api/admin/**").permitAll()
                 // Swagger
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // WebSocket
                 .requestMatchers("/ws/**").permitAll()
                 // Fotos de productos públicas para carga rápida (Glide)
                 .requestMatchers("/api/productos/*/foto").permitAll()
-                // Endpoint para pruebas (reset de base de datos)
+                // Endpoint para pruebas (reset de base de datos) — SOLO en entorno de desarrollo
                 .requestMatchers("/api/pruebas/**").permitAll()
+                // Admin requiere autenticación (token de cualquier usuario por ahora; idealmente rol ADMIN)
+                .requestMatchers("/api/admin/**").authenticated()
                 // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )
@@ -55,7 +55,8 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

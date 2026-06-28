@@ -14,4 +14,10 @@ public interface AuthApiService {
 
     @POST("api/auth/login")
     Call<AuthResponse> login(@Body LoginRequest body);
+
+    @retrofit2.http.GET("api/auth/registro/estado")
+    Call<java.util.Map<String, Object>> obtenerEstadoRegistro(@retrofit2.http.Query("email") String email);
+
+    @POST("api/auth/registro/completar")
+    Call<AuthResponse> completarRegistro(@Body tpo.g16.blackwood.network.model.CompletarRegistroRequest body);
 }

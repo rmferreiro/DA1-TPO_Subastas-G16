@@ -16,6 +16,7 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Long
     long countByClienteIdentificadorAndLeidaFalse(Integer clienteId);
 
     @Modifying
+    @org.springframework.transaction.annotation.Transactional
     @Query("UPDATE Notificacion n SET n.leida = true WHERE n.cliente.identificador = :clienteId AND n.leida = false")
     int marcarTodasComoLeidas(@Param("clienteId") Integer clienteId);
 }
