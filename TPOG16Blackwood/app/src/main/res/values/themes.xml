@@ -1,9 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.TPOG16Blackwood" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Color principal (el que suele verse violeta) -->
+        <item name="colorPrimary">@color/green_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Color para los placeholders y detalles (Surface Variant) -->
+        <item name="colorOnSurfaceVariant">#7B7B7B</item>
+
+        <!-- Color de los elementos del dropdown y controles -->
+        <item name="colorSecondary">@color/gold</item>
+
+        <!-- Forzar colores de barra de estado y navegación -->
+        <item name="android:statusBarColor">@color/green_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="Theme.TPOG16Blackwood" parent="Base.Theme.TPOG16Blackwood" />
+
+    <!-- Estilo para la pantalla de inicio del sistema (Splash API) -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/green_bottle</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_blackwood_vector</item>
+        <item name="postSplashScreenTheme">@style/Theme.TPOG16Blackwood</item>
+    </style>
 </resources>

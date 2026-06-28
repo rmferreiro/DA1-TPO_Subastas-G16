@@ -6,7 +6,7 @@
     android:background="#1C2A21">
 
     <!-- Logo: ocupa toda la pantalla, dibuja el rombo centrado internamente -->
-    <tpo.g16.blackwood.SplashLogoView
+    <tpo.g16.blackwood.splash.SplashLogoView
         android:id="@+id/splash_logo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -49,7 +49,7 @@
             android:id="@+id/splash_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BlackWood"
+            android:text="@string/logo_title"
             android:textColor="#F4F1EA"
             android:textSize="26sp"
             android:letterSpacing="0.12"
@@ -60,7 +60,7 @@
             android:id="@+id/splash_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Finance  &amp;  Sales"
+            android:text="@string/logo_sub_title"
             android:textColor="#C6A75E"
             android:textSize="11sp"
             android:letterSpacing="0.28"

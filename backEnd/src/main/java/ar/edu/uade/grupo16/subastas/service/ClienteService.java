@@ -21,15 +21,18 @@ public class ClienteService {
     private final UsuarioAuthRepository usuarioAuthRepository;
     private final MedioPagoRepository medioPagoRepository;
     private final PujoRepository pujoRepository;
+    private final ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository;
 
     public ClienteService(ClienteRepository clienteRepository,
                           UsuarioAuthRepository usuarioAuthRepository,
                           MedioPagoRepository medioPagoRepository,
-                          PujoRepository pujoRepository) {
+                          PujoRepository pujoRepository,
+                          ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository) {
         this.clienteRepository = clienteRepository;
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.medioPagoRepository = medioPagoRepository;
         this.pujoRepository = pujoRepository;
+        this.asistenteRepository = asistenteRepository;
     }
 
     @Transactional(readOnly = true)
@@ -40,8 +43,22 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(auth.getPersona().getIdentificador())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado"));
 
-        boolean tieneMedioPago = medioPagoRepository
-                .existsByClienteIdentificadorAndVerificadoTrueAndActivoTrue(cliente.getIdentificador());
+        java.util.List<ar.edu.uade.grupo16.subastas.entity.MedioPago> medios = medioPagoRepository
+                .findByClienteIdentificadorAndVerificadoTrueAndActivoTrue(cliente.getIdentificador());
+        boolean tieneMedioPago = !medios.isEmpty();
+        String ultimoMedioPagoText = null;
+        if (tieneMedioPago) {
+            ar.edu.uade.grupo16.subastas.entity.MedioPago mp = medios.get(0);
+            if (ar.edu.uade.grupo16.subastas.enums.TipoMedioPago.TARJETA_CREDITO.equals(mp.getTipo())) {
+                ultimoMedioPagoText = "Tarjeta " + (mp.getNumeroTarjetaHash() != null && mp.getNumeroTarjetaHash().length() >= 4 
+                    ? "**** " + mp.getNumeroTarjetaHash().substring(mp.getNumeroTarjetaHash().length() - 4) 
+                    : "****");
+            } else if (ar.edu.uade.grupo16.subastas.enums.TipoMedioPago.CUENTA_BANCARIA.equals(mp.getTipo())) {
+                ultimoMedioPagoText = "Cta. " + (mp.getBanco() != null ? mp.getBanco() : "Bancaria");
+            } else {
+                ultimoMedioPagoText = "Cheque Certificado";
+            }
+        }
 
         return ClienteResponse.builder()
                 .id(cliente.getIdentificador())
@@ -53,6 +70,7 @@ public class ClienteService {
                 .categoria(cliente.getCategoria())
                 .estado(auth.getEstado().name())
                 .tieneMedioPagoVerificado(tieneMedioPago)
+                .ultimoMedioPago(ultimoMedioPagoText)
                 .build();
     }
 
@@ -65,12 +83,21 @@ public class ClienteService {
 
         long totalPujas = pujoRepository.countByAsistenteClienteIdentificador(clienteId);
         long totalVictorias = pujoRepository.countVictoriasByCliente(clienteId);
+        Long ofertado = pujoRepository.sumOfertadoByCliente(clienteId);
+        Long pagado = pujoRepository.sumPagadoByCliente(clienteId);
+        long subastasParticipadas = asistenteRepository.countByClienteIdentificador(clienteId);
 
         Map<String, Object> metricas = new HashMap<>();
         metricas.put("totalPujas", totalPujas);
         metricas.put("totalVictorias", totalVictorias);
+        metricas.put("totalOfertado", ofertado != null ? ofertado : 0L);
+        metricas.put("totalPagado", pagado != null ? pagado : 0L);
+        metricas.put("totalPujasRealizadas", totalPujas);
+        metricas.put("subastasGanadas", totalVictorias);
         metricas.put("tasaVictorias", totalPujas > 0
                 ? String.format("%.1f%%", (double) totalVictorias / totalPujas * 100) : "0%");
+        metricas.put("subastasParticipadas", subastasParticipadas);
+        metricas.put("importeTotalPagado", totalVictorias * 50000.0); // Simulación para la UI
 
         return metricas;
     }

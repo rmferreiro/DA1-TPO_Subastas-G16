@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_login.xml — Blackwood Fine Sales
+    Estructura:
+      · FrameLayout raíz con fondo @color/marfil (cream, cubre la mitad inferior)
+      · View verde de altura fija (cubre la mitad superior)
+      · ScrollView encima de ambas capas (toda la pantalla) con:
+          - Header: logo + marca (se posiciona sobre el verde)
+          - CardView flotante: formulario de login (cruza la frontera verde/cream)
+
+    Teclado: windowSoftInputMode="adjustResize" en Manifest + ScrollView raíz
+             → el window se encoge, el ScrollView hace scroll automático al campo enfocado.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/login_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marfil">
+
+    <!-- ══════════════════════════════════════════════
+         Capa 1 (fondo): franja verde superior fija
+         El header tiene 230dp, la card empieza ahí y
+         se superpone ~40dp dentro del verde → la franja
+         verde debe ser ligeramente más alta (270dp).
+         ══════════════════════════════════════════════ -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_gravity="top"
+        android:background="@color/green_bottle"/>
+
+    <!-- ══════════════════════════════════════════════
+         Capa 2 (contenido): ScrollView de pantalla completa
+         Maneja el scroll cuando el teclado aparece.
+         ══════════════════════════════════════════════ -->
+    <ScrollView
+        android:id="@+id/login_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── HEADER: Logo + nombre de marca ── -->
+            <!-- Ocupa los primeros 230dp (dentro de la franja verde).
+                 La card empieza aquí y su primera parte se superpone
+                 al verde fijo de abajo, creando el efecto flotante. -->
+            <LinearLayout
+                android:id="@+id/login_header"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/login_logo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/logo_blackwood_vector"
+                    android:contentDescription="@string/desc_logo"
+                    android:scaleType="fitCenter"/>
+
+                <TextView
+                    android:id="@+id/login_brand_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/header_brand"
+                    android:textColor="@color/cream"
+                    android:textSize="22sp"
+                    android:fontFamily="serif"
+                    android:letterSpacing="0.05"/>
+
+                <TextView
+                    android:id="@+id/login_brand_tagline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/login_brand_tagline"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:fontFamily="serif"
+                    android:letterSpacing="0.10"/>
+
+            </LinearLayout>
+
+            <!-- ── CARD FLOTANTE: Formulario de login ──
+                 Empieza en 230dp (superponiéndose al bloque verde que
+                 termina en 270dp) → efecto de tarjeta flotante.
+                 Márgenes laterales + cardCornerRadius + elevation = card elevada.
+            -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="28dp"
+                    android:paddingBottom="24dp">
+
+                    <!-- Título -->
+                    <TextView
+                        android:id="@+id/login_form_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_title"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_large_title"
+                        android:fontFamily="serif"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <!-- Subtítulo -->
+                    <TextView
+                        android:id="@+id/login_form_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="22dp"
+                        android:text="@string/login_subtitle"
+                        android:textColor="@color/gray_medium"
+                        android:textSize="@dimen/text_size_small"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"/>
+
+                    <!-- ── CORREO ELECTRÓNICO ── -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/login_email_label"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_small"/>
+
+                    <EditText
+                        android:id="@+id/login_email_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:hint="@string/login_email_hint"
+                        android:inputType="textEmailAddress"
+                        android:importantForAutofill="no"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_body"
+                        android:textColorHint="@color/gray_medium"
+                        android:maxLines="1"
+                        android:imeOptions="actionNext"/>
+
+                    <!-- Mensaje de error de email -->
+                    <TextView
+                        android:id="@+id/login_email_error"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/error_email_invalido"
+                        android:textColor="@color/error"
+                        android:textSize="12sp"
+                        android:visibility="gone"/>
+
+                    <!-- ── CONTRASEÑA ── -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/login_password_label"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_small"/>
+
+                    <!--
+                        El campo de contraseña usa un FrameLayout de 55dp
+                        (idéntico al email) con @drawable/input_bg como fondo.
+                        Dentro, un TextInputLayout con boxBackgroundMode="none"
+                        y hintEnabled="false" para que no agregue padding extra,
+                        + endIconMode="password_toggle" para el ícono de ojo.
+                    -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/login_password_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:endIconMode="password_toggle"
+                            app:endIconTint="@color/gray_medium"
+                            app:boxBackgroundMode="none"
+                            app:hintEnabled="false"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/login_password_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:inputType="textPassword"
+                                android:importantForAutofill="no"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="52dp"
+                                android:textColor="@color/charcoal"
+                                android:textColorHint="@color/gray_medium"
+                                android:textSize="@dimen/text_size_body"
+                                android:imeOptions="actionDone"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </FrameLayout>
+
+                    <!-- Link: ¿Olvidaste tu contraseña? -->
+                    <TextView
+                        android:id="@+id/login_forgot_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/login_forgot_password"
+                        android:textColor="@color/gold"
+                        android:textSize="@dimen/text_size_small"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                    <!-- Botón principal: Ingresar -->
+                    <Button
+                        android:id="@+id/login_btn_ingresar"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/button_primary"
+                        app:backgroundTint="@null"
+                        android:text="@string/login_btn_ingresar"
+                        android:textAllCaps="false"
+                        android:textColor="@color/marfil"
+                        android:textSize="@dimen/text_size_button"
+                        android:fontFamily="serif"/>
+
+                    <!-- Separador "o" -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginBottom="18dp">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/gray_medium"
+                            android:alpha="0.35"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="14dp"
+                            android:text="@string/login_separator"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="@dimen/text_size_small"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/gray_medium"
+                            android:alpha="0.35"/>
+
+                    </LinearLayout>
+
+                    <!-- Botón secundario: Crear cuenta nueva -->
+                    <Button
+                        android:id="@+id/login_btn_crear_cuenta"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/button_cream_gold"
+                        app:backgroundTint="@null"
+                        android:text="@string/login_btn_crear_cuenta"
+                        android:textAllCaps="false"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_button"
+                        android:fontFamily="serif"/>
+
+                    <!-- Texto legal al pie -->
+                    <TextView
+                        android:id="@+id/login_legal_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="@string/login_legal_text"
+                        android:textColor="@color/gray_medium"
+                        android:textSize="11sp"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

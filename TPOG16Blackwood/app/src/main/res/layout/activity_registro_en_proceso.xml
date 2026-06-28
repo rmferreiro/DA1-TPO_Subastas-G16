@@ -3,35 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F4F1EA"
-    android:fitsSystemWindows="true"
+    android:background="@color/marfil"
     android:importantForAutofill="noExcludeDescendants">
 
-    <!-- HEADER AJUSTADO -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1C2A21"
-        android:orientation="vertical"
-        android:paddingTop="48dp"
-        android:paddingBottom="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Blackwood Fine Sales"
-            android:textColor="#F4F1EA"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registro en proceso"
-            android:textColor="#C6A75E"
-            android:textSize="14sp"/>
-    </LinearLayout>
+    <!-- HEADER REUTILIZABLE -->
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header" />
 
     <!-- CONTENIDO CENTRADO -->
     <LinearLayout
@@ -39,47 +17,47 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="24dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:padding="24dp">
 
-        <!-- CÍRCULO + BORDE DORADO -->
+        <!-- CÍRCULO + ARCO DORADO ANIMADO -->
         <FrameLayout
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="40dp">
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="24dp">
 
-            <!-- Borde dorado -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/circle_gold"/>
-
-            <!-- Círculo negro interior -->
+            <!-- Círculo negro con borde gris (Fondo estático) -->
             <View
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:background="@drawable/circle_black"/>
+                android:background="@drawable/circle_black" />
+
+            <!-- Arco dorado rotatorio (ProgressBar) -->
+            <ProgressBar
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/loading_ring" />
         </FrameLayout>
 
         <!-- TÍTULO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verificando información"
-            android:textSize="18sp"
-            android:textColor="#1A1A1A"
+            android:text="@string/ver_info"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@color/charcoal"
             android:layout_marginBottom="10dp"/>
 
         <!-- DESCRIPCIÓN -->
         <TextView
             android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:text="Estamos validando tus datos y documentación mediante nuestros procesos de verificación."
-            android:textColor="#6B6B6B"
-            android:textSize="13sp"
+            android:text="@string/ver_info_description"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text_size_small"
             android:gravity="center"
             android:layout_marginBottom="20dp"/>
 
@@ -89,18 +67,18 @@
             android:layout_height="wrap_content"
             android:background="@drawable/info_box"
             android:padding="14dp"
-            android:text="Este proceso puede demorar unos minutos.\nTe notificaremos por correo electrónico cuando tu cuenta esté aprobada."
-            android:textColor="#6B6B6B"
-            android:textSize="13sp"
+            android:text="@string/ver_info_info"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text_size_small"
             android:layout_marginBottom="20dp"/>
 
         <!-- ESTADO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estado: En revisión"
-            android:textColor="#C6A75E"
-            android:textSize="13sp"/>
+            android:text="@string/ver_info_estatus"
+            android:textColor="@color/gold"
+            android:textSize="@dimen/text_size_small"/>
 
     </LinearLayout>
 

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:allowBackup="true"
@@ -11,7 +12,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.TPOG16Blackwood">
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -21,9 +24,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+
         <activity
-            android:name=".SplashActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name=".splash.SplashActivity"
+            android:theme="@style/Theme.App.Starting"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -32,20 +36,57 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".login.LoginActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
+            android:name=".register.RegisterActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetalleLoteActivity"
             android:exported="false"
-            android:theme="@style/Theme.TPOG16Blackwood" />
+            android:screenOrientation="portrait" />
+
         <activity
-            android:name=".RegistroEnProcesoActivity"
+            android:name=".ConfirmarPagoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".register.RegistroEnProcesoActivity"
+            android:exported="false" />
+
+        <activity android:name=".common.LoadingActivity" android:exported="false" />
+
+        <activity
+            android:name=".register.RegistroPaso2Activity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+
+
+        <!-- FLUJO COMPRA DE LOTES -->
+        <activity
+            android:name=".main.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroPaso2Activity"
+            android:name=".DetalleSubastaActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroCompletadoActivity"
+            android:name=".SubastaEnVivoActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".PermanecerSubastaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificacionGanadorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificacionPerdedorActivity"
             android:exported="false" />
         <activity
             android:name=".EmpleadoSubastasActivity" />
@@ -66,5 +107,4 @@
         <activity
             android:name=".EmpleadoCrearSubastaActivity" />
     </application>
-
 </manifest>

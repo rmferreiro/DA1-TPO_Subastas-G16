@@ -82,6 +82,7 @@ public class PujaController {
      */
     @GetMapping("/items/{itemId}/historial")
     @Operation(summary = "Historial de pujas de un item")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<Map<String, Object>>> historialItem(
             @PathVariable Integer subastaId,
             @PathVariable Integer itemId) {
@@ -106,6 +107,7 @@ public class PujaController {
      */
     @GetMapping("/items/{itemId}/mejor")
     @Operation(summary = "Mejor puja actual de un item")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<Map<String, Object>> mejorPuja(
             @PathVariable Integer subastaId,
             @PathVariable Integer itemId) {
@@ -116,8 +118,24 @@ public class PujaController {
                         "numeroPostor", p.getAsistente().getNumeroPostor(),
                         "fechaHora", p.getFechaHora()
                 )))
-                .orElse(ResponseEntity.ok(Map.of("mensaje", "Sin pujas aún",
-                        "precioBase", itemCatalogoRepository.findById(itemId)
-                                .map(i -> i.getPrecioBase()).orElse(null))));
+                .orElseGet(() -> {
+                    Map<String, Object> map = new java.util.HashMap<>();
+                    map.put("mensaje", "Sin pujas aún");
+                    map.put("precioBase", itemCatalogoRepository.findById(itemId)
+                            .map(i -> i.getPrecioBase()).orElse(null));
+                    return ResponseEntity.ok(map);
+                });
+    }
+    /**
+     * Resultado del item una vez finalizado el tiempo
+     */
+    @GetMapping("/items/{itemId}/resultado")
+    @Operation(summary = "Verificar si gané el item y sus resultados")
+    public ResponseEntity<Map<String, Object>> resultadoItem(
+            @PathVariable Integer subastaId,
+            @PathVariable Integer itemId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity.ok(pujaService.obtenerResultadoItem(subastaId, itemId, userDetails.getUsername()));
     }
 }

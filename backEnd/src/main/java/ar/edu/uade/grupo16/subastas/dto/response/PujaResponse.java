@@ -20,4 +20,11 @@ public class PujaResponse {
     private LocalDateTime fechaHora;
     private boolean esGanadora;
     private String mensaje;
+    /** Próxima puja mínima válida (mejor oferta actual + 1% del precio base). */
+    private BigDecimal siguientePujaMinima;
+    /** Próxima puja máxima válida (mejor oferta actual + 20% del precio base). null para Oro/Platino. */
+    private BigDecimal siguientePujaMaxima;
+    /** true si la subasta es Oro o Platino (sin límite superior de puja). */
+    private boolean sinLimiteMaximo;
 }
+

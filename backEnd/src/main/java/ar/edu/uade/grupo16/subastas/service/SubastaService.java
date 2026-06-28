@@ -1,5 +1,6 @@
 package ar.edu.uade.grupo16.subastas.service;
 
+import ar.edu.uade.grupo16.subastas.dto.response.EstadoVivoResponse;
 import ar.edu.uade.grupo16.subastas.dto.response.SubastaResponse;
 import ar.edu.uade.grupo16.subastas.entity.*;
 import ar.edu.uade.grupo16.subastas.enums.CategoriaUsuario;
@@ -9,8 +10,10 @@ import ar.edu.uade.grupo16.subastas.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +26,8 @@ public class SubastaService {
     private final SesionSubastaRepository sesionSubastaRepository;
     private final MedioPagoRepository medioPagoRepository;
     private final MultaRepository multaRepository;
+    private final ItemCatalogoRepository itemCatalogoRepository;
+    private final PujoRepository pujoRepository;
 
     public SubastaService(SubastaRepository subastaRepository,
                           AsistenteRepository asistenteRepository,
@@ -30,7 +35,9 @@ public class SubastaService {
                           UsuarioAuthRepository usuarioAuthRepository,
                           SesionSubastaRepository sesionSubastaRepository,
                           MedioPagoRepository medioPagoRepository,
-                          MultaRepository multaRepository) {
+                          MultaRepository multaRepository,
+                          ItemCatalogoRepository itemCatalogoRepository,
+                          PujoRepository pujoRepository) {
         this.subastaRepository = subastaRepository;
         this.asistenteRepository = asistenteRepository;
         this.clienteRepository = clienteRepository;
@@ -38,6 +45,8 @@ public class SubastaService {
         this.sesionSubastaRepository = sesionSubastaRepository;
         this.medioPagoRepository = medioPagoRepository;
         this.multaRepository = multaRepository;
+        this.itemCatalogoRepository = itemCatalogoRepository;
+        this.pujoRepository = pujoRepository;
     }
 
     /**
@@ -85,6 +94,107 @@ public class SubastaService {
     }
 
     /**
+     * Devuelve el estado en tiempo real de una subasta:
+     * item activo, mejor oferta actual, límites de la próxima puja
+     * e historial de las últimas 10 pujas del item.
+     * La app Android llama a esto al entrar a la sala y puede refrescarlo cada X segundos.
+     */
+    @Transactional(readOnly = true)
+    public EstadoVivoResponse getEstadoVivo(Integer subastaId) {
+        Subasta subasta = subastaRepository.findById(subastaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Subasta no encontrada: " + subastaId));
+
+        // Items del catálogo de esta subasta
+        List<ItemCatalogo> pendientes = itemCatalogoRepository
+                .findByCatalogoSubastaIdentificadorAndSubastado(subastaId, "no");
+        List<ItemCatalogo> vendidos = itemCatalogoRepository
+                .findByCatalogoSubastaIdentificadorAndSubastado(subastaId, "si");
+
+        // El item activo es el primero pendiente (menor ID = orden de catálogo)
+        Optional<ItemCatalogo> itemActivo = pendientes.stream()
+                .min((a, b) -> a.getIdentificador().compareTo(b.getIdentificador()));
+
+        // Flag de categoría (para límite de puja)
+        String catSubasta = subasta.getCategoria() != null ? subasta.getCategoria().toLowerCase() : "";
+        boolean sinLimiteMaximo = catSubasta.equals("oro") || catSubasta.equals("platino");
+
+        EstadoVivoResponse.ItemActivoInfo itemInfo = null;
+        List<EstadoVivoResponse.PujaInfo> ultimasPujas = List.of();
+
+        if (itemActivo.isPresent()) {
+            ItemCatalogo item = itemActivo.get();
+            BigDecimal precioBase = item.getPrecioBase();
+            BigDecimal unPorciento = precioBase.multiply(new BigDecimal("0.01"));
+            BigDecimal veintePorciento = precioBase.multiply(new BigDecimal("0.20"));
+
+            // Mejor puja actual del item
+            Optional<Pujo> mejorPuja = pujoRepository.findMejorPujaByItem(item.getIdentificador());
+            BigDecimal mejorOferta = mejorPuja.map(Pujo::getImporte).orElse(null);
+            String nombreMejorPostor = mejorPuja
+                    .map(p -> p.getAsistente().getCliente().getPersona().getNombre())
+                    .orElse(null);
+
+            // Límites para la siguiente puja
+            BigDecimal baseCalculo = mejorOferta != null ? mejorOferta : precioBase;
+            BigDecimal siguienteMin = baseCalculo.add(unPorciento);
+            BigDecimal siguienteMax = sinLimiteMaximo ? null : baseCalculo.add(veintePorciento);
+
+            // Datos de obra de arte (si aplica)
+            String artista = null;
+            String historia = null;
+            if (item.getProducto().getProductoObraArte() != null) {
+                artista  = item.getProducto().getProductoObraArte().getArtista();
+                historia = item.getProducto().getProductoObraArte().getHistoria();
+            }
+
+            // Total de pujas sobre este item
+            List<Pujo> todasLasPujas = pujoRepository
+                    .findByItemIdentificadorOrderByFechaHoraAsc(item.getIdentificador());
+
+            itemInfo = EstadoVivoResponse.ItemActivoInfo.builder()
+                    .itemId(item.getIdentificador())
+                    .productoId(item.getProducto().getIdentificador())
+                    .descripcion(item.getProducto().getDescripcionCatalogo())
+                    .descripcionCompleta(item.getProducto().getDescripcionCompleta())
+                    .precioBase(precioBase)
+                    .mejorOferta(mejorOferta)
+                    .nombreMejorPostor(nombreMejorPostor)
+                    .totalPujas(todasLasPujas.size())
+                    .siguientePujaMinima(siguienteMin)
+                    .siguientePujaMaxima(siguienteMax)
+                    .sinLimiteMaximo(sinLimiteMaximo)
+                    .artista(artista)
+                    .historia(historia)
+                    .build();
+
+            // Últimas 10 pujas del item (más reciente primero)
+            ultimasPujas = todasLasPujas.stream()
+                    .sorted((a, b) -> b.getFechaHora().compareTo(a.getFechaHora()))
+                    .limit(10)
+                    .map(p -> EstadoVivoResponse.PujaInfo.builder()
+                            .pujoId(p.getIdentificador())
+                            .nombrePostor(p.getAsistente().getCliente().getPersona().getNombre())
+                            .numeroPostor(p.getAsistente().getNumeroPostor())
+                            .importe(p.getImporte())
+                            .fechaHora(p.getFechaHora())
+                            .esGanadora("si".equalsIgnoreCase(p.getGanador()))
+                            .build())
+                    .collect(Collectors.toList());
+        }
+
+        return EstadoVivoResponse.builder()
+                .subastaId(subastaId)
+                .estadoSubasta(subasta.getEstado())
+                .moneda(subasta.getMoneda() != null ? subasta.getMoneda().name() : "ARS")
+                .categoria(subasta.getCategoria())
+                .itemsRestantes(pendientes.size())
+                .itemsSubastados(vendidos.size())
+                .itemActual(itemInfo)
+                .ultimasPujas(ultimasPujas)
+                .build();
+    }
+
+    /**
      * Registra al cliente como asistente de la subasta.
      * Valida: estado abierta, categoría, multas pendientes, medio de pago verificado,
      * capacidad máxima y que no esté ya en otra subasta activa.
@@ -113,12 +223,8 @@ public class SubastaService {
                     "Tenés una multa pendiente. Debés pagarla antes de participar en subastas.");
         }
 
-        // Verificar medio de pago verificado
-        if (!medioPagoRepository.existsByClienteIdentificadorAndVerificadoTrueAndActivoTrue(
-                cliente.getIdentificador())) {
-            throw new SubastaNoDisponibleException(
-                    "Necesitás al menos un medio de pago verificado para participar.");
-        }
+        // Eliminamos el bloqueo estricto de medio de pago para permitir Modo Espectador.
+        // El chequeo se hará en el Frontend y al intentar procesar la puja.
 
         // Verificar capacidad
         long asistentesActuales = asistenteRepository.countBySubastaIdentificador(subastaId);

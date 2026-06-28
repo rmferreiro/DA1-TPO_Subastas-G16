@@ -20,17 +20,20 @@ public class CatalogoService {
     private final ProductoRepository productoRepository;
     private final SubastaRepository subastaRepository;
     private final SeguroRepository seguroRepository;
+    private final PujoRepository pujoRepository;
 
     public CatalogoService(CatalogoRepository catalogoRepository,
                            ItemCatalogoRepository itemCatalogoRepository,
                            ProductoRepository productoRepository,
                            SubastaRepository subastaRepository,
-                           SeguroRepository seguroRepository) {
+                           SeguroRepository seguroRepository,
+                           PujoRepository pujoRepository) {
         this.catalogoRepository = catalogoRepository;
         this.itemCatalogoRepository = itemCatalogoRepository;
         this.productoRepository = productoRepository;
         this.subastaRepository = subastaRepository;
         this.seguroRepository = seguroRepository;
+        this.pujoRepository = pujoRepository;
     }
 
     /**
@@ -52,26 +55,53 @@ public class CatalogoService {
     }
 
     /**
+     * Obtiene el catálogo de una subasta para usuarios NO registrados (Público).
+     * Oculta el precioBase y comision según requerimiento del sistema.
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getCatalogoPublicoDeSubasta(Integer subastaId) {
+        Subasta subasta = subastaRepository.findById(subastaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Subasta no encontrada: " + subastaId));
+
+        return catalogoRepository.findBySubastaIdentificador(subastaId)
+                .stream()
+                .flatMap(cat -> itemCatalogoRepository
+                        .findByCatalogoIdentificador(cat.getIdentificador())
+                        .stream()
+                        .map(item -> {
+                            Map<String, Object> response = new java.util.HashMap<>(buildItemResponse(item, cat));
+                            response.remove("precioBase");
+                            response.remove("comision");
+                            return response;
+                        }))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Agrega un producto aprobado como item en un catálogo de una subasta.
-     * Requiere precio base y comisión.
+     * Utiliza el precio base y la comisión ya acordados con el dueño.
      * Valida que el producto tenga seguro vigente (requerimiento del enunciado).
      */
     @Transactional
     public Map<String, Object> agregarItemAlCatalogo(Integer subastaId, Map<String, Object> request) {
         Integer productoId = (Integer) request.get("productoId");
-        BigDecimal precioBase = new BigDecimal(request.get("precioBase").toString());
-        BigDecimal comision = new BigDecimal(
-                request.getOrDefault("comision", "0").toString());
         Integer orden = (Integer) request.getOrDefault("orden", 1);
 
         // Validar que el producto exista y esté aprobado
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado: " + productoId));
 
-        if (!"ACEPTADO".equals(producto.getEstadoRevision())) {
+        if (!"ACEPTADO_DUENIO".equals(producto.getEstadoRevision())) {
             throw new RegistroInvalidoException(
-                    "El producto debe estar en estado 'ACEPTADO' para ser subastado. " +
+                    "El producto debe estar en estado 'ACEPTADO_DUENIO' para ser subastado. " +
                     "Estado actual: " + producto.getEstadoRevision());
+        }
+
+        // Obtener condiciones acordadas
+        BigDecimal precioBase = producto.getPrecioBasePropuesto();
+        BigDecimal comision = producto.getComisionPropuesta();
+        if (precioBase == null || comision == null) {
+            throw new RegistroInvalidoException("El producto no tiene precio base o comisión asignados.");
         }
 
         // Validar seguro vigente
@@ -145,5 +175,33 @@ public class CatalogoService {
                 "orden", item.getOrden() != null ? item.getOrden() : 0,
                 "subastado", item.getSubastado()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getItemDetalle(Integer itemId) {
+        ItemCatalogo item = itemCatalogoRepository.findById(itemId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Item no encontrado: " + itemId));
+        Producto producto = item.getProducto();
+        Duenio duenio = producto.getDuenio();
+        
+        java.util.Optional<Pujo> mejorPujaActual = pujoRepository.findMejorPujaByItem(item.getIdentificador());
+        BigDecimal pujaMinima = mejorPujaActual
+                .map(p -> p.getImporte().add(BigDecimal.ONE))
+                .orElse(item.getPrecioBase());
+
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+        response.put("itemId", item.getIdentificador());
+        response.put("subastaId", item.getCatalogo().getSubasta().getIdentificador());
+        response.put("productoId", producto.getIdentificador());
+        response.put("descripcionBreve", producto.getDescripcionCatalogo() != null ? producto.getDescripcionCatalogo() : producto.getDescripcionCompleta());
+        response.put("descripcionCompleta", producto.getDescripcionCompleta());
+        response.put("precioBase", item.getPrecioBase());
+        response.put("pujaMinima", pujaMinima);
+        response.put("numeroPieza", "REF-" + producto.getIdentificador() + "-" + item.getIdentificador());
+        response.put("duenioActual", duenio != null && duenio.getPersona() != null ? duenio.getPersona().getNombre() : "Desconocido");
+        response.put("subastado", item.getSubastado());
+        response.put("categoria", item.getCatalogo().getSubasta().getCategoria() != null ? item.getCatalogo().getSubasta().getCategoria() : "COMUN");
+        
+        return response;
     }
 }

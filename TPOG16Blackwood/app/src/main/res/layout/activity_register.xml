@@ -1,45 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F1EA"
-    android:fitsSystemWindows="true"
-    android:importantForAutofill="noExcludeDescendants">
+    android:orientation="vertical"
+    android:background="@color/marfil">
 
-    <LinearLayout
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content" />
 
-        <!-- HEADER UNIFICADO -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#1C2A21"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Blackwood Fine Sales"
-                android:textColor="#F4F1EA"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Registro de postor"
-                android:textColor="#C6A75E"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <!-- CONTENIDO LIBERADO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,119 +28,250 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:text="Datos personales"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
+                android:text="@string/datos_personales_title"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/text_size_title" />
 
-            <EditText
-                android:id="@+id/et_nombre"
+            <!-- EMAIL -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="14dp"
-                android:background="@drawable/input_bg"
-                android:hint="Nombre"
-                android:inputType="textPersonName"
-                android:importantForAutofill="no"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="#1A1A1A"
-                android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
-
-            <EditText
-                android:id="@+id/et_apellido"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="14dp"
-                android:background="@drawable/input_bg"
-                android:hint="Apellido"
-                android:inputType="textPersonName"
-                android:importantForAutofill="no"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="#1A1A1A"
-                android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
-
-            <EditText
-                android:id="@+id/et_pais"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="14dp"
-                android:background="@drawable/input_bg"
-                android:hint="País de origen"
-                android:inputType="text"
-                android:importantForAutofill="no"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="#1A1A1A"
-                android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
-
-            <EditText
-                android:id="@+id/et_domicilio"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="26dp"
-                android:background="@drawable/input_bg"
-                android:hint="Domicilio legal"
-                android:inputType="textPostalAddress"
-                android:importantForAutofill="no"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="#1A1A1A"
-                android:textColorHint="#7B7B7B"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:text="Documento"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/field_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/login_email_label"
+                    android:inputType="textEmailAddress"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColorHint="@color/gray_medium"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext"/>
+                <TextView
+                    android:id="@+id/error_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- NOMBRE -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/field_n"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/nombre_ph"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="20"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColorHint="@color/gray_medium" />
+                <TextView
+                    android:id="@+id/error_n"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- APELLIDO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/field_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/apellido_ph"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="20"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColorHint="@color/gray_medium"/>
+                <TextView
+                    android:id="@+id/error_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- PAIS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="false"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    app:endIconTint="@color/green_dark">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/field_p"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:popupBackground="@color/marfil"
+                        android:hint="@string/pais_ph"
+                        android:textColorHint="@color/gray_medium"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/text_size_body"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/error_p"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- DOMICILIO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/field_d"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/dom_ph"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="40"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColorHint="@color/gray_medium"/>
+                <TextView
+                    android:id="@+id/error_d"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- DOCUMENTO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="26dp"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/field_doc"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="@string/doc_ph"
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    android:maxLength="8"
+                    android:importantForAutofill="no"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColorHint="@color/gray_medium"/>
+                <TextView
+                    android:id="@+id/error_doc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/gold"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_frente"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="14dp"
                 android:background="@drawable/button_black_gold"
-                android:backgroundTint="@null"
                 app:backgroundTint="@null"
-                android:elevation="0dp"
-                android:text="Subir documento (frente)"
+                android:text="@string/submit_f_doc"
                 android:textAllCaps="false"
-                android:textColor="#F4F1EA"
-                android:textSize="15sp" />
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_size_body"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/gray_light" />
 
             <Button
                 android:id="@+id/btn_dorso"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/button_black_gold"
-                android:backgroundTint="@null"
                 app:backgroundTint="@null"
-                android:elevation="0dp"
-                android:text="Subir documento (dorso)"
+                android:text="@string/submit_d_doc"
                 android:textAllCaps="false"
-                android:textColor="#F4F1EA"
-                android:textSize="15sp" />
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/text_size_body"
+                app:icon="@drawable/ic_camera"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/gray_light" />
 
             <Button
                 android:id="@+id/btn_enviar"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="65dp"
                 android:background="@drawable/button_primary"
-                android:backgroundTint="@null"
                 app:backgroundTint="@null"
-                android:text="Enviar para verificación"
+                android:text="@string/enviar"
                 android:textAllCaps="false"
-                android:textColor="#F4F1EA"
-                android:textSize="18sp"
-                android:elevation="0dp"/>
+                android:textColor="@color/marfil"
+                android:textSize="@dimen/text_size_button"
+                app:icon="@drawable/ic_arrow_forward"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/marfil" />
 
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>
