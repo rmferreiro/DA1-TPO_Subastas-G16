@@ -105,6 +105,49 @@
         android:layout_marginBottom="8dp">
 
         <TextView
+            android:id="@+id/btn_comun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Común"
+            android:textColor="#1A1A1A"
+            android:textSize="13sp"
+            android:background="@drawable/input_bg"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btn_especial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Especial"
+            android:textColor="#1A1A1A"
+            android:textSize="13sp"
+            android:background="@drawable/input_bg"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btn_plata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Plata"
+            android:textColor="#1A1A1A"
+            android:textSize="13sp"
+            android:background="@drawable/input_bg"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <TextView
             android:id="@+id/btn_oro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,25 +164,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Platino"
-            android:textColor="#F4F1EA"
-            android:textSize="13sp"
-            android:background="@drawable/button_primary"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
-
-        <TextView
-            android:id="@+id/btn_diamante"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Diamante"
             android:textColor="#1A1A1A"
             android:textSize="13sp"
             android:background="@drawable/input_bg"
@@ -198,6 +222,20 @@
         android:text="Aplicar filtros"
         android:textAllCaps="false"
         android:textColor="#F4F1EA"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/btn_quitar_filtros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quitar todos los filtros"
+        android:textAllCaps="false"
+        android:textColor="#C6A75E"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true" />
 
 </LinearLayout>

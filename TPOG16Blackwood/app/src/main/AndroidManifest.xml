@@ -63,6 +63,8 @@
             android:name=".EmpleadoSubastasVivoActivity" />
         <activity
             android:name=".EmpleadoControlPujasActivity" />
+        <activity
+            android:name=".EmpleadoCrearSubastaActivity" />
     </application>
 
 </manifest>

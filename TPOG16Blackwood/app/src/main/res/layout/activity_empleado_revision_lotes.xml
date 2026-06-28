@@ -58,177 +58,13 @@
         android:padding="16dp">
 
         <LinearLayout
+            android:id="@+id/container_lotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- LOTE 1 -->
-            <LinearLayout
-                android:id="@+id/lote_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/card_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:background="#C6A75E"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="3dp"
-                    android:text="EN INSPECCIÓN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reloj Patek Philippe 1950s"
-                    android:textColor="#1A1A1A"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dueño: Carlos Méndez"
-                    android:textColor="#555555"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Valor estimado: USD 15.000"
-                    android:textColor="#C6A75E"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Ver detalle →"
-                    android:textColor="#1C2A21"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <!-- LOTE 2 -->
-            <LinearLayout
-                android:id="@+id/lote_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/card_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:background="#C6A75E"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="3dp"
-                    android:text="EN INSPECCIÓN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vajilla de plata Sterling"
-                    android:textColor="#1A1A1A"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dueño: Ana López"
-                    android:textColor="#555555"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Valor estimado: USD 8.000"
-                    android:textColor="#C6A75E"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Ver detalle →"
-                    android:textColor="#1C2A21"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <!-- LOTE 3 -->
-            <LinearLayout
-                android:id="@+id/lote_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/card_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:background="#C6A75E"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="3dp"
-                    android:text="EN INSPECCIÓN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cuadro Berni - Escuela Rioplatense"
-                    android:textColor="#1A1A1A"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dueño: Roberto Silva"
-                    android:textColor="#555555"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Valor estimado: USD 22.000"
-                    android:textColor="#C6A75E"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Ver detalle →"
-                    android:textColor="#1C2A21"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
+            <!-- Las cards se generan por código en EmpleadoRevisionLotesActivity,
+                 una por cada Lote que devuelva LoteRepository.obtenerTodos() -->
 
         </LinearLayout>
 
@@ -271,13 +107,18 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/circle_gold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mis pujas"
-                android:textColor="#888888"
+                android:textColor="#C6A75E"
                 android:textSize="11sp" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -294,18 +135,17 @@
             <View
                 android:layout_width="6dp"
                 android:layout_height="6dp"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/circle_gold" />
+                android:layout_marginBottom="2dp"/>
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Perfil"
-                android:textColor="#C6A75E"
+                android:textColor="#888888"
                 android:textSize="11sp" />
 
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>
