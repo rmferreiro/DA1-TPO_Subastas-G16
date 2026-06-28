@@ -80,4 +80,11 @@ public class AuthController {
         AuthResponse response = authService.completarRegistro(request.getEmail(), request.getPassword(), request.getMediosPago());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/dev/crear-admin")
+    @Operation(summary = "[DEV] Crear/Actualizar usuario administrador de desarrollo",
+               description = "Registra admin@gmail.com con contraseña 'admin', categoría platino y cargo de administrador.")
+    public ResponseEntity<Map<String, Object>> crearAdminDev() {
+        return ResponseEntity.ok(authService.crearAdminDev());
+    }
 }

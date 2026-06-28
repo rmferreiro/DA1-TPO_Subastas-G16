@@ -298,4 +298,88 @@ public class AuthService {
                 .tokenType("Bearer")
                 .build();
     }
+
+    @Transactional
+    public Map<String, Object> crearAdminDev() {
+        String email = "admin@gmail.com";
+        String plainPassword = "admin";
+        
+        // Buscar si ya existe
+        var optUsuario = usuarioAuthRepository.findByEmail(email);
+        if (optUsuario.isPresent()) {
+            UsuarioAuth usuario = optUsuario.get();
+            usuario.setEstado(EstadoUsuario.APROBADO);
+            usuario.setPasswordHash(passwordEncoder.encode(plainPassword));
+            usuarioAuthRepository.save(usuario);
+            
+            Cliente cliente = clienteRepository.findById(usuario.getPersona().getIdentificador())
+                    .orElse(null);
+            if (cliente != null) {
+                cliente.setAdmitido("si");
+                cliente.setCategoria("platino");
+                clienteRepository.save(cliente);
+            }
+            
+            return Map.of(
+                    "mensaje", "Usuario administrador existente actualizado a password 'admin' y categoría 'platino'",
+                    "email", email,
+                    "estado", usuario.getEstado().name()
+            );
+        }
+
+        // Obtener primer país disponible o fallback
+        var pais = paisRepository.findById(1)
+                .orElseGet(() -> paisRepository.findAll().stream().findFirst().orElse(null));
+
+        // 1. Crear Persona
+        Persona persona = Persona.builder()
+                .documento("99999999")
+                .nombre("Administrador Empresa")
+                .direccion("Av. de la Administración 1")
+                .pais(pais)
+                .estado("activo")
+                .build();
+        persona = personaRepository.save(persona);
+
+        // 2. Crear Empleado con cargo ADMINISTRADOR
+        Empleado empleado = Empleado.builder()
+                .persona(persona)
+                .cargo("ADMINISTRADOR")
+                .sector(null)
+                .build();
+        final Empleado empleadoPersistido = empleadoRepository.save(empleado);
+
+        // Obtener primer verificador disponible, o el nuevo empleado en su defecto
+        Empleado verificador = empleadoRepository.findAll().stream()
+                .filter(e -> !e.getIdentificador().equals(empleadoPersistido.getIdentificador()))
+                .findFirst()
+                .orElse(empleadoPersistido);
+
+        // 3. Crear Cliente Platino
+        Cliente cliente = Cliente.builder()
+                .persona(persona)
+                .pais(pais)
+                .admitido("si")
+                .categoria("platino")
+                .verificador(verificador)
+                .build();
+        clienteRepository.save(cliente);
+
+        // 4. Crear UsuarioAuth
+        UsuarioAuth auth = UsuarioAuth.builder()
+                .persona(persona)
+                .email(email)
+                .passwordHash(passwordEncoder.encode(plainPassword))
+                .estado(EstadoUsuario.APROBADO)
+                .build();
+        usuarioAuthRepository.save(auth);
+
+        return Map.of(
+                "mensaje", "Usuario administrador creado con éxito",
+                "email", email,
+                "password", plainPassword,
+                "categoria", "platino",
+                "cargo", "ADMINISTRADOR"
+        );
+    }
 }

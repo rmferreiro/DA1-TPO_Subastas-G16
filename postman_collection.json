@@ -87,6 +87,21 @@
           "response": []
         },
         {
+          "name": "[DEV] Crear Administrador Supremo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/dev/crear-admin",
+              "host": [
+                "localhost:8080"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login como Cliente",
           "request": {
             "method": "POST",
