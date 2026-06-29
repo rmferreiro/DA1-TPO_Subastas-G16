@@ -88,6 +88,24 @@
         <activity
             android:name=".NotificacionPerdedorActivity"
             android:exported="false" />
+        <activity
+            android:name=".EmpleadoSubastasActivity" />
+        <activity
+            android:name=".EmpleadoRevisionLotesActivity" />
+        <activity
+            android:name=".EmpleadoDetalleLoteActivity" />
+        <activity
+            android:name=".EmpleadoLogsPujasActivity" />
+        <activity
+            android:name=".EmpleadoDetalleSubastaActivity" />
+        <activity
+            android:name=".EmpleadoPanelControlActivity" />
+        <activity
+            android:name=".EmpleadoSubastasVivoActivity" />
+        <activity
+            android:name=".EmpleadoControlPujasActivity" />
+        <activity
+            android:name=".EmpleadoCrearSubastaActivity" />
 
         <!-- VENDEDOR - Gestión de lotes -->
         <activity
