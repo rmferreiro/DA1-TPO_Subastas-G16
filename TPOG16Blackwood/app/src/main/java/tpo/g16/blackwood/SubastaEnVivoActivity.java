@@ -90,6 +90,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
     private TextView tvTituloPuja, tvBadgeLider;
     private LinearLayout layoutAvatars;
     private Long limiteFinalizacionEpoch = null;
+    private View loadingOverlay;
 
     // ── Sección obra de arte ─────────────────────────────────────────────
     private View cardVivoObraArte;
@@ -168,6 +169,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
         cardVivoObraArte = findViewById(R.id.card_vivo_obra_arte);
         tvVivoObraArtista = findViewById(R.id.tv_vivo_obra_artista);
         tvVivoObraHistoria = findViewById(R.id.tv_vivo_obra_historia);
+        loadingOverlay = findViewById(R.id.loading_overlay);
 
         if (tvParticipantesCount != null) tvParticipantesCount.setText("1 en línea");
         if (layoutAvatars != null) layoutAvatars.removeAllViews();
@@ -377,6 +379,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
         // ── Verificar requisitos antes de conectar WebSocket ─────────────────
         fetchMedioPagoYConectar(token);
+        hideLoadingOverlay();
     }
 
     // ────────────────────────────────────────────────────────────────────────
@@ -773,6 +776,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
             actualizarUIConPostor(nombrePostor, numPostor);
             actualizarUITextos();
             iniciarTimer();
+            hideLoadingOverlay();
 
             Toast.makeText(this, "¡Nueva puja: " + formatMoneda(precioActual) + "!", Toast.LENGTH_SHORT).show();
         });
@@ -881,6 +885,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
             actualizarUIConPostor(update.newLotStartingBidder, 999);
             actualizarUITextos();
             iniciarTimer();
+            hideLoadingOverlay();
 
             // Issue 15: mostrar modal si el usuario ganó el lote que acaba de cerrar
             if (usuarioGano) {
@@ -1045,6 +1050,12 @@ public class SubastaEnVivoActivity extends AppCompatActivity
             sb.append(s, i, i + 3);
         }
         return sb.toString();
+    }
+
+    private void hideLoadingOverlay() {
+        if (loadingOverlay != null && loadingOverlay.getVisibility() == View.VISIBLE) {
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
     private int getCategoryRank(String cat) {

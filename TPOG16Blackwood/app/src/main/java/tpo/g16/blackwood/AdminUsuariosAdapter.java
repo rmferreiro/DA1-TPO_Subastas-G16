@@ -77,6 +77,10 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
             categoriaSeleccionada[0] = "comun";
             seleccionarCategoria(holder, "comun");
         });
+        holder.btnEspecial.setOnClickListener(v -> {
+            categoriaSeleccionada[0] = "especial";
+            seleccionarCategoria(holder, "especial");
+        });
         holder.btnPlata.setOnClickListener(v -> {
             categoriaSeleccionada[0] = "plata";
             seleccionarCategoria(holder, "plata");
@@ -84,6 +88,10 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
         holder.btnOro.setOnClickListener(v -> {
             categoriaSeleccionada[0] = "oro";
             seleccionarCategoria(holder, "oro");
+        });
+        holder.btnPlatino.setOnClickListener(v -> {
+            categoriaSeleccionada[0] = "platino";
+            seleccionarCategoria(holder, "platino");
         });
 
         String uuid = getStr(item, "uuid");
@@ -99,16 +107,20 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
     }
 
     private void seleccionarCategoria(ViewHolder holder, String categoria) {
-        // Resetear los tres botones
+        // Resetear los cinco botones
         resetBotonCategoria(holder.btnBronce);
+        resetBotonCategoria(holder.btnEspecial);
         resetBotonCategoria(holder.btnPlata);
         resetBotonCategoria(holder.btnOro);
+        resetBotonCategoria(holder.btnPlatino);
 
         // Resaltar el seleccionado
         switch (categoria) {
-            case "comun": activarBotonCategoria(holder.btnBronce); break;
-            case "plata": activarBotonCategoria(holder.btnPlata);  break;
-            case "oro":   activarBotonCategoria(holder.btnOro);    break;
+            case "comun":    activarBotonCategoria(holder.btnBronce); break;
+            case "especial": activarBotonCategoria(holder.btnEspecial); break;
+            case "plata":    activarBotonCategoria(holder.btnPlata);  break;
+            case "oro":      activarBotonCategoria(holder.btnOro);    break;
+            case "platino":  activarBotonCategoria(holder.btnPlatino); break;
         }
     }
 
@@ -146,8 +158,10 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
         TextView tvDocumento;
         TextView tvPais;
         MaterialButton btnBronce;
+        MaterialButton btnEspecial;
         MaterialButton btnPlata;
         MaterialButton btnOro;
+        MaterialButton btnPlatino;
         Button btnAprobar;
 
         public ViewHolder(@NonNull View itemView) {
@@ -157,8 +171,10 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
             tvDocumento = itemView.findViewById(R.id.tv_usuario_documento);
             tvPais      = itemView.findViewById(R.id.tv_usuario_pais);
             btnBronce   = itemView.findViewById(R.id.btn_cat_bronce);
+            btnEspecial = itemView.findViewById(R.id.btn_cat_especial);
             btnPlata    = itemView.findViewById(R.id.btn_cat_plata);
             btnOro      = itemView.findViewById(R.id.btn_cat_oro);
+            btnPlatino  = itemView.findViewById(R.id.btn_cat_platino);
             btnAprobar  = itemView.findViewById(R.id.btn_aprobar_usuario);
         }
     }

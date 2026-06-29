@@ -99,18 +99,22 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <!-- CONTENIDO SCROLLEABLE -->
-    <ScrollView
+    <!-- CONTENIDO SCROLLEABLE CON COBERTURA DE CARGA -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#F4F1EA">
+        android:layout_weight="1">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:background="#F4F1EA">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
             <!-- CARD IMAGEN Y LOTE -->
             <LinearLayout
@@ -143,7 +147,7 @@
                         android:paddingEnd="8dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
-                        android:text="LOTE #007"
+                        android:text="LOTE #—"
                         android:textColor="#C6A75E"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -159,7 +163,7 @@
                         android:id="@+id/tv_lote_numero"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lote #007 de 24"
+                        android:text="Lote #— de —"
                         android:textColor="#C6A75E"
                         android:textSize="12sp" />
 
@@ -168,7 +172,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Reloj Patek Philippe Calatrava 1950s"
+                        android:text="—"
                         android:textColor="#1A1A1A"
                         android:textSize="16sp"
                         android:textStyle="normal" />
@@ -178,7 +182,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Oro 18k · Cal. 27 SC · Certificado de autenticidad"
+                        android:text="—"
                         android:textColor="#6B6B6B"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -249,7 +253,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="$ 3.200 USD"
+                    android:text="—"
                     android:textColor="#C6A75E"
                     android:textSize="28sp"
                     android:textStyle="normal" />
@@ -267,7 +271,7 @@
                         android:layout_height="32dp"
                         android:background="@drawable/circle_black_gold_border"
                         android:gravity="center"
-                        android:text="MR"
+                        android:text="—"
                         android:textColor="#C6A75E"
                         android:textSize="12sp" />
 
@@ -281,7 +285,7 @@
                             android:id="@+id/tv_nombre_postor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="M. Rodríguez"
+                            android:text="—"
                             android:textColor="#F4F1EA"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -330,7 +334,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:text="04:37"
+                        android:text="—:—"
                         android:textColor="#1A1A1A"
                         android:textSize="24sp"
                         android:textStyle="normal" />
@@ -413,7 +417,7 @@
                             android:background="@android:color/transparent"
                             android:gravity="center"
                             android:inputType="number"
-                            android:text="3210"
+                            android:text="—"
                             android:textColor="#1A1A1A"
                             android:textSize="16sp" />
                             
@@ -472,7 +476,7 @@
                         android:id="@+id/tv_btn_pujar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ofertar $ 3.210 USD"
+                        android:text="OFERTAR"
                         android:textColor="#1C2A21"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -592,9 +596,27 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </ScrollView>
+        </ScrollView>
+
+        <!-- Círculo de carga que se oculta al recibir datos reales -->
+        <FrameLayout
+            android:id="@+id/loading_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F4F1EA"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="#C6A75E" />
+        </FrameLayout>
+
+    </FrameLayout>
 
 
 </LinearLayout>

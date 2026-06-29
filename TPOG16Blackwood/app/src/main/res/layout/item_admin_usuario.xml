@@ -138,64 +138,97 @@
             android:layout_marginBottom="8dp"
             android:background="#F0EBE3" />
 
-        <!-- Selector de categoría -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categoría a asignar"
-            android:textColor="#9B9B9B"
-            android:textSize="11sp"
-            android:textAllCaps="true"
-            android:letterSpacing="0.08"
-            android:layout_marginBottom="6dp" />
-
-        <!-- Grupo de botones de categoría (toggle manual) -->
+        <!-- Grupo de botones de categoría (toggle manual en dos filas) -->
         <LinearLayout
             android:id="@+id/grupo_categorias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cat_bronce"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
+            <!-- Fila 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:text="Común"
-                android:textAllCaps="false"
-                android:textSize="13sp"
-                app:strokeColor="#C6A75E"
-                app:cornerRadius="8dp" />
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="6dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cat_plata"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="Plata"
-                android:textAllCaps="false"
-                android:textSize="13sp"
-                app:strokeColor="#C6A75E"
-                app:cornerRadius="8dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cat_bronce"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="Común"
+                    android:textAllCaps="false"
+                    android:textSize="13sp"
+                    app:strokeColor="#C6A75E"
+                    app:cornerRadius="8dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cat_oro"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cat_especial"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="Especial"
+                    android:textAllCaps="false"
+                    android:textSize="13sp"
+                    app:strokeColor="#C6A75E"
+                    app:cornerRadius="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cat_plata"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="Plata"
+                    android:textAllCaps="false"
+                    android:textSize="13sp"
+                    app:strokeColor="#C6A75E"
+                    app:cornerRadius="8dp" />
+
+            </LinearLayout>
+
+            <!-- Fila 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:text="Oro"
-                android:textAllCaps="false"
-                android:textSize="13sp"
-                app:strokeColor="#C6A75E"
-                app:cornerRadius="8dp" />
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cat_oro"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="Oro"
+                    android:textAllCaps="false"
+                    android:textSize="13sp"
+                    app:strokeColor="#C6A75E"
+                    app:cornerRadius="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cat_platino"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="Platino"
+                    android:textAllCaps="false"
+                    android:textSize="13sp"
+                    app:strokeColor="#C6A75E"
+                    app:cornerRadius="8dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
