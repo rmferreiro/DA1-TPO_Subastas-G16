@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA"
+    android:fitsSystemWindows="true">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1C2A21"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/btn_volver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="←"
+            android:textColor="#F4F1EA"
+            android:textSize="20sp"
+            android:layout_marginEnd="12dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blackwood Fine Sales"
+                android:textColor="#F4F1EA"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalle de subasta"
+                android:textColor="#C6A75E"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ESTADO BAR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2F3E34"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
+
+        <View
+            android:id="@+id/dot_estado"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="#4CAF50"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/txt_badge_estado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="En sala · Activa"
+            android:textColor="#F4F1EA"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/txt_categoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ORO"
+            android:textColor="#C6A75E"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- INFO SUBASTA -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/txt_fecha_hora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12 Marzo · 18:00"
+                    android:textColor="#1A1A1A"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/txt_ubicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Buenos Aires · Sala Central"
+                    android:textColor="#555555"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txt_rematador"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rematador: Gómez"
+                    android:textColor="#555555"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/txt_lotes_disponibles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="24 lotes disponibles"
+                    android:textColor="#1A1A1A"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/txt_estimacion_inicial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estimación inicial: 10.000 USD"
+                    android:textColor="#C6A75E"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txt_incremento_minimo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Incremento mínimo: 10 USD"
+                    android:textColor="#C6A75E"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <!-- LOTES DESTACADOS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lotes destacados"
+                android:textColor="#1A1A1A"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:id="@+id/container_lotes_destacados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Las cards se generan por código en EmpleadoDetalleSubastaActivity,
+                     una por cada LoteDestacado de la subasta seleccionada -->
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver todos los lotes"
+                android:textColor="#C6A75E"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- BOTÓN PRINCIPAL (cambia según estado) -->
+            <Button
+                android:id="@+id/btn_accion_principal"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/button_ok"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Empezar Subasta"
+                android:textAllCaps="false"
+                android:textColor="#F4F1EA"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- BOTÓN FINALIZAR -->
+            <Button
+                android:id="@+id/btn_finalizar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/button_black_gold"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Finalizar Subasta"
+                android:textAllCaps="false"
+                android:textColor="#F4F1EA"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <LinearLayout
+        android:id="@+id/nav_subastas"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:background="@drawable/circle_gold"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:text="Subastas"
+                android:textColor="#C6A75E"
+                android:textSize="11sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_mis_pujas"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:text="Mis pujas"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_perfil"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <TextView
+                android:text="Perfil"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

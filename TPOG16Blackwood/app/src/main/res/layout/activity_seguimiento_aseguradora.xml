@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="100dp" android:orientation="vertical" android:paddingTop="28dp" android:paddingLeft="16dp" android:paddingRight="16dp" android:background="#1C2A21">
+        <TextView android:text="Blackwood Fine Sales" android:textColor="#F4F1EA" android:textSize="16sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <TextView android:text="Estado del bien" android:textColor="#C6A75E" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/input_bg" android:padding="16dp" android:layout_marginBottom="16dp">
+                <TextView android:text="Estado del artículo" android:textSize="15sp" android:textColor="#1A1A1A" android:layout_marginBottom="12dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
+                    <View android:id="@+id/circleAse1" android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/circle_gold" android:layout_marginEnd="10dp" />
+                    <TextView android:text="Recepcionado" android:textColor="#1A1A1A" android:textSize="13sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
+                    <View android:id="@+id/circleAse2" android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/circle_gold" android:layout_marginEnd="10dp" />
+                    <TextView android:text="En inspección" android:textColor="#1A1A1A" android:textSize="13sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <View android:id="@+id/circleAse3" android:layout_width="12dp" android:layout_height="12dp" android:background="#CCCCCC" android:layout_marginEnd="10dp" />
+                    <TextView android:text="Programado para subasta" android:textColor="#6B6B6B" android:textSize="13sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/input_bg" android:padding="16dp" android:layout_marginBottom="16dp">
+                <TextView android:text="Ubicación" android:textSize="15sp" android:textColor="#1A1A1A" android:layout_marginBottom="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:text="Depósito central - Buenos Aires" android:textColor="#6B6B6B" android:textSize="13sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/input_bg" android:padding="16dp" android:layout_marginBottom="16dp">
+                <TextView android:text="Seguro" android:textSize="15sp" android:textColor="#1A1A1A" android:layout_marginBottom="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:text="Cobertura total según valor estimado" android:textColor="#6B6B6B" android:textSize="13sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <Button android:id="@+id/btnContactarAseguradora" android:text="Contactar aseguradora" android:background="@drawable/button_primary" android:backgroundTint="@null" android:textColor="#F4F1EA" android:padding="16dp" android:layout_marginBottom="20dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:stateListAnimator="@null" />
+        </LinearLayout>
+    </ScrollView>
+    <include layout="@layout/bottom_nav_vendedor" />
+</LinearLayout>

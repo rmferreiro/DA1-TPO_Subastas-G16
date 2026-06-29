@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:orientation="horizontal"
+    android:background="#F4F1EA"
+    android:gravity="center"
+    android:paddingBottom="32dp"
+    android:paddingTop="4dp">
+
+    <LinearLayout
+        android:id="@+id/navSubastasLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <View
+            android:id="@+id/indicatorSubastas"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_gold"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/navSubastas"
+            android:text="Subastas"
+            android:textColor="#6B6B6B"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navMisPujasLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <View
+            android:id="@+id/indicatorPujas"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_gold"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/navMisPujas"
+            android:text="Mis pujas"
+            android:textColor="#6B6B6B"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navPerfilLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <View
+            android:id="@+id/indicatorPerfil"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_gold"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/navPerfil"
+            android:text="Perfil"
+            android:textColor="#6B6B6B"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

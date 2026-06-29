@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/input_bg"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp">
+
+    <TextView
+        android:id="@+id/tvCardNombre"
+        android:textSize="16sp"
+        android:textColor="#1A1A1A"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvCardDescripcion"
+        android:textSize="12sp"
+        android:textColor="#6B6B6B"
+        android:layout_marginTop="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <View
+            android:id="@+id/circleEstado"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/circle_gold"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/tvCardEstado"
+            android:textSize="12sp"
+            android:textColor="#C6A75E"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/btnCardDetalle"
+            android:text="Ver detalle →"
+            android:textColor="#C6A75E"
+            android:textSize="12sp"
+            android:padding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

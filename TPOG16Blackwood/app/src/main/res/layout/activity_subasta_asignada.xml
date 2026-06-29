@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="100dp" android:orientation="vertical" android:paddingTop="28dp" android:paddingLeft="16dp" android:paddingRight="16dp" android:background="#1C2A21">
+        <TextView android:text="Blackwood Fine Sales" android:textColor="#F4F1EA" android:textSize="16sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+
+            <TextView android:text="Subasta asignada" android:textSize="22sp" android:textColor="#1A1A1A" android:layout_marginBottom="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/input_bg" android:padding="16dp" android:layout_marginBottom="16dp">
+                <TextView android:text="Fecha" android:textColor="#C6A75E" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/tvFechaSubasta" android:text="15/06/2026 - 18:00 hs" android:textColor="#1A1A1A" android:textSize="14sp" android:layout_marginBottom="12dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+                <TextView android:text="Lugar" android:textColor="#C6A75E" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/tvLugarSubasta" android:text="Salón Central - Av. Libertador 1234, CABA" android:textColor="#1A1A1A" android:textSize="14sp" android:layout_marginBottom="12dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+                <TextView android:text="Precio base" android:textColor="#C6A75E" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/tvPrecioBaseSubasta" android:text="$ 12.500" android:textColor="#1A1A1A" android:textSize="14sp" android:layout_marginBottom="12dp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+                <TextView android:text="Comisión" android:textColor="#C6A75E" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/tvComisionSubasta" android:text="12%" android:textColor="#1A1A1A" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView android:text="El equipo gestionará la subasta y logística del bien" android:textColor="#6B6B6B" android:textSize="13sp" android:layout_marginBottom="24dp" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+            <Button android:id="@+id/btnAceptarSubasta" android:text="Aceptar" android:background="@drawable/button_primary" android:backgroundTint="@null" android:textColor="#F4F1EA" android:padding="16dp" android:layout_marginBottom="12dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:stateListAnimator="@null" />
+            <Button android:id="@+id/btnRechazarSubasta" android:text="Rechazar" android:background="@drawable/button_primary" android:backgroundTint="@null" android:textColor="#F4F1EA" android:padding="16dp" android:layout_marginBottom="20dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:stateListAnimator="@null" />
+        </LinearLayout>
+    </ScrollView>
+    <include layout="@layout/bottom_nav_vendedor" />
+</LinearLayout>
