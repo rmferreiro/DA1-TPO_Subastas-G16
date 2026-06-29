@@ -38,7 +38,8 @@ import ua.naiksoftware.stomp.StompClient;
 public class SubastaEnVivoActivity extends AppCompatActivity {
 
     private static final String TAG = "SubastaEnVivoActivity";
-    private static final String WS_URL = "ws://10.0.2.2:8080/ws/subasta/websocket";
+    // private static final String WS_URL = "ws://10.0.2.2:8080/ws/subasta/websocket";
+    private static final String WS_URL = "wss://da1-tpo-subastas-g16.onrender.com/ws/subasta/websocket";
 
     private int subastaId;
     private int currentItemId = -1;
@@ -208,7 +209,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                     // Cargar imagen dinámicamente con Glide
                     if (ivLoteImagen != null && item.get("productoId") != null) {
                         int prodId = ((Number) item.get("productoId")).intValue();
-                        String imageUrl = "http://10.0.2.2:8080/api/productos/" + prodId + "/foto";
+                        // String imageUrl = "http://10.0.2.2:8080/api/productos/" + prodId + "/foto";
+                        String imageUrl = "https://da1-tpo-subastas-g16.onrender.com/api/productos/" + prodId + "/foto";
                         new Thread(() -> {
                             try {
                                 InputStream in = new URL(imageUrl).openStream();
