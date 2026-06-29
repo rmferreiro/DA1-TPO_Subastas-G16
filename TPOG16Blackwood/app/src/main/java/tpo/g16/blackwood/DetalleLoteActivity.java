@@ -1,6 +1,5 @@
 package tpo.g16.blackwood;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +28,9 @@ import tpo.g16.blackwood.network.RetrofitClient;
 public class DetalleLoteActivity extends AppCompatActivity {
 
     private int itemId = -1;
-    private int subastaId = -1;
 
     private TextView tvTitulo, tvSubtitulo, tvNPieza, tvPrecioBase, tvPujaMinima, tvDuenio, tvDuenioAvatar;
-    private TextView tvTiempoRestante, tvDescripcion, tvCategoria, tvLoteNumero;
+    private TextView tvTiempoRestante, tvDescripcion, tvLoteNumero;
     private ViewPager2 vpImagenes;
     private LinearLayout llDots;
     private View cardObraArte;
@@ -48,7 +44,6 @@ public class DetalleLoteActivity extends AppCompatActivity {
         itemId = getIntent().getIntExtra("ITEM_ID", -1);
 
         initViews();
-        configurarListeners();
 
         if (itemId != -1) {
             cargarDetallesItem();
@@ -68,7 +63,6 @@ public class DetalleLoteActivity extends AppCompatActivity {
         tvDuenioAvatar = findViewById(R.id.tv_duenio_avatar);
         tvTiempoRestante = findViewById(R.id.tv_tiempo_restante);
         tvDescripcion = findViewById(R.id.tv_descripcion);
-        tvCategoria = findViewById(R.id.tv_categoria);
         tvLoteNumero = findViewById(R.id.tv_lote_numero);
         vpImagenes = findViewById(R.id.vp_imagenes);
         llDots = findViewById(R.id.ll_dots);
@@ -78,38 +72,6 @@ public class DetalleLoteActivity extends AppCompatActivity {
         tvObraHistoria = findViewById(R.id.tv_obra_historia);
     }
 
-    private void configurarListeners() {
-        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
-
-        findViewById(R.id.btn_ir_sala).setOnClickListener(v -> {
-            if (subastaId == -1) return;
-
-            RetrofitClient.getApiService().unirseSubasta(subastaId)
-                .enqueue(new Callback<Map<String, Object>>() {
-                    @Override
-                    public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                        if (response.isSuccessful()) {
-                            Intent intent = new Intent(DetalleLoteActivity.this, SubastaEnVivoActivity.class);
-                            intent.putExtra("SUBASTA_ID", subastaId);
-                            startActivity(intent);
-                        } else {
-                            try {
-                                String errorStr = response.errorBody() != null ? response.errorBody().string() : "Error desconocido";
-                                Toast.makeText(DetalleLoteActivity.this, "No se pudo unir: " + errorStr, Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
-                                Toast.makeText(DetalleLoteActivity.this, "Error al unirse a la subasta", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                        Toast.makeText(DetalleLoteActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-        });
-    }
-
     private void cargarDetallesItem() {
         RetrofitClient.getApiService().getItemDetalle(itemId).enqueue(new Callback<Map<String, Object>>() {
             @Override
@@ -117,20 +79,18 @@ public class DetalleLoteActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Map<String, Object> body = response.body();
 
-                    Object subastaIdObj = body.get("subastaId");
                     Object productoIdObj = body.get("productoId");
-                    if (subastaIdObj != null) {
-                        subastaId = ((Number) subastaIdObj).intValue();
-                    }
                     int productoId = -1;
                     if (productoIdObj != null) {
                         productoId = ((Number) productoIdObj).intValue();
                     }
 
-                    // Issue 10: subtitulo muestra descripcionCompleta, no descripcionBreve
-                    tvTitulo.setText((String) body.get("descripcionBreve"));
+                    String descBreve = (String) body.get("descripcionBreve");
                     String descCompleta = (String) body.get("descripcionCompleta");
-                    tvSubtitulo.setText(descCompleta != null && !descCompleta.isEmpty() ? descCompleta : (String) body.get("descripcionBreve"));
+                    String categoria = (String) body.get("categoria");
+
+                    tvTitulo.setText(descBreve != null ? descBreve : "");
+                    tvSubtitulo.setText("Categoría: " + (categoria != null ? categoria.toUpperCase() : "GENERAL"));
 
                     tvNPieza.setText((String) body.get("numeroPieza"));
 
@@ -149,25 +109,18 @@ public class DetalleLoteActivity extends AppCompatActivity {
                         tvDuenioAvatar.setText(duenio.substring(0, 2).toUpperCase());
                     }
 
-                    tvDescripcion.setText((String) body.get("descripcionCompleta"));
-                    tvCategoria.setText((String) body.get("categoria"));
+                    tvDescripcion.setText(descCompleta != null ? descCompleta : "");
                     tvLoteNumero.setText("LOTE #" + String.format("%03d", itemId));
 
                     String subastado = (String) body.get("subastado");
                     TextView tvEstadoTitulo = findViewById(R.id.tv_estado_titulo);
-                    View vEstadoStripCircle = findViewById(R.id.v_estado_strip_circle);
-                    View vEstadoCardCircle = findViewById(R.id.v_estado_card_circle);
 
                     if ("si".equalsIgnoreCase(subastado)) {
                         if (tvEstadoTitulo != null) tvEstadoTitulo.setText("Finalizado");
                         tvTiempoRestante.setText("Este ítem ya fue subastado.");
-                        if (vEstadoStripCircle != null) vEstadoStripCircle.setBackgroundResource(R.drawable.circle_red);
-                        if (vEstadoCardCircle != null) vEstadoCardCircle.setBackgroundResource(R.drawable.circle_red);
                     } else {
                         if (tvEstadoTitulo != null) tvEstadoTitulo.setText("Disponible para pujar");
                         tvTiempoRestante.setText("En espera de puja...");
-                        if (vEstadoStripCircle != null) vEstadoStripCircle.setBackgroundResource(R.drawable.circle_green);
-                        if (vEstadoCardCircle != null) vEstadoCardCircle.setBackgroundResource(R.drawable.circle_green);
                     }
 
                     // Issues 8 y 9: cargar fotos y datos de obra de arte

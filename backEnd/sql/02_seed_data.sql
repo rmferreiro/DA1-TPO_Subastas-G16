@@ -190,22 +190,22 @@ UPDATE seguros SET producto = 5 WHERE numero_poliza = 'SEG-2024-005';
 -- ============================================================
 INSERT INTO subastas (identificador, fecha, hora, estado, categoria, ubicacion, moneda,
                        descripcion, subastador, capacidad_asistentes, tiene_deposito, seguridad_propia) VALUES
--- Subasta ABIERTA (en curso)
-(1, CURDATE(), '19:00:00', 'cerrada', 'comun',
+-- Subasta PENDIENTE (se activa hoy cuando corre el scheduler)
+(1, CURDATE(), '19:00:00', 'PENDIENTE', 'comun',
    'Av. Corrientes 1346 Piso 3, CABA',
    'ARS',
    'Subasta de bienes preciados — Lote de marzo 2024. Relojes, arte y antigüedades.',
    20, 50, 'no', 'no'),
 
--- Subasta PROGRAMADA (ahora cerrada por requerimiento del seed inicial)
-(2, DATE_ADD(CURDATE(), INTERVAL 7 DAY), '18:00:00', 'cerrada', 'oro',
+-- Subasta PENDIENTE (fecha futura, se activa cuando llegue su hora)
+(2, DATE_ADD(CURDATE(), INTERVAL 7 DAY), '18:00:00', 'PENDIENTE', 'oro',
    'Palacio Paz — Florida 1000, CABA',
    'ARS',
    'Subasta Premium — Arte y obras históricas. Solo para clientes categoría Oro y superior.',
    21, 30, 'si', 'si'),
 
--- Subasta CERRADA (histórica)
-(3, DATE_SUB(CURDATE(), INTERVAL 15 DAY), '20:00:00', 'cerrada', 'comun',
+-- Subasta FINALIZADA (histórica, fecha pasada)
+(3, DATE_SUB(CURDATE(), INTERVAL 15 DAY), '20:00:00', 'FINALIZADA', 'comun',
    'Av. de Mayo 1370, CABA',
    'ARS',
    'Subasta de mobiliario y objetos de época — Lote enero 2024.',

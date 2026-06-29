@@ -104,10 +104,11 @@ public class AuctionStompClient {
         );
     }
 
-    public void sendBid(String auctionId, double amount) {
+    public void sendBid(String auctionId, double amount, Long medioPagoId) {
         if (stompClient == null || !stompClient.isConnected()) return;
         BidRequest bid = new BidRequest();
         bid.amount = amount;
+        bid.medioPagoId = medioPagoId;
         disposables.add(
             stompClient.send(
                 "/app/auction." + auctionId + ".bid",

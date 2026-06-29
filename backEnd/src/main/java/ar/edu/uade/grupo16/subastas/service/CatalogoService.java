@@ -174,19 +174,27 @@ public class CatalogoService {
     }
 
     private Map<String, Object> buildItemResponse(ItemCatalogo item, Catalogo catalogo) {
-        return Map.of(
-                "itemId", item.getIdentificador(),
-                "catalogoId", catalogo != null ? catalogo.getIdentificador() : "",
-                "productoId", item.getProducto().getIdentificador(),
-                "descripcion", item.getProducto().getDescripcionCompleta() != null
-                        ? item.getProducto().getDescripcionCompleta() : "",
-                "descripcionCatalogo", item.getProducto().getDescripcionCatalogo() != null
-                        ? item.getProducto().getDescripcionCatalogo() : "",
-                "precioBase", item.getPrecioBase(),
-                "comision", item.getComision() != null ? item.getComision() : BigDecimal.ZERO,
-                "orden", item.getOrden() != null ? item.getOrden() : 0,
-                "subastado", item.getSubastado()
-        );
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("itemId", item.getIdentificador());
+        response.put("catalogoId", catalogo != null ? catalogo.getIdentificador() : "");
+        response.put("productoId", item.getProducto().getIdentificador());
+        response.put("descripcion", item.getProducto().getDescripcionCompleta() != null
+                ? item.getProducto().getDescripcionCompleta() : "");
+        response.put("descripcionCatalogo", item.getProducto().getDescripcionCatalogo() != null
+                ? item.getProducto().getDescripcionCatalogo() : "");
+        response.put("precioBase", item.getPrecioBase());
+        response.put("comision", item.getComision() != null ? item.getComision() : BigDecimal.ZERO);
+        response.put("orden", item.getOrden() != null ? item.getOrden() : 0);
+        response.put("subastado", item.getSubastado());
+
+        pujoRepository.findMejorPujaByItem(item.getIdentificador()).ifPresent(pujo -> {
+            response.put("mejorOferta", pujo.getImporte());
+            if (pujo.getAsistente() != null && pujo.getAsistente().getCliente() != null
+                    && pujo.getAsistente().getCliente().getPersona() != null) {
+                response.put("nombreGanador", pujo.getAsistente().getCliente().getPersona().getNombre());
+            }
+        });
+        return response;
     }
 
     @Transactional(readOnly = true)

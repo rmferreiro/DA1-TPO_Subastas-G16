@@ -6,23 +6,25 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 /**
- * Endpoints admin para la gestión de clientes/usuarios pendientes de verificación.
- * Requieren rol ADMIN en el backend (token JWT enviado automáticamente por RetrofitClient).
+ * Endpoints admin para la gestión de usuarios pendientes de aprobación.
+ * Requieren autenticación (token JWT enviado automáticamente por RetrofitClient).
  */
 public interface ClienteApiService {
 
-    /** Devuelve la lista de clientes en estado ESPERANDO_APROBACION. */
-    @GET("api/auth/registro/pendientes")
+    /** Devuelve usuarios con estado PENDIENTE. */
+    @GET("api/admin/usuarios/pendientes")
     Call<List<Map<String, Object>>> getUsuariosPendientes();
 
     /**
-     * Aprueba el registro de un usuario.
-     * Body: { "email": "...", "categoria": "bronce"|"plata"|"oro" }
-     * Pasa al usuario de ESPERANDO_APROBACION → APROBADO para que pueda crear su contraseña.
+     * Aprueba un usuario por UUID.
+     * Body: { "categoria": "comun"|"especial"|"plata"|"oro"|"platino" }
      */
-    @POST("api/auth/registro/aprobar")
-    Call<Map<String, Object>> aprobarUsuario(@Body Map<String, Object> request);
+    @PUT("api/admin/usuarios/{uuid}/aprobar")
+    Call<Map<String, Object>> aprobarUsuario(
+            @Path("uuid") String uuid,
+            @Body Map<String, Object> request);
 }

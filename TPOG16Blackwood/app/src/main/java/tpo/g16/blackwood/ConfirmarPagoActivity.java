@@ -168,7 +168,17 @@ public class ConfirmarPagoActivity extends AppCompatActivity {
                         // - CHEQUE_CERTIFICADO: según moneda del cheque
                         boolean compatible;
                         if ("TARJETA_CREDITO".equals(tipoBE)) {
-                            compatible = true;
+                            if ("USD".equalsIgnoreCase(subastaMoneda)) {
+                                compatible = Boolean.TRUE.equals(mp.get("esTarjetaInternacional")) || "USD".equalsIgnoreCase(monedaMP);
+                            } else {
+                                compatible = true;
+                            }
+                        } else if ("CUENTA_BANCARIA".equals(tipoBE)) {
+                            if ("USD".equalsIgnoreCase(subastaMoneda)) {
+                                compatible = Boolean.TRUE.equals(mp.get("esInternacional")) || "USD".equalsIgnoreCase(monedaMP);
+                            } else {
+                                compatible = !Boolean.TRUE.equals(mp.get("esInternacional")) && "ARS".equalsIgnoreCase(monedaMP != null ? monedaMP : "ARS");
+                            }
                         } else {
                             compatible = subastaMoneda.equalsIgnoreCase(monedaMP != null ? monedaMP : "ARS");
                         }

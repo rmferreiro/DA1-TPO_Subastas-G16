@@ -59,13 +59,18 @@
 
         <activity
             android:name=".register.RegistroEnProcesoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".register.RegistroRechazadoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
-        <activity android:name=".common.LoadingActivity" android:exported="false" />
+        <activity
+            android:name=".common.LoadingActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
         <activity
             android:name=".register.RegistroCompletadoActivity"
@@ -75,50 +80,62 @@
         <activity
             android:name=".register.RegistroPaso2Activity"
             android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".register.NuevoLoteActivity"
             android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".main.AdminArticulosActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".main.EvaluarLoteActivity"
             android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".main.CrearSubastaActivity"
             android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".register.SeguimientoLoteActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
 
         <!-- FLUJO COMPRA DE LOTES -->
         <activity
             android:name=".main.HomeActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".DetalleSubastaActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".SubastaEnVivoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".PermanecerSubastaActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".NotificacionGanadorActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".NotificacionPerdedorActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
     </application>

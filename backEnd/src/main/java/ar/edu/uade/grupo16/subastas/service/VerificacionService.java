@@ -36,16 +36,18 @@ public class VerificacionService {
         this.mailService = mailService;
     }
 
+    @Transactional(readOnly = true)
     public List<Map<String, Object>> listarPendientes() {
-        return usuarioAuthRepository.findByEstado(EstadoUsuario.PENDIENTE)
-                .stream()
+        List<ar.edu.uade.grupo16.subastas.entity.UsuarioAuth> pendientes =
+                usuarioAuthRepository.findByEstado(EstadoUsuario.PENDIENTE);
+        return pendientes.stream()
                 .map(u -> {
                     Map<String, Object> data = new HashMap<>();
                     data.put("uuid", u.getUuid());
                     data.put("email", u.getEmail());
-                    data.put("nombre", u.getPersona().getNombre());
-                    data.put("documento", u.getPersona().getDocumento());
-                    data.put("direccion", u.getPersona().getDireccion());
+                    data.put("nombre", u.getPersona() != null ? u.getPersona().getNombre() : "");
+                    data.put("documento", u.getPersona() != null ? u.getPersona().getDocumento() : "");
+                    data.put("direccion", u.getPersona() != null ? u.getPersona().getDireccion() : "");
                     data.put("fechaRegistro", u.getFechaRegistro());
                     return data;
                 })

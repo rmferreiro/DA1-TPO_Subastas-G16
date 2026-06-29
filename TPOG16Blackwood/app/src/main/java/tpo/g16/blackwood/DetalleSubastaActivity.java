@@ -1,6 +1,8 @@
 package tpo.g16.blackwood;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import tpo.g16.blackwood.network.ApiConfig;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -28,6 +30,10 @@ public class DetalleSubastaActivity extends AppCompatActivity {
 
     private int subastaId = -1;
     private String estadoSubasta = "";
+    private String subastaMoneda = "ARS";
+    private String subastaCategoria = "comun";
+    private Long medioPagoIdSeleccionado = null;
+    private boolean primeraVezEnResume = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,20 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         btnIngresar.setOnClickListener(v -> {
             if (subastaId == -1) return;
             btnIngresar.setEnabled(false);
+
+            SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
+            String userCategory = prefs.getString(ApiConfig.KEY_USER_CATEGORIA, "comun");
+
+            if (getCategoryRank(userCategory) < getCategoryRank(subastaCategoria)) {
+                new AlertDialog.Builder(DetalleSubastaActivity.this)
+                        .setTitle("Categoría insuficiente")
+                        .setMessage("Tu categoría (" + userCategory.toUpperCase() + ") no permite acceder a esta subasta (requiere: " + subastaCategoria.toUpperCase() + ").")
+                        .setPositiveButton("Aceptar", null)
+                        .show();
+                btnIngresar.setEnabled(true);
+                return;
+            }
+
             RetrofitClient.getApiService().unirseSubasta(subastaId)
                 .enqueue(new Callback<Map<String, Object>>() {
                     @Override
@@ -76,6 +96,32 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         configurarBottomNav();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (intent.hasExtra("SUBASTA_ID")) {
+            subastaId = intent.getIntExtra("SUBASTA_ID", -1);
+        }
+        recargarContenido();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (primeraVezEnResume) {
+            primeraVezEnResume = false;
+            return;
+        }
+        recargarContenido();
+    }
+
+    private void recargarContenido() {
+        if (subastaId == -1) return;
+        cargarDetalle();
+        cargarCatalogo();
+    }
+
     /**
      * Llamado DESPUÉS de que unirseSubasta tiene éxito.
      * Consulta los medios de pago y, si el usuario no tiene uno válido,
@@ -87,22 +133,36 @@ public class DetalleSubastaActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<List<Map<String, Object>>> call,
                                            Response<List<Map<String, Object>>> response) {
-                        boolean tienePago = false;
+                        boolean tieneCompatible = false;
+                        int countVerificadosActivos = 0;
+                        medioPagoIdSeleccionado = null;
+
                         if (response.isSuccessful() && response.body() != null) {
                             for (Map<String, Object> mp : response.body()) {
                                 if (Boolean.TRUE.equals(mp.get("verificado"))
                                         && Boolean.TRUE.equals(mp.get("activo"))) {
-                                    tienePago = true;
-                                    break;
+                                    countVerificadosActivos++;
+                                    if (esMedioPagoCompatible(mp)) {
+                                        tieneCompatible = true;
+                                        Object idObj = mp.get("id");
+                                        if (idObj instanceof Number) {
+                                            medioPagoIdSeleccionado = ((Number) idObj).longValue();
+                                        }
+                                    }
                                 }
                             }
                         }
 
-                        if (tienePago) {
+                        if (tieneCompatible) {
                             navegarASubastaEnVivo(false);
                         } else {
-                            mostrarDialogoEspectador(
-                                    "No tenés un medio de pago verificado.\n\n¿Querés entrar como espectador?");
+                            if (countVerificadosActivos == 0) {
+                                mostrarDialogoEspectador(
+                                        "No tenés al menos un medio de pago verificado.\n\n¿Querés entrar como espectador?");
+                            } else {
+                                mostrarDialogoEspectador(
+                                        "No tenés el medio de pago adecuado para esta subasta por la moneda.\n\n¿Querés entrar como espectador?");
+                            }
                         }
                     }
 
@@ -128,7 +188,34 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         Intent intent = new Intent(DetalleSubastaActivity.this, SubastaEnVivoActivity.class);
         intent.putExtra("SUBASTA_ID", subastaId);
         intent.putExtra("SPECTATOR_MODE", comoEspectador);
+        if (!comoEspectador && medioPagoIdSeleccionado != null) {
+            intent.putExtra("MEDIO_PAGO_ID", medioPagoIdSeleccionado);
+        }
         startActivity(intent);
+    }
+
+    /**
+     * Mismas reglas que el backend (MedioPagoStrategy.puedeOperarEnMoneda).
+     */
+    private boolean esMedioPagoCompatible(Map<String, Object> mp) {
+        String tipo = (String) mp.get("tipo");
+        String monedaMP = (String) mp.get("moneda");
+        if (monedaMP == null) {
+            monedaMP = "ARS";
+        }
+
+        if ("TARJETA_CREDITO".equals(tipo)) {
+            return true;
+        }
+        if ("CUENTA_BANCARIA".equals(tipo)) {
+            if ("USD".equalsIgnoreCase(subastaMoneda)) {
+                return Boolean.TRUE.equals(mp.get("esInternacional")) || "USD".equalsIgnoreCase(monedaMP);
+            }
+            // Para subasta en ARS se requiere cuenta en ARS (CBU)
+            return !Boolean.TRUE.equals(mp.get("esInternacional")) && "ARS".equalsIgnoreCase(monedaMP);
+        }
+        // Cheque certificado
+        return subastaMoneda.equalsIgnoreCase(monedaMP);
     }
 
     private void cancelarIngreso() {
@@ -216,9 +303,10 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         // --- Moneda ---
         TextView tvMoneda = findViewById(R.id.tv_moneda_detalle);
         if (tvMoneda != null) {
-            String moneda = s.getMoneda() != null ? s.getMoneda().toUpperCase() : "ARS";
-            tvMoneda.setText("Moneda: " + moneda);
+            subastaMoneda = s.getMoneda() != null ? s.getMoneda().toUpperCase() : "ARS";
+            tvMoneda.setText("Moneda: " + subastaMoneda);
         }
+        subastaCategoria = s.getCategoria() != null ? s.getCategoria().toLowerCase() : "comun";
 
         // --- Incremento mínimo según categoría (1% para normal, 20% para Oro y Platino) ---
         TextView tvIncremento = findViewById(R.id.tv_incremento);
@@ -231,15 +319,22 @@ public class DetalleSubastaActivity extends AppCompatActivity {
             }
         }
 
-        // --- Habilitar botón sólo si la sala está activa ---
+        // --- Habilitar botón según estado ---
         MaterialButton btnIngresar = findViewById(R.id.btn_ingresar);
         if (btnIngresar != null) {
-            boolean activa = "ACTIVA".equals(estadoSubasta);
-            btnIngresar.setEnabled(activa);
-            if (activa) {
+            if ("ACTIVA".equals(estadoSubasta)) {
+                btnIngresar.setText("Ingresar a la subasta");
+                btnIngresar.setEnabled(true);
                 btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#C0A062")));
                 btnIngresar.setTextColor(Color.parseColor("#1C2A21"));
+            } else if ("FINALIZADA".equals(estadoSubasta)) {
+                btnIngresar.setText("Subasta finalizada");
+                btnIngresar.setEnabled(false);
+                btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BDBDBD")));
+                btnIngresar.setTextColor(Color.parseColor("#757575"));
             } else {
+                btnIngresar.setText("Próximamente");
+                btnIngresar.setEnabled(false);
                 btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BDBDBD")));
                 btnIngresar.setTextColor(Color.parseColor("#757575"));
             }
@@ -286,6 +381,9 @@ public class DetalleSubastaActivity extends AppCompatActivity {
             String descripcion = item.get("descripcion") != null ? (String) item.get("descripcion") : "Sin descripción";
             Object precioObj = item.get("precioBase");
             String precio = precioObj != null ? String.format("%.2f", ((Number) precioObj).doubleValue()) : "—";
+            boolean subastado = "si".equalsIgnoreCase(String.valueOf(item.get("subastado")));
+            Object mejorOfertaObj = item.get("mejorOferta");
+            String nombreGanador = item.get("nombreGanador") != null ? (String) item.get("nombreGanador") : null;
 
             // Card del lote
             LinearLayout card = new LinearLayout(this);
@@ -328,6 +426,32 @@ public class DetalleSubastaActivity extends AppCompatActivity {
             lpPrecio.setMargins(0, dpToPx(4), 0, 0);
             tvPrecio.setLayoutParams(lpPrecio);
             card.addView(tvPrecio);
+
+            TextView tvEstadoLote = new TextView(this);
+            if (subastado && mejorOfertaObj instanceof Number) {
+                String oferta = String.format("%.2f", ((Number) mejorOfertaObj).doubleValue());
+                String estadoLote = "Adjudicado: $" + oferta;
+                if (nombreGanador != null && !nombreGanador.isBlank()) {
+                    estadoLote += " · " + nombreGanador;
+                }
+                tvEstadoLote.setText(estadoLote);
+                tvEstadoLote.setTextColor(Color.parseColor("#1B7A3E"));
+            } else if (subastado) {
+                tvEstadoLote.setText("Lote cerrado sin ofertas");
+                tvEstadoLote.setTextColor(Color.parseColor("#757575"));
+            } else if ("FINALIZADA".equals(estadoSubasta)) {
+                tvEstadoLote.setText("Sin adjudicar");
+                tvEstadoLote.setTextColor(Color.parseColor("#757575"));
+            } else {
+                tvEstadoLote.setText("Pendiente de subasta");
+                tvEstadoLote.setTextColor(Color.parseColor("#1565C0"));
+            }
+            tvEstadoLote.setTextSize(11f);
+            LinearLayout.LayoutParams lpEstado = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lpEstado.setMargins(0, dpToPx(4), 0, 0);
+            tvEstadoLote.setLayoutParams(lpEstado);
+            card.addView(tvEstadoLote);
 
             // Click listener
             if (item.get("itemId") != null) {
@@ -389,5 +513,17 @@ public class DetalleSubastaActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         });
+    }
+
+    private int getCategoryRank(String cat) {
+        if (cat == null) return 0;
+        switch (cat.toLowerCase()) {
+            case "comun": return 1;
+            case "especial": return 2;
+            case "plata": return 3;
+            case "oro": return 4;
+            case "platino": return 5;
+            default: return 0;
+        }
     }
 }

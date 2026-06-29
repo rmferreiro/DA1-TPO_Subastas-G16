@@ -23,10 +23,11 @@ public class CuentaBancariaStrategy implements MedioPagoStrategy {
     @Override
     public boolean puedeOperarEnMoneda(MedioPago medioPago, Moneda moneda) {
         if (moneda == Moneda.USD) {
-            // Para subasta en dólares se requiere cuenta internacional
-            return Boolean.TRUE.equals(medioPago.getEsInternacional());
+            // Para subasta en dólares se requiere cuenta internacional o moneda USD
+            return Boolean.TRUE.equals(medioPago.getEsInternacional()) || medioPago.getMoneda() == Moneda.USD;
         }
-        return true; // ARS: cualquier cuenta
+        // Para subasta en ARS se requiere cuenta nacional (CBU) y moneda ARS
+        return !Boolean.TRUE.equals(medioPago.getEsInternacional()) && medioPago.getMoneda() == Moneda.ARS;
     }
 
     @Override

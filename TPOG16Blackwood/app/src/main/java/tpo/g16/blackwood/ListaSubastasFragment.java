@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -150,7 +152,8 @@ public class ListaSubastasFragment extends Fragment {
             public void onResponse(Call<List<SubastaResponse>> call, Response<List<SubastaResponse>> response) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    todasLasSubastas = response.body();
+                    todasLasSubastas = new ArrayList<>(response.body());
+                    ordenarSubastas(todasLasSubastas);
                     adapter.updateData(todasLasSubastas);
                 } else {
                     Toast.makeText(getContext(), "Error al cargar subastas", Toast.LENGTH_SHORT).show();
@@ -163,5 +166,23 @@ public class ListaSubastasFragment extends Fragment {
                 Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /** Activas primero, luego pendientes, luego finalizadas (todas visibles). */
+    private void ordenarSubastas(List<SubastaResponse> lista) {
+        Collections.sort(lista, Comparator
+                .comparingInt((SubastaResponse s) -> prioridadEstado(s.getEstado()))
+                .thenComparing((SubastaResponse s) -> s.getFecha() != null ? s.getFecha() : "", Comparator.reverseOrder())
+                .thenComparing((SubastaResponse s) -> s.getHora() != null ? s.getHora() : "", Comparator.reverseOrder()));
+    }
+
+    private int prioridadEstado(String estado) {
+        if (estado == null) return 3;
+        switch (estado.toUpperCase()) {
+            case "ACTIVA": return 0;
+            case "PENDIENTE": return 1;
+            case "FINALIZADA": return 2;
+            default: return 3;
+        }
     }
 }

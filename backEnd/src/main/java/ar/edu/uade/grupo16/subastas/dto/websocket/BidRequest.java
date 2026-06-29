@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BidRequest {
     private double amount;
+    /** ID del medio de pago que el cliente validó al entrar a la subasta (opcional). */
+    private Long medioPagoId;
 }

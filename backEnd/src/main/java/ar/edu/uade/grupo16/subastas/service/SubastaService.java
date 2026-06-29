@@ -74,8 +74,8 @@ public class SubastaService {
     }
 
     /**
-     * Lista las subastas abiertas filtradas por categoría del cliente.
-     * Un cliente de categoría X puede ver subastas de nivel X o inferior.
+     * Lista subastas visibles para el cliente (pendientes, activas y finalizadas),
+     * filtradas por categoría del cliente.
      */
     @Transactional(readOnly = true)
     public List<SubastaResponse> listarDisponibles(String emailCliente) {
@@ -86,7 +86,7 @@ public class SubastaService {
 
         CategoriaUsuario categoriaCliente = CategoriaUsuario.fromValor(cliente.getCategoria());
 
-        return subastaRepository.findSubastasAbiertas()
+        return subastaRepository.findSubastasParaListado()
                 .stream()
                 .filter(s -> s.getCategoria() != null)
                 .filter(s -> {
@@ -134,9 +134,30 @@ public class SubastaService {
         List<ItemCatalogo> vendidos = itemCatalogoRepository
                 .findByCatalogoSubastaIdentificadorAndSubastado(subastaId, "si");
 
-        // El item activo es el primero pendiente (menor ID = orden de catálogo)
-        Optional<ItemCatalogo> itemActivo = pendientes.stream()
-                .min((a, b) -> a.getIdentificador().compareTo(b.getIdentificador()));
+        // El item activo es el que el scheduler/pujas establecieron en itemActualId.
+        // Fallback: menor ID pendiente (compatibilidad con subastas antiguas sin itemActualId).
+        Optional<ItemCatalogo> itemActivo;
+        if (subasta.getItemActualId() != null) {
+            itemActivo = pendientes.stream()
+                    .filter(i -> i.getIdentificador().equals(subasta.getItemActualId()))
+                    .findFirst();
+            // Si itemActualId no está en pendientes (edge case: ya cerrado), buscar el próximo
+            if (itemActivo.isEmpty()) {
+                itemActivo = pendientes.stream()
+                        .min((a, b) -> {
+                            int oa = a.getOrden() != null ? a.getOrden() : a.getIdentificador();
+                            int ob = b.getOrden() != null ? b.getOrden() : b.getIdentificador();
+                            return Integer.compare(oa, ob);
+                        });
+            }
+        } else {
+            itemActivo = pendientes.stream()
+                    .min((a, b) -> {
+                        int oa = a.getOrden() != null ? a.getOrden() : a.getIdentificador();
+                        int ob = b.getOrden() != null ? b.getOrden() : b.getIdentificador();
+                        return Integer.compare(oa, ob);
+                    });
+        }
 
         // Flag de categoría (para límite de puja)
         String catSubasta = subasta.getCategoria() != null ? subasta.getCategoria().toLowerCase() : "";

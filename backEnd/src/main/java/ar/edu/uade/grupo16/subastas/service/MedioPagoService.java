@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MedioPagoService {
@@ -125,8 +126,22 @@ public class MedioPagoService {
         return medioPagoRepository.findByClienteIdentificadorAndActivoTrue(clienteId);
     }
 
+    @Transactional(readOnly = true)
     public List<MedioPago> listarNoVerificados() {
         return medioPagoRepository.findByVerificadoFalseAndActivoTrue();
+    }
+
+    /**
+     * Lista medios de pago pendientes de verificación para el panel admin.
+     * El mapeo a Map ocurre dentro de la transacción para poder acceder a cliente.persona
+     * con open-in-view=false.
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> listarNoVerificadosParaAdmin() {
+        return medioPagoRepository.findByVerificadoFalseAndActivoTrue()
+                .stream()
+                .map(this::toAdminResponseMap)
+                .collect(Collectors.toList());
     }
 
     public List<MedioPago> listarVerificadosPorClienteYMoneda(Integer clienteId, Moneda moneda) {
@@ -185,6 +200,37 @@ public class MedioPagoService {
         }
         mp.setVerificado(false);
         return medioPagoRepository.save(mp);
+    }
+
+    /**
+     * Resuelve el medio de pago a usar para una puja.
+     * Usa las mismas reglas de compatibilidad que la app (strategy.puedeOperarEnMoneda).
+     * Si se indica un ID preferido (el que el cliente ya validó al entrar), se usa ese.
+     */
+    @Transactional(readOnly = true)
+    public MedioPago resolverMedioPagoParaPuja(Integer clienteId, Moneda moneda, Long medioPagoIdPreferido) {
+        List<MedioPago> medios = medioPagoRepository
+                .findByClienteIdentificadorAndVerificadoTrueAndActivoTrue(clienteId);
+
+        List<MedioPago> compatibles = medios.stream()
+                .filter(mp -> mp.getTipo() != null
+                        && getStrategy(mp.getTipo()).puedeOperarEnMoneda(mp, moneda))
+                .toList();
+
+        if (compatibles.isEmpty()) {
+            throw new MedioPagoRequeridoException(
+                    "No tenés ningún medio de pago verificado compatible con esta subasta en " + moneda.name());
+        }
+
+        if (medioPagoIdPreferido != null) {
+            for (MedioPago mp : compatibles) {
+                if (medioPagoIdPreferido.equals(mp.getId())) {
+                    return mp;
+                }
+            }
+        }
+
+        return compatibles.get(0);
     }
 
     /**
@@ -250,38 +296,58 @@ public class MedioPagoService {
      * Construye un Map con los datos seguros del medio de pago (sin info sensible).
      */
     public Map<String, Object> toResponseMap(MedioPago mp) {
-        return Map.of(
-                "id", mp.getId(),
-                "tipo", mp.getTipo().name(),
-                "moneda", mp.getMoneda().name(),
-                "verificado", mp.getVerificado(),
-                "activo", mp.getActivo(),
-                "montoDisponible", getStrategy(mp.getTipo()).getMontoDisponible(mp),
-                "detalle", buildDetalle(mp)
-        );
+        String monedaStr = mp.getMoneda() != null ? mp.getMoneda().name() : "ARS";
+        Boolean verificado = mp.getVerificado() != null ? mp.getVerificado() : false;
+        Boolean activo = mp.getActivo() != null ? mp.getActivo() : false;
+        Map<String, Object> result = new java.util.HashMap<>();
+        result.put("id", mp.getId());
+        result.put("tipo", mp.getTipo() != null ? mp.getTipo().name() : "DESCONOCIDO");
+        result.put("moneda", monedaStr);
+        result.put("verificado", verificado);
+        result.put("activo", activo);
+        result.put("esInternacional", Boolean.TRUE.equals(mp.getEsInternacional()));
+        result.put("esTarjetaInternacional", Boolean.TRUE.equals(mp.getEsTarjetaInternacional()));
+        if (mp.getTipo() != null) {
+            result.put("montoDisponible", getStrategy(mp.getTipo()).getMontoDisponible(mp));
+            result.put("detalle", buildDetalle(mp));
+        } else {
+            result.put("montoDisponible", java.math.BigDecimal.ZERO);
+            result.put("detalle", "Tipo no definido");
+        }
+        return result;
     }
 
     public Map<String, Object> toAdminResponseMap(MedioPago mp) {
         Map<String, Object> map = new java.util.HashMap<>(toResponseMap(mp));
-        map.put("clienteNombre", mp.getCliente().getPersona().getNombre());
+        String clienteNombre = (mp.getCliente() != null && mp.getCliente().getPersona() != null)
+                ? mp.getCliente().getPersona().getNombre() : "Desconocido";
+        map.put("clienteNombre", clienteNombre);
         return map;
     }
 
     private String buildDetalle(MedioPago mp) {
+        if (mp.getTipo() == null) {
+            return "Sin tipo definido";
+        }
         return switch (mp.getTipo()) {
-            case CUENTA_BANCARIA -> "Banco: " + mp.getBanco() +
+            case CUENTA_BANCARIA -> "Banco: " + safeStr(mp.getBanco()) +
                     " | Cuenta: ***" + truncar(mp.getNumeroCuenta(), 4) +
                     (Boolean.TRUE.equals(mp.getEsInternacional()) ? " (Internacional)" : "");
-            case TARJETA_CREDITO -> "Titular: " + mp.getTitular() +
-                    " | Vence: " + mp.getVencimiento() +
+            case TARJETA_CREDITO -> "Titular: " + safeStr(mp.getTitular()) +
+                    " | Vence: " + safeStr(mp.getVencimiento()) +
                     (Boolean.TRUE.equals(mp.getEsTarjetaInternacional()) ? " (Internacional)" : "");
-            case CHEQUE_CERTIFICADO -> "Banco emisor: " + mp.getBancoEmisor() +
-                    " | Monto certificado: $" + mp.getMontoCertificado();
+            case CHEQUE_CERTIFICADO -> "Banco emisor: " + safeStr(mp.getBancoEmisor()) +
+                    " | Monto certificado: $" + (mp.getMontoCertificado() != null ? mp.getMontoCertificado() : "0");
         };
     }
 
+    private String safeStr(String valor) {
+        return valor != null && !valor.isBlank() ? valor : "-";
+    }
+
     private String truncar(String valor, int ultimos) {
-        if (valor == null || valor.length() <= ultimos) return valor;
+        if (valor == null || valor.isBlank()) return "****";
+        if (valor.length() <= ultimos) return valor;
         return valor.substring(valor.length() - ultimos);
     }
 }

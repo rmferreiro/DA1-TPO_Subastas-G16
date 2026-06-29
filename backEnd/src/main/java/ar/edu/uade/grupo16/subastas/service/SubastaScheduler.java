@@ -116,9 +116,9 @@ public class SubastaScheduler {
     /**
      * Tarea 2: Manejar la expiración del lote actual. Si vence el tiempo (5 minutos),
      * se cierra el lote actual y se pasa al siguiente. Si no hay más lotes, se finaliza la subasta.
-     * Se ejecuta cada 10 segundos.
+     * Se ejecuta cada 2 segundos para que el cambio de lote sea casi instantáneo.
      */
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 2000)
     public void finalizarSubastasExpiradas() {
         long ahora = Instant.now().toEpochMilli();
 
@@ -218,8 +218,18 @@ public class SubastaScheduler {
      * Ejecuta la transición de lote DENTRO de una transacción activa.
      * NO broadcastea — devuelve los datos de broadcast para que el caller los envíe
      * DESPUÉS del commit, garantizando que el cliente vea el estado ya persistido.
+     * Revalida el epoch dentro de la transacción para evitar doble cierre ante
+     * ticks concurrentes del scheduler.
      */
     private VencimientoResult procesarVencimientoLoteInterno(Subasta subasta) {
+        // Re-validar: otra transacción (puja o tick anterior) pudo haber extendido el timer
+        long ahoraTransaccional = java.time.Instant.now().toEpochMilli();
+        if (subasta.getLimiteFinalizacionEpoch() != null
+                && subasta.getLimiteFinalizacionEpoch() > ahoraTransaccional) {
+            log.info("Subasta ID {} ya no está vencida (epoch={}, ahora={}). Salteando cierre.",
+                    subasta.getIdentificador(), subasta.getLimiteFinalizacionEpoch(), ahoraTransaccional);
+            return null;
+        }
         Integer itemActualId = subasta.getItemActualId();
 
         // 1. Email del subastador para auditoría

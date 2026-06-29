@@ -3,7 +3,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- Nueva Subasta Oro (ID 10 para evitar conflictos)
 INSERT INTO subastas (identificador, fecha, hora, estado, subastador, ubicacion, capacidadAsistentes, tieneDeposito, seguridadPropia, categoria, moneda, descripcion) VALUES
-(10, CURDATE(), '20:00:00', 'espera', 4, 'Sede Central Exclusiva', 50, 'si', 'si', 'oro', 'USD', 'Subasta Oro Exclusiva - Relojes');
+(10, CURDATE(), '20:00:00', 'PENDIENTE', 4, 'Sede Central Exclusiva', 50, 'si', 'si', 'oro', 'USD', 'Subasta Oro Exclusiva - Relojes');
 
 -- Nuevo Catalogo
 INSERT INTO catalogos (identificador, descripcion, subasta, responsable) VALUES

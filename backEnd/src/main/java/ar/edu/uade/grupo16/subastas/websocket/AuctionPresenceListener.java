@@ -116,8 +116,7 @@ public class AuctionPresenceListener {
 
     private String buildInitials(String nombre) {
         if (nombre == null || nombre.isBlank()) return "?";
-        String[] parts = nombre.trim().split("\\s+");
-        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
-        return (String.valueOf(parts[0].charAt(0)) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        String clean = nombre.trim();
+        return clean.substring(0, Math.min(2, clean.length())).toUpperCase();
     }
 }

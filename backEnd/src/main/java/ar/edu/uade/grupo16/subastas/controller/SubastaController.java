@@ -29,7 +29,7 @@ public class SubastaController {
 
     @GetMapping
     @Operation(summary = "Listar subastas disponibles",
-               description = "Devuelve las subastas abiertas accesibles para la categoría del cliente.")
+               description = "Devuelve subastas pendientes, activas y finalizadas accesibles para la categoría del cliente.")
     public ResponseEntity<List<SubastaResponse>> listarDisponibles(
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(subastaService.listarDisponibles(userDetails.getUsername()));

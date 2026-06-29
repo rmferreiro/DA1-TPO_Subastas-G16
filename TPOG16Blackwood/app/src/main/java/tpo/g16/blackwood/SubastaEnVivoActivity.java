@@ -73,6 +73,9 @@ public class SubastaEnVivoActivity extends AppCompatActivity
     private Runnable bidTimeoutRunnable;
     private static final long BID_TIMEOUT_MS = 15_000L;
 
+    // ── Ciclo de vida: reconexión al volver a la app ───────────────────────
+    private boolean needsReconnect = false;
+
     // ── Nombre del usuario (para detectar si ganó un lote) ───────────────
     private String currentUserNombre = "";
 
@@ -117,6 +120,12 @@ public class SubastaEnVivoActivity extends AppCompatActivity
         // activar el modo antes de que la pantalla muestre cualquier cosa.
         if (getIntent().getBooleanExtra("SPECTATOR_MODE", false)) {
             isSpectator = true;
+        }
+        if (!isSpectator && getIntent().hasExtra("MEDIO_PAGO_ID")) {
+            long mpId = getIntent().getLongExtra("MEDIO_PAGO_ID", -1L);
+            if (mpId > 0) {
+                miMedioPagoId = mpId;
+            }
         }
 
         SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
@@ -230,6 +239,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
                     @Override
                     public void onResponse(Call<Map<String, Object>> call,
                                            Response<Map<String, Object>> response) {
+                        if (isFinishing() || isDestroyed()) return;
                         sincronizarReloj(response);
                         if (response.isSuccessful() && response.body() != null) {
                             procesarEstadoVivo(response.body(), token);
@@ -237,15 +247,24 @@ public class SubastaEnVivoActivity extends AppCompatActivity
                             Log.e(TAG, "Error en getEstadoVivo: " + response.code());
                             Toast.makeText(SubastaEnVivoActivity.this,
                                     "Error al obtener estado de la subasta", Toast.LENGTH_SHORT).show();
-                            finish();
+                            if (currentItemId == -1) {
+                                finish();
+                            } else if (auctionStompClient == null || !auctionStompClient.isConnected()) {
+                                conectarWebSocket(token);
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                        if (isFinishing() || isDestroyed()) return;
                         Log.e(TAG, "Fallo de red en getEstadoVivo", t);
                         Toast.makeText(SubastaEnVivoActivity.this,
-                                "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                "Error de red. Reintentando conexión...", Toast.LENGTH_SHORT).show();
+                        // Si volvimos de background, reconectar WS aunque falle el refresh REST
+                        if (auctionStompClient == null || !auctionStompClient.isConnected()) {
+                            conectarWebSocket(token);
+                        }
                     }
                 });
     }
@@ -260,8 +279,14 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
         String estadoStr = getStr(estado, "estadoSubasta", "");
         if ("FINALIZADA".equalsIgnoreCase(estadoStr)) {
-            Toast.makeText(this, "La subasta ha finalizado", Toast.LENGTH_LONG).show();
-            irAHome(0);
+            Toast.makeText(this, "La subasta ha finalizado, gracias por participar", Toast.LENGTH_LONG).show();
+            // Misma navegación que onAuctionFinished: volver al detalle para ver la subasta finalizada
+            Intent intentFin = new Intent(this, DetalleSubastaActivity.class);
+            intentFin.putExtra("SUBASTA_ID", subastaId);
+            intentFin.putExtra("FORCE_REFRESH", true);
+            intentFin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intentFin);
+            finish();
             return;
         }
 
@@ -366,15 +391,23 @@ public class SubastaEnVivoActivity extends AppCompatActivity
                                            Response<List<Map<String, Object>>> response) {
                         sincronizarReloj(response);
                         if (response.isSuccessful() && response.body() != null) {
+                            Long preferido = miMedioPagoId;
+                            miMedioPagoId = null;
                             for (Map<String, Object> mp : response.body()) {
                                 if (!Boolean.TRUE.equals(mp.get("verificado"))
                                         || !Boolean.TRUE.equals(mp.get("activo"))) continue;
-
-                                // Issue 19: filtrar por compatibilidad de moneda
                                 if (!esMedioPagoCompatible(mp)) continue;
 
-                                miMedioPagoId = ((Number) mp.get("id")).longValue();
-                                break;
+                                Object idObj = mp.get("id");
+                                if (!(idObj instanceof Number)) continue;
+                                long id = ((Number) idObj).longValue();
+                                if (preferido != null && preferido == id) {
+                                    miMedioPagoId = id;
+                                    break;
+                                }
+                                if (miMedioPagoId == null) {
+                                    miMedioPagoId = id;
+                                }
                             }
                         }
                         verificarRequisitosYConectar(token);
@@ -388,13 +421,23 @@ public class SubastaEnVivoActivity extends AppCompatActivity
     }
 
     /**
-     * Determina si un medio de pago es compatible con la moneda de esta subasta.
-     * - TARJETA_CREDITO: siempre compatible (ARS y USD).
-     * - CUENTA_BANCARIA y CHEQUE_CERTIFICADO: solo si su moneda coincide con la subasta.
+     * Mismas reglas que el backend (MedioPagoStrategy.puedeOperarEnMoneda).
      */
     private boolean esMedioPagoCompatible(Map<String, Object> mp) {
         String tipo = (String) mp.get("tipo");
-        if ("TARJETA_CREDITO".equals(tipo)) return true;
+        if ("TARJETA_CREDITO".equals(tipo)) {
+            if ("USD".equalsIgnoreCase(subastaMoneda)) {
+                return Boolean.TRUE.equals(mp.get("esTarjetaInternacional"));
+            }
+            return true;
+        }
+        if ("CUENTA_BANCARIA".equals(tipo)) {
+            if ("USD".equalsIgnoreCase(subastaMoneda)) {
+                return Boolean.TRUE.equals(mp.get("esInternacional"));
+            }
+            String monedaMP = (String) mp.get("moneda");
+            return "ARS".equalsIgnoreCase(monedaMP != null ? monedaMP : "ARS");
+        }
         String monedaMP = (String) mp.get("moneda");
         return subastaMoneda.equalsIgnoreCase(monedaMP != null ? monedaMP : "ARS");
     }
@@ -402,6 +445,18 @@ public class SubastaEnVivoActivity extends AppCompatActivity
     private void verificarRequisitosYConectar(String token) {
         // Si el usuario ya eligió modo espectador en DetalleSubastaActivity, entrar directo.
         if (isSpectator) {
+            SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
+            String userCategory = prefs.getString(ApiConfig.KEY_USER_CATEGORIA, "comun");
+            boolean cumplenNivel = getCategoryRank(userCategory) >= getCategoryRank(subastaCategoria);
+            if (!cumplenNivel) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Categoría insuficiente")
+                        .setMessage("No podés acceder a esta subasta porque tu categoría (" + userCategory.toUpperCase() + ") es menor a la requerida (" + subastaCategoria.toUpperCase() + ").")
+                        .setPositiveButton("Aceptar", (d, w) -> finish())
+                        .setCancelable(false)
+                        .show();
+                return;
+            }
             setSpectatorMode();
             iniciarTimerYConectar(token);
             return;
@@ -447,6 +502,9 @@ public class SubastaEnVivoActivity extends AppCompatActivity
     // ────────────────────────────────────────────────────────────────────────
 
     private void conectarWebSocket(String token) {
+        if (auctionStompClient != null) {
+            auctionStompClient.disconnect();
+        }
         auctionStompClient = new AuctionStompClient();
         auctionStompClient.connect(String.valueOf(subastaId), token, this);
     }
@@ -461,7 +519,13 @@ public class SubastaEnVivoActivity extends AppCompatActivity
             Toast.makeText(this, "Sin conexión. Reintentando...", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.d(TAG, "Enviando puja: " + miPuja + " vía STOMP");
+        if (!isSpectator && miMedioPagoId == null) {
+            Toast.makeText(this,
+                    "No hay medio de pago compatible para esta subasta",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.d(TAG, "Enviando puja: " + miPuja + " mpId=" + miMedioPagoId + " vía STOMP");
         setBidProcessing(true);
         // Issue 13: timeout para desbloquear el botón si el WebSocket no responde
         bidTimeoutHandler.removeCallbacks(bidTimeoutRunnable != null ? bidTimeoutRunnable : () -> {});
@@ -476,7 +540,7 @@ public class SubastaEnVivoActivity extends AppCompatActivity
             }
         };
         bidTimeoutHandler.postDelayed(bidTimeoutRunnable, BID_TIMEOUT_MS);
-        auctionStompClient.sendBid(String.valueOf(subastaId), miPuja);
+        auctionStompClient.sendBid(String.valueOf(subastaId), miPuja, miMedioPagoId);
     }
 
     private void setBidProcessing(boolean processing) {
@@ -512,14 +576,16 @@ public class SubastaEnVivoActivity extends AppCompatActivity
             if (tiempoRestanteMs < 0) tiempoRestanteMs = 0;
         }
 
-        final long duracionTotal = tiempoRestanteMs;
+        // duracionTotal es el tiempo real restante del lote; se usa para la barra de progreso
+        final long duracionTotal = tiempoRestanteMs > 0 ? tiempoRestanteMs : 1;
         countDownTimer = new CountDownTimer(duracionTotal, 1000) {
             @Override public void onTick(long ms) {
                 if (tvTiempo != null) {
                     tvTiempo.setText(String.format("%02d:%02d", ms / 60000, (ms / 1000) % 60));
                 }
                 if (progressPuja != null) {
-                    int pct = (int) ((ms * 100) / TIMER_TOTAL_DURATION_MS);
+                    // Porcentaje sobre la duración real del lote actual (no fija de 5 min)
+                    int pct = (int) ((ms * 100) / duracionTotal);
                     progressPuja.setProgress(Math.min(100, Math.max(0, pct)));
                 }
             }
@@ -536,10 +602,12 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
     /**
      * Calcula el paso de incremento/decremento para los botones +/-.
-     * Para Oro/Platino se usa el 1% del precio base como paso sugerido,
-     * aunque no hay mínimo obligatorio.
+     * Estándar: 1% del precio base. Oro/Platino: mínimo +1 sobre la oferta actual.
      */
     private double calcularStep() {
+        if (sinLimiteMaximo) {
+            return 1.0;
+        }
         return Math.max(1.0, precioBase * 0.01);
     }
 
@@ -624,18 +692,52 @@ public class SubastaEnVivoActivity extends AppCompatActivity
         finish();
     }
 
+    /**
+     * Al pausar y volver a la app, reconectamos el WebSocket y recargamos el estado.
+     * El flag needsReconnect se activa sólo cuando la actividad pasó por onStop(),
+     * evitando reconexiones innecesarias en el primer lanzamiento.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (needsReconnect) {
+            needsReconnect = false;
+            SharedPreferences prefs = getSharedPreferences(ApiConfig.PREFS_NAME, MODE_PRIVATE);
+            String token = prefs.getString(ApiConfig.KEY_ACCESS_TOKEN, "");
+            // Recargar estado completo (maneja FINALIZADA automáticamente)
+            fetchEstadoVivo(token);
+        }
+    }
+
+    /**
+     * Al salir a home o a otra app: desconectamos el WebSocket y cancelamos el timer.
+     * Cuando el usuario vuelva, onResume() se encargará de reconectar.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (countDownTimer != null) countDownTimer.cancel();
+        if (bidTimeoutRunnable != null) bidTimeoutHandler.removeCallbacks(bidTimeoutRunnable);
+        // Liberar botón de puja si quedó bloqueado
+        if (pujaEnProceso) setBidProcessing(false);
+        if (auctionStompClient != null) auctionStompClient.disconnect();
+        needsReconnect = true;
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (countDownTimer != null) countDownTimer.cancel();
         if (bidTimeoutRunnable != null) bidTimeoutHandler.removeCallbacks(bidTimeoutRunnable);
         if (auctionStompClient != null) auctionStompClient.disconnect();
-        // Notificar al backend que el usuario salió
-        RetrofitClient.getApiService().salirSubasta(subastaId)
-                .enqueue(new Callback<Map<String, Object>>() {
-                    @Override public void onResponse(Call<Map<String, Object>> c, Response<Map<String, Object>> r) {}
-                    @Override public void onFailure(Call<Map<String, Object>> c, Throwable t) {}
-                });
+        // Notificar al backend que el usuario salió sólo cuando la Activity termina definitivamente
+        if (isFinishing()) {
+            RetrofitClient.getApiService().salirSubasta(subastaId)
+                    .enqueue(new Callback<Map<String, Object>>() {
+                        @Override public void onResponse(Call<Map<String, Object>> c, Response<Map<String, Object>> r) {}
+                        @Override public void onFailure(Call<Map<String, Object>> c, Throwable t) {}
+                    });
+        }
     }
 
     // ────────────────────────────────────────────────────────────────────────
@@ -678,17 +780,20 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
     @Override
     public void onUsersUpdate(AuctionUsersUpdate update) {
+        if (isFinishing() || isDestroyed()) return;
         runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
             if (tvParticipantesCount != null) {
                 tvParticipantesCount.setText(update.count + " en línea");
             }
-            if (layoutAvatars != null) {
+            if (layoutAvatars != null && update.participants != null) {
                 layoutAvatars.removeAllViews();
                 int density = (int) getResources().getDisplayMetrics().density;
                 int sizePx   = 36 * density;
                 int marginPx = 8 * density;
 
                 for (AuctionUsersUpdate.UserInfo p : update.participants) {
+                    if (p == null) continue;
                     TextView tv = new TextView(this);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizePx, sizePx);
                     params.setMarginEnd(marginPx);
@@ -698,13 +803,11 @@ public class SubastaEnVivoActivity extends AppCompatActivity
                     tv.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
                     tv.setText(p.initials != null ? p.initials : "?");
 
-                    boolean esMio = p.username.equalsIgnoreCase(currentUsername);
+                    boolean esMio = p.username != null && p.username.equalsIgnoreCase(currentUsername);
                     if (esMio) {
-                        // Mi propio badge: verde oscuro con borde dorado
                         tv.setBackgroundResource(R.drawable.circle_black_gold_border);
                         tv.setTextColor(Color.parseColor("#C6A75E"));
                     } else {
-                        // Otros participantes: verde oscuro de la app
                         tv.setBackgroundResource(R.drawable.circle_dark);
                         tv.setTextColor(Color.parseColor("#C6A75E"));
                     }
@@ -716,17 +819,24 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
     @Override
     public void onLotChange(LotChangeUpdate update) {
+        if (isFinishing() || isDestroyed()) return;
         runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
             int soldDisplay = update.soldLotOrder > 0 ? update.soldLotOrder : update.soldLotNumber;
 
             // Issue 15: detectar si el usuario actual ganó el lote anterior
-            boolean usuarioGano = !isSpectator
-                    && update.soldLotWinnerName != null
+            String winnerName = (update.soldLotWinnerName != null
                     && !update.soldLotWinnerName.isEmpty()
-                    && (update.soldLotWinnerName.equalsIgnoreCase(currentUserNombre)
-                        || update.soldLotWinnerName.equalsIgnoreCase(currentUsername));
+                    && !"Nadie".equalsIgnoreCase(update.soldLotWinnerName))
+                    ? update.soldLotWinnerName : null;
 
-            String msg = "Lote #" + soldDisplay + " vendido → " + update.soldLotWinnerName
+            boolean usuarioGano = !isSpectator
+                    && winnerName != null
+                    && (winnerName.equalsIgnoreCase(currentUserNombre)
+                        || winnerName.equalsIgnoreCase(currentUsername));
+
+            String ganadorStr = winnerName != null ? winnerName : "Sin postor";
+            String msg = "Lote #" + soldDisplay + " vendido → " + ganadorStr
                     + " por " + formatMoneda(update.soldLotFinalPrice);
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 
@@ -845,13 +955,16 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
     @Override
     public void onAuctionFinished(AuctionFinishedUpdate update) {
+        if (isFinishing() || isDestroyed()) return;
         runOnUiThread(() -> {
-            Toast.makeText(this,
-                    update.message != null ? update.message : "La subasta ha finalizado, gracias por participar",
-                    Toast.LENGTH_LONG).show();
+            if (isFinishing() || isDestroyed()) return;
+            String msg = (update != null && update.message != null)
+                    ? update.message : "La subasta ha finalizado, gracias por participar";
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             // Navegar al detalle de la subasta para que se muestre como FINALIZADA
             Intent intent = new Intent(this, DetalleSubastaActivity.class);
             intent.putExtra("SUBASTA_ID", subastaId);
+            intent.putExtra("FORCE_REFRESH", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
@@ -860,13 +973,16 @@ public class SubastaEnVivoActivity extends AppCompatActivity
 
     @Override
     public void onBidError(BidError error) {
+        if (isFinishing() || isDestroyed()) return;
         runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
             // Puja rechazada → cancelar timeout y liberar botón
             if (bidTimeoutRunnable != null) bidTimeoutHandler.removeCallbacks(bidTimeoutRunnable);
             setBidProcessing(false);
 
+            String razon = error.reason != null ? error.reason : "Puja inválida";
             Toast.makeText(this,
-                    "Puja rechazada: " + error.reason + ". Mínimo: " + formatMoneda(error.minimumRequired),
+                    "Puja rechazada: " + razon + ". Mínimo: " + formatMoneda(error.minimumRequired),
                     Toast.LENGTH_LONG).show();
             if (error.minimumRequired > 0) {
                 siguientePujaMinima = error.minimumRequired;
@@ -904,7 +1020,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity
     private double parseInput() {
         if (etOfertaInput == null) return miPuja;
         try {
-            String text = etOfertaInput.getText().toString().replaceAll("[^0-9.]", "");
+            // Eliminar todos los no-dígitos (el punto es separador de miles, no decimal)
+            String text = etOfertaInput.getText().toString().replaceAll("[^0-9]", "");
             return text.isEmpty() ? miPuja : Double.parseDouble(text);
         } catch (NumberFormatException e) {
             return miPuja;

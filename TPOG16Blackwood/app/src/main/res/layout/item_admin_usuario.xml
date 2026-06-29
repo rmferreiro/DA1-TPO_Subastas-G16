@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                android:text="Bronce"
+                android:text="Común"
                 android:textAllCaps="false"
                 android:textSize="13sp"
                 app:strokeColor="#C6A75E"

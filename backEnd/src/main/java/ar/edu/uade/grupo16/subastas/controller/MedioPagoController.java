@@ -87,11 +87,7 @@ public class MedioPagoController {
     @GetMapping("/admin/no-verificados")
     @Operation(summary = "[ADMIN] Listar medios de pago no verificados")
     public ResponseEntity<List<Map<String, Object>>> listarNoVerificados() {
-        List<Map<String, Object>> lista = medioPagoService.listarNoVerificados()
-                .stream()
-                .map(medioPagoService::toAdminResponseMap)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(lista);
+        return ResponseEntity.ok(medioPagoService.listarNoVerificadosParaAdmin());
     }
 
     // --- Endpoint admin para verificar un medio de pago ---

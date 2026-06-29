@@ -91,6 +91,12 @@ public class PujaService {
             throw new PujaInvalidaException("El item no pertenece a esta subasta");
         }
 
+        // Solo se puede pujar por el lote activo de la subasta
+        if (subasta.getItemActualId() != null
+                && !subasta.getItemActualId().equals(request.getItemId())) {
+            throw new PujaInvalidaException("Este lote ya no está activo. Esperá el siguiente.");
+        }
+
         // 3. Obtener el asistente
         UsuarioAuth auth = usuarioAuthRepository.findByEmail(emailPostor)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));

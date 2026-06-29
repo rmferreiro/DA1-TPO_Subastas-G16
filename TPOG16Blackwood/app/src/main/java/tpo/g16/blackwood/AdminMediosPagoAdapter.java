@@ -71,7 +71,9 @@ public class AdminMediosPagoAdapter extends RecyclerView.Adapter<AdminMediosPago
 
         holder.tvTipo.setText(tipoLabel);
         holder.tvDueno.setText(dueno != null ? dueno : "Usuario desconocido");
-        holder.tvDetalle.setText(buildDetalle(tipo, item));
+        String detalleApi = getStr(item, "detalle");
+        holder.tvDetalle.setText(
+                detalleApi != null && !detalleApi.isEmpty() ? detalleApi : buildDetalle(tipo, item));
 
         holder.btnVerificar.setOnClickListener(v -> {
             int pos = holder.getBindingAdapterPosition();

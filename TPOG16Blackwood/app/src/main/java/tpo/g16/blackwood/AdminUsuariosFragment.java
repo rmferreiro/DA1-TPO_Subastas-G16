@@ -94,12 +94,11 @@ public class AdminUsuariosFragment extends Fragment implements AdminUsuariosAdap
     }
 
     @Override
-    public void onAprobarClick(String email, String categoria, int position) {
+    public void onAprobarClick(String uuid, String categoria, int position) {
         Map<String, Object> body = new HashMap<>();
-        body.put("email", email);
         body.put("categoria", categoria);
 
-        apiService.aprobarUsuario(body).enqueue(new Callback<Map<String, Object>>() {
+        apiService.aprobarUsuario(uuid, body).enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (!isAdded()) return;

@@ -23,8 +23,8 @@ public class TarjetaCreditoStrategy implements MedioPagoStrategy {
     @Override
     public boolean puedeOperarEnMoneda(MedioPago medioPago, Moneda moneda) {
         if (moneda == Moneda.USD) {
-            // Para subasta en dólares se requiere tarjeta internacional
-            return Boolean.TRUE.equals(medioPago.getEsTarjetaInternacional());
+            // Para subasta en dólares se requiere tarjeta internacional o moneda USD
+            return Boolean.TRUE.equals(medioPago.getEsTarjetaInternacional()) || medioPago.getMoneda() == Moneda.USD;
         }
         return true;
     }

@@ -28,7 +28,7 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
     private final OnAprobarClickListener listener;
 
     public interface OnAprobarClickListener {
-        void onAprobarClick(String email, String categoria, int position);
+        void onAprobarClick(String uuid, String categoria, int position);
     }
 
     public AdminUsuariosAdapter(OnAprobarClickListener listener) {
@@ -69,13 +69,13 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
         holder.tvDocumento.setText(documento != null ? documento : "—");
         holder.tvPais.setText(pais != null ? pais : "—");
 
-        // Categoría seleccionada por defecto: bronce
-        final String[] categoriaSeleccionada = {"bronce"};
-        seleccionarCategoria(holder, "bronce");
+        // Categoría seleccionada por defecto: comun
+        final String[] categoriaSeleccionada = {"comun"};
+        seleccionarCategoria(holder, "comun");
 
         holder.btnBronce.setOnClickListener(v -> {
-            categoriaSeleccionada[0] = "bronce";
-            seleccionarCategoria(holder, "bronce");
+            categoriaSeleccionada[0] = "comun";
+            seleccionarCategoria(holder, "comun");
         });
         holder.btnPlata.setOnClickListener(v -> {
             categoriaSeleccionada[0] = "plata";
@@ -86,13 +86,15 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
             seleccionarCategoria(holder, "oro");
         });
 
+        String uuid = getStr(item, "uuid");
+
         holder.btnAprobar.setEnabled(true);
         holder.btnAprobar.setOnClickListener(v -> {
             int pos = holder.getBindingAdapterPosition();
             if (pos == RecyclerView.NO_POSITION) return;
-            if (email == null || email.isEmpty()) return;
+            if (uuid == null || uuid.isEmpty()) return;
             holder.btnAprobar.setEnabled(false);
-            listener.onAprobarClick(email, categoriaSeleccionada[0], pos);
+            listener.onAprobarClick(uuid, categoriaSeleccionada[0], pos);
         });
     }
 
@@ -104,9 +106,9 @@ public class AdminUsuariosAdapter extends RecyclerView.Adapter<AdminUsuariosAdap
 
         // Resaltar el seleccionado
         switch (categoria) {
-            case "bronce": activarBotonCategoria(holder.btnBronce); break;
-            case "plata":  activarBotonCategoria(holder.btnPlata);  break;
-            case "oro":    activarBotonCategoria(holder.btnOro);    break;
+            case "comun": activarBotonCategoria(holder.btnBronce); break;
+            case "plata": activarBotonCategoria(holder.btnPlata);  break;
+            case "oro":   activarBotonCategoria(holder.btnOro);    break;
         }
     }
 

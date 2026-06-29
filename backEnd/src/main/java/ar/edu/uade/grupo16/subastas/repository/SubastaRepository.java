@@ -14,6 +14,7 @@ public interface SubastaRepository extends JpaRepository<Subasta, Integer> {
     List<Subasta> findByFechaGreaterThanEqual(LocalDate fecha);
     List<Subasta> findByEstadoAndCategoria(String estado, String categoria);
 
-    @Query("SELECT s FROM Subasta s ORDER BY s.fecha DESC, s.hora DESC")
-    List<Subasta> findSubastasAbiertas();
+    @Query("SELECT s FROM Subasta s WHERE UPPER(s.estado) IN ('PENDIENTE', 'ACTIVA', 'FINALIZADA') " +
+           "ORDER BY s.fecha DESC, s.hora DESC")
+    List<Subasta> findSubastasParaListado();
 }

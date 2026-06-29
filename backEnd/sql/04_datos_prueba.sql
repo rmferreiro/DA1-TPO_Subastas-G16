@@ -37,7 +37,7 @@ INSERT INTO productos (identificador, fecha, disponible, descripcionCatalogo, de
 (2, '2024-02-10', 'si', 'Cuadro al óleo', 'Pintura clásica de paisaje siglo XIX', 2, 3, 'SEG-2024-001', 'ESTANDAR', 1, 'ACEPTADO', 'Depósito B');
 
 INSERT INTO subastas (identificador, fecha, hora, estado, subastador, ubicacion, capacidadAsistentes, tieneDeposito, seguridadPropia, categoria, moneda, descripcion) VALUES
-(1, CURDATE(), '19:00:00', 'PLANIFICADA', 4, 'Av. Corrientes 1346', 50, 'no', 'no', 'comun', 'ARS', 'Subasta de prueba');
+(1, CURDATE(), '19:00:00', 'PENDIENTE', 4, 'Av. Corrientes 1346', 50, 'no', 'no', 'comun', 'ARS', 'Subasta de prueba');
 
 INSERT INTO catalogos (identificador, descripcion, subasta, responsable) VALUES
 (1, 'Catálogo Principal', 1, 2);
@@ -52,7 +52,8 @@ INSERT INTO asistentes (identificador, numeroPostor, cliente, subasta) VALUES
 INSERT INTO medios_pago (id, cliente_id, tipo, banco, numero_cuenta, moneda, verificado, activo, monto_reservado) VALUES
 (1, 1, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', 'ARS', 1, 1, 0.00),
 (99, 999, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', 'ARS', 1, 1, 0.00),
-(100, 999, 'TARJETA_CREDITO', 'Visa', '4517660011223344', 'USD', 1, 1, 0.00);
+(100, 999, 'TARJETA_CREDITO', 'Visa', '4517660011223344', 'USD', 1, 1, 0.00),
+(101, 1, 'CUENTA_BANCARIA', 'Banco Provincia', '0000777666555', 'ARS', 0, 1, 0.00);
 
 SET FOREIGN_KEY_CHECKS = 1;
 
