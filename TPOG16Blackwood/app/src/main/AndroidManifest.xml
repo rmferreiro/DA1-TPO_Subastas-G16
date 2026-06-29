@@ -72,6 +72,24 @@
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
 
+        <activity
+            android:name=".register.NuevoLoteActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+
+        <activity
+            android:name=".main.AdminArticulosActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".main.EvaluarLoteActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+
+        <activity
+            android:name=".register.SeguimientoLoteActivity"
+            android:exported="false" />
+
 
         <!-- FLUJO COMPRA DE LOTES -->
         <activity

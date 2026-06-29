@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA"
+    android:importantForAutofill="noExcludeDescendants">
+
+    <!-- HEADER REUTILIZABLE -->
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- SECCIÓN FOTOS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fotos del lote (mínimo 1, máximo 6)"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <!-- FILA 1 DE FOTOS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/img_foto_1"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_black"
+                    android:scaleType="centerCrop"
+                    android:backgroundTint="#EAE5DA"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp" />
+
+                <ImageView
+                    android:id="@+id/img_foto_2"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_black"
+                    android:scaleType="centerCrop"
+                    android:backgroundTint="#EAE5DA"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp" />
+
+                <ImageView
+                    android:id="@+id/img_foto_3"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_black"
+                    android:scaleType="centerCrop"
+                    android:backgroundTint="#EAE5DA"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp" />
+            </LinearLayout>
+
+            <!-- FILA 2 DE FOTOS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/img_foto_4"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_black"
+                    android:scaleType="centerCrop"
+                    android:backgroundTint="#EAE5DA"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp" />
+
+                <ImageView
+                    android:id="@+id/img_foto_5"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_black"
+                    android:scaleType="centerCrop"
+                    android:backgroundTint="#EAE5DA"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp" />
+
+                <ImageView
+                    android:id="@+id/img_foto_6"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_black"
+                    android:scaleType="centerCrop"
+                    android:backgroundTint="#EAE5DA"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp" />
+
+                <LinearLayout
+                    android:id="@+id/btn_add_foto"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/input_bg"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+"
+                        android:textSize="24sp"
+                        android:textColor="#C6A75E" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- NOMBRE -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del lote"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_nombre_lote"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Ej: Juego de té antiguo"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:layout_marginBottom="16dp"
+                android:inputType="text" />
+
+            <!-- DETALLES CORTOS (SUBTÍTULO) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalles cortos / Subtítulo"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_subtitulo_lote"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Ej: 18 piezas · Porcelana"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:layout_marginBottom="16dp"
+                android:inputType="text" />
+
+            <!-- MONEDA Y PRECIO -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio estimado / sugerido"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <!-- SELECTOR DE SEGMENTOS: ARS | USD -->
+                <LinearLayout
+                    android:id="@+id/layout_moneda_selector"
+                    android:layout_width="140dp"
+                    android:layout_height="55dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/input_bg"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/btn_moneda_ars"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="ARS"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:background="@drawable/segment_active_bg"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/btn_moneda_usd"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="USD"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#1C2A21"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/et_precio_lote"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:hint="0.00"
+                    android:background="@drawable/input_bg"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#1C2A21"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
+
+            <!-- DESCRIPCIÓN COMPLETA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripción completa"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_descripcion_lote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Historia, estado y detalles del lote..."
+                android:background="@drawable/input_bg"
+                android:padding="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:minLines="3"
+                android:gravity="top"
+                android:layout_marginBottom="20dp"
+                android:inputType="textMultiLine" />
+
+            <!-- TOGGLE OBRA DE ARTE -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Es una obra de arte"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/sw_obra_arte"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:useMaterialThemeColors="true" />
+            </LinearLayout>
+
+            <!-- CONTENEDOR EXCLUSIVO OBRA DE ARTE -->
+            <LinearLayout
+                android:id="@+id/container_obra_arte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <!-- NOMBRE DEL ARTISTA -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre del artista"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+                <EditText
+                    android:id="@+id/et_artista_obra"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Ej: Vincent van Gogh"
+                    android:background="@drawable/input_bg"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#1C2A21"
+                    android:layout_marginBottom="16dp"
+                    android:inputType="text" />
+
+                <!-- FECHA DE CREACIÓN -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha de creación"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+                <EditText
+                    android:id="@+id/et_fecha_obra"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="Seleccionar fecha"
+                    android:background="@drawable/input_bg"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#1C2A21"
+                    android:layout_marginBottom="16dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none" />
+
+                <!-- HISTORIA DE LA OBRA -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Historia/Contexto de la obra"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+                <EditText
+                    android:id="@+id/et_historia_obra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Dueños anteriores, curiosidades..."
+                    android:background="@drawable/input_bg"
+                    android:padding="16dp"
+                    android:textSize="14sp"
+                    android:textColor="#1C2A21"
+                    android:minLines="3"
+                    android:gravity="top"
+                    android:inputType="textMultiLine" />
+            </LinearLayout>
+
+            <!-- CHECKBOXES -->
+            <CheckBox
+                android:id="@+id/cb_declaracion_jurada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Declaro que el bien a subastar me pertenece y que no poseo ningún impedimento para subastarlo dentro de la plataforma."
+                android:textColor="#555555"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp" />
+
+            <CheckBox
+                android:id="@+id/cb_origen_licito"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Afirmo poder acreditar el origen licito de los bienes a subastar (en el caso de que fueran requeridos por Blackwood)."
+                android:textColor="#555555"
+                android:textSize="12sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- BOTÓN ENVIAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_enviar_evaluacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enviar a evaluación"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="@null"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:enabled="false" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

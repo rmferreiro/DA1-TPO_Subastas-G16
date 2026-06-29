@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA"
+    android:importantForAutofill="noExcludeDescendants">
+
+    <!-- HEADER REUTILIZABLE -->
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- FOTOS DEL LOTE -->
+            <HorizontalScrollView
+                android:id="@+id/scroll_eval_fotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/layout_eval_fotos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- DUEÑO -->
+            <TextView
+                android:id="@+id/txt_eval_duenio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dueño: -"
+                android:textColor="#C6A75E"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <!-- NOMBRE LOTE -->
+            <TextView
+                android:id="@+id/txt_eval_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del lote"
+                android:textColor="#1C2A21"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- SUBTÍTULO -->
+            <TextView
+                android:id="@+id/txt_eval_subtitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subtítulo del lote"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- DESCRIPCIÓN -->
+            <TextView
+                android:id="@+id/txt_eval_descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción completa del lote..."
+                android:textColor="#555555"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- DATOS EXTRAS OBRA ARTE -->
+            <LinearLayout
+                android:id="@+id/container_eval_obra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/input_bg"
+                android:padding="12dp">
+                <TextView
+                    android:id="@+id/txt_eval_artista"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Artista: -"
+                    android:textColor="#1C2A21"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txt_eval_fecha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Creación: -"
+                    android:textColor="#1C2A21"
+                    android:textSize="13sp" />
+                <TextView
+                    android:id="@+id/txt_eval_historia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Historia: -"
+                    android:textColor="#555555"
+                    android:textSize="13sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0DEDA"
+                android:layout_marginBottom="20dp" />
+
+            <!-- ACCIÓN ADMINISTRADOR -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Decisión de la administración"
+                android:textColor="#1C2A21"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- SELECTOR SEGMENTADO: ACEPTAR | RECHAZAR -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/input_bg"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/btn_decide_aceptar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="ACEPTAR"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/segment_active_bg"
+                    android:backgroundTint="#4CAF50"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/btn_decide_rechazar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="RECHAZAR"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#1C2A21"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- CONTENEDOR RECHAZAR (MOTIVOS) -->
+            <LinearLayout
+                android:id="@+id/container_decide_rechazar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Motivos del rechazo"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+                <EditText
+                    android:id="@+id/et_decide_motivos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Explique las razones de seguridad o valuación..."
+                    android:background="@drawable/input_bg"
+                    android:padding="14dp"
+                    android:textSize="14sp"
+                    android:textColor="#1C2A21"
+                    android:minLines="3"
+                    android:gravity="top"
+                    android:inputType="textMultiLine" />
+            </LinearLayout>
+
+            <!-- CONTENEDOR ACEPTAR (PRECIO FINAL) -->
+            <LinearLayout
+                android:id="@+id/container_decide_aceptar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Precio base propuesto / final"
+                    android:textColor="#1C2A21"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- SELECTOR SEGMENTADO MONEDA EVAL -->
+                    <LinearLayout
+                        android:layout_width="140dp"
+                        android:layout_height="55dp"
+                        android:background="@drawable/input_bg"
+                        android:orientation="horizontal"
+                        android:padding="4dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:id="@+id/btn_eval_moneda_ars"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="ARS"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"
+                            android:background="@drawable/segment_active_bg"
+                            android:clickable="true"
+                            android:focusable="true" />
+
+                        <TextView
+                            android:id="@+id/btn_eval_moneda_usd"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="USD"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#1C2A21"
+                            android:background="@android:color/transparent"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:background="@drawable/input_bg"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+                        <EditText
+                            android:id="@+id/et_decide_precio"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:hint="0.00"
+                            android:textSize="14sp"
+                            android:textColor="#1C2A21"
+                            android:inputType="numberDecimal" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- BOTÓN ENVIAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_enviar_decision"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enviar decisión"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="#1C2A21"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -26,6 +26,7 @@ public class ProductoService {
     private final ClienteRepository clienteRepository;
     private final UsuarioAuthRepository usuarioAuthRepository;
     private final MedioPagoRepository medioPagoRepository;
+    private final ProductoObraArteRepository productoObraArteRepository;
 
     public ProductoService(ProductoRepository productoRepository,
                            DuenioRepository duenioRepository,
@@ -35,7 +36,8 @@ public class ProductoService {
                            NotificacionService notificacionService,
                            ClienteRepository clienteRepository,
                            UsuarioAuthRepository usuarioAuthRepository,
-                           MedioPagoRepository medioPagoRepository) {
+                           MedioPagoRepository medioPagoRepository,
+                           ProductoObraArteRepository productoObraArteRepository) {
         this.productoRepository = productoRepository;
         this.duenioRepository = duenioRepository;
         this.fotoRepository = fotoRepository;
@@ -45,6 +47,7 @@ public class ProductoService {
         this.clienteRepository = clienteRepository;
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.medioPagoRepository = medioPagoRepository;
+        this.productoObraArteRepository = productoObraArteRepository;
     }
 
     /**
@@ -52,10 +55,29 @@ public class ProductoService {
      * El producto queda en estado 'pendiente' hasta que un empleado lo revise.
      */
     @Transactional
-    public Map<String, Object> solicitarProducto(Map<String, Object> request) {
-        Integer duenioId = (Integer) request.get("duenioId");
-        Duenio duenio = duenioRepository.findById(duenioId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Dueño no encontrado: " + duenioId));
+    public Map<String, Object> solicitarProducto(Map<String, Object> request, String email) {
+        UsuarioAuth auth = usuarioAuthRepository.findByEmail(email)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con email: " + email));
+        
+        Persona persona = auth.getPersona();
+        
+        // Creación de Dueño al vuelo si no existe
+        Duenio duenio = duenioRepository.findById(persona.getIdentificador()).orElse(null);
+        if (duenio == null) {
+            Empleado verificador = empleadoRepository.findAll().stream().findFirst().orElse(null);
+            duenio = Duenio.builder()
+                    .persona(persona)
+                    .pais(persona.getPais())
+                    .verificacionFinanciera("si")
+                    .verificacionJudicial("si")
+                    .calificacionRiesgo(1)
+                    .verificador(verificador)
+                    .build();
+            duenio = duenioRepository.save(duenio);
+        }
+
+        // Obtener primer verificador/empleado como revisor por defecto
+        Empleado revisor = empleadoRepository.findAll().stream().findFirst().orElse(null);
 
         Object declObj = request.get("declaracionJurada");
         boolean declaracionJurada = false;
@@ -69,21 +91,62 @@ public class ProductoService {
             throw new RegistroInvalidoException("Debe declarar obligatoriamente que el bien le pertenece, su origen es lícito y no posee impedimento legal para subastarlo.");
         }
 
+        String tipo = (String) request.getOrDefault("tipo", "ESTANDAR");
+        String subtitulo = (String) request.get("subtitulo");
+        
+        java.math.BigDecimal precioBase = java.math.BigDecimal.ZERO;
+        if (request.containsKey("precioEstimado")) {
+            precioBase = new java.math.BigDecimal(request.get("precioEstimado").toString());
+        }
+
+        String moneda = (String) request.getOrDefault("moneda", "ARS");
+
+        String descLarga = (String) request.getOrDefault("descripcionLarga", "");
+        String catalogoCombined = (subtitulo != null ? subtitulo : "") + " · " + descLarga;
+
         Producto producto = Producto.builder()
                 .duenio(duenio)
+                .revisor(revisor)
                 .descripcionCompleta((String) request.get("descripcion"))
+                .descripcionCatalogo(catalogoCombined)
+                .tipoProducto(tipo)
+                .declaracionPropiedad(true)
+                .precioBasePropuesto(precioBase)
+                .moneda(moneda)
                 .estadoRevision("PENDIENTE")
                 .disponible("no")
+                .ubicacionDeposito("Depósito central · Buenos Aires")
                 .build();
         producto = productoRepository.save(producto);
+
+        // Si es OBRA_ARTE, registrar la entidad ProductoObraArte
+        if ("OBRA_ARTE".equals(tipo)) {
+            String artista = (String) request.get("artista");
+            String historia = (String) request.get("historia");
+            java.time.LocalDate fechaCreacion = null;
+            if (request.containsKey("fechaCreacion")) {
+                try {
+                    fechaCreacion = java.time.LocalDate.parse((String) request.get("fechaCreacion"));
+                } catch (Exception e) {
+                    // Ignorar error de parsing
+                }
+            }
+            
+            ProductoObraArte obraArte = ProductoObraArte.builder()
+                    .producto(producto)
+                    .artista(artista)
+                    .fechaCreacion(fechaCreacion)
+                    .historia(historia)
+                    .build();
+            productoObraArteRepository.save(obraArte);
+        }
 
         // Guardar fotos si vienen en Base64
         if (request.containsKey("fotos")) {
             @SuppressWarnings("unchecked")
             List<String> fotos = (List<String>) request.get("fotos");
-            final Integer productoId = producto.getIdentificador();
             final Producto productoFinal = producto;
-            fotos.stream().limit(5).forEach(fotoBase64 -> {
+            fotos.stream().limit(6).forEach(fotoBase64 -> {
                 try {
                     Foto foto = Foto.builder()
                             .producto(productoFinal)
@@ -130,6 +193,9 @@ public class ProductoService {
 
             producto.setPrecioBasePropuesto(precioBase);
             producto.setComisionPropuesta(comision);
+            if (request.containsKey("moneda")) {
+                producto.setMoneda(request.get("moneda").toString());
+            }
             producto.setEstadoRevision("PENDIENTE_DUENIO");
 
             // Notificar al dueño para que revise las condiciones
@@ -217,7 +283,8 @@ public class ProductoService {
      */
     @Transactional(readOnly = true)
     public List<Map<String, Object>> listarPorEstado(String estado) {
-        return productoRepository.findByEstadoRevision(estado)
+        if (estado == null) return java.util.Collections.emptyList();
+        return productoRepository.findByEstadoRevision(estado.toUpperCase())
                 .stream()
                 .map(p -> Map.<String, Object>of(
                         "id", p.getIdentificador(),
@@ -234,19 +301,50 @@ public class ProductoService {
     @Transactional(readOnly = true)
     public Map<String, Object> detalle(Integer productoId) {
         Producto p = productoRepository.findById(productoId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado: " + productoId));
 
-        // Verificar si tiene seguro vigente
         boolean tieneSeguro = seguroRepository.existsByProductoIdentificadorAndVigente(productoId, true);
 
-        return Map.of(
-                "id", p.getIdentificador(),
-                "descripcion", p.getDescripcionCompleta() != null ? p.getDescripcionCompleta() : "",
-                "estado", p.getEstadoRevision() != null ? p.getEstadoRevision() : "",
-                "duenioId", p.getDuenio() != null ? p.getDuenio().getIdentificador() : "",
-                "tieneSeguroVigente", tieneSeguro,
-                "cantidadFotos", fotoRepository.countByProductoIdentificador(productoId)
-        );
+        Map<String, Object> map = new java.util.HashMap<>();
+        map.put("id", p.getIdentificador());
+        map.put("descripcion", p.getDescripcionCompleta() != null ? p.getDescripcionCompleta() : "");
+
+        String rawCat = p.getDescripcionCatalogo() != null ? p.getDescripcionCatalogo() : "";
+        String subtitulo = rawCat;
+        String descLarga = "";
+        int separatorIdx = rawCat.indexOf(" · ");
+        if (separatorIdx != -1) {
+            subtitulo = rawCat.substring(0, separatorIdx);
+            descLarga = rawCat.substring(separatorIdx + 3);
+        }
+        map.put("subtitulo", subtitulo);
+        map.put("descripcionCompleta", descLarga);
+
+        map.put("estado", p.getEstadoRevision() != null ? p.getEstadoRevision() : "");
+        map.put("duenioId", p.getDuenio() != null ? p.getDuenio().getIdentificador() : "");
+        map.put("duenioNombre", p.getDuenio() != null && p.getDuenio().getPersona() != null ? p.getDuenio().getPersona().getNombre() : "Desconocido");
+        map.put("tieneSeguroVigente", tieneSeguro);
+        map.put("cantidadFotos", fotoRepository.countByProductoIdentificador(productoId));
+        map.put("tipo", p.getTipoProducto() != null ? p.getTipoProducto() : "ESTANDAR");
+        map.put("precioEstimado", p.getPrecioBasePropuesto() != null ? p.getPrecioBasePropuesto() : java.math.BigDecimal.ZERO);
+        map.put("precioBasePropuesto", p.getPrecioBasePropuesto() != null ? p.getPrecioBasePropuesto() : java.math.BigDecimal.ZERO);
+        map.put("moneda", p.getMoneda() != null ? p.getMoneda() : "ARS");
+        map.put("ubicacionDeposito", p.getUbicacionDeposito() != null ? p.getUbicacionDeposito() : "");
+        map.put("motivoRechazo", p.getMotivoRechazo() != null ? p.getMotivoRechazo() : "");
+
+        java.util.List<String> fotosBase64 = fotoRepository.findByProductoIdentificador(productoId).stream()
+                .map(f -> java.util.Base64.getEncoder().encodeToString(f.getFoto()))
+                .collect(java.util.stream.Collectors.toList());
+        map.put("fotos", fotosBase64);
+
+        if ("OBRA_ARTE".equals(p.getTipoProducto()) && p.getProductoObraArte() != null) {
+            ProductoObraArte oa = p.getProductoObraArte();
+            map.put("artista", oa.getArtista() != null ? oa.getArtista() : "");
+            map.put("fechaCreacion", oa.getFechaCreacion() != null ? oa.getFechaCreacion().toString() : "");
+            map.put("historia", oa.getHistoria() != null ? oa.getHistoria() : "");
+        }
+
+        return map;
     }
 
     /**
@@ -272,14 +370,18 @@ public class ProductoService {
         
         return productoRepository.findAll().stream()
                 .filter(p -> p.getDuenio() != null && p.getDuenio().getIdentificador().equals(duenioId))
-                .map(p -> Map.<String, Object>of(
-                        "id", p.getIdentificador(),
-                        "descripcion", p.getDescripcionCompleta() != null ? p.getDescripcionCompleta() : "",
-                        "estado", p.getEstadoRevision() != null ? p.getEstadoRevision() : "",
-                        "motivoRechazo", p.getMotivoRechazo() != null ? p.getMotivoRechazo() : "",
-                        "cuentaCobroConfigurada", p.getCuentaCobro() != null,
-                        "tieneSeguro", seguroRepository.existsByProductoIdentificadorAndVigente(p.getIdentificador(), true)
-                ))
+                .map(p -> {
+                    Map<String, Object> map = new java.util.HashMap<>();
+                    map.put("id", p.getIdentificador());
+                    map.put("descripcion", p.getDescripcionCompleta() != null ? p.getDescripcionCompleta() : "");
+                    map.put("subtitulo", p.getDescripcionCatalogo() != null ? p.getDescripcionCatalogo() : "");
+                    map.put("tipo", p.getTipoProducto() != null ? p.getTipoProducto() : "ESTANDAR");
+                    map.put("estado", p.getEstadoRevision() != null ? p.getEstadoRevision() : "");
+                    map.put("motivoRechazo", p.getMotivoRechazo() != null ? p.getMotivoRechazo() : "");
+                    map.put("cuentaCobroConfigurada", p.getCuentaCobro() != null);
+                    map.put("tieneSeguro", seguroRepository.existsByProductoIdentificadorAndVigente(p.getIdentificador(), true));
+                    return map;
+                })
                 .collect(Collectors.toList());
     }
 

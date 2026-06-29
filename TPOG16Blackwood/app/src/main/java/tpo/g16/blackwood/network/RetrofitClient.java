@@ -57,10 +57,18 @@ public class RetrofitClient {
                 if (token != null) {
                     Request.Builder builder = original.newBuilder()
                             .header("Authorization", "Bearer " + token);
-                    return chain.proceed(builder.build());
+                    Response response = chain.proceed(builder.build());
+                    if (response.code() == 401) {
+                        manejarSesionVencida();
+                    }
+                    return response;
                 }
 
-                return chain.proceed(original);
+                Response response = chain.proceed(original);
+                if (response.code() == 401 && prefs.getString(ApiConfig.KEY_ACCESS_TOKEN, null) != null) {
+                    manejarSesionVencida();
+                }
+                return response;
             }
         };
 
@@ -107,6 +115,36 @@ public class RetrofitClient {
         authToken = token;
     }
 
+    private static boolean isRedirecting = false;
+
+    private static void manejarSesionVencida() {
+        if (appContext == null) return;
+        synchronized (RetrofitClient.class) {
+            if (isRedirecting) return;
+            isRedirecting = true;
+        }
+
+        // Limpiar preferences
+        SharedPreferences prefs = appContext.getSharedPreferences(ApiConfig.PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+        authToken = null;
+
+        // Redirigir a LoginActivity
+        android.content.Intent intent = new android.content.Intent(appContext, tpo.g16.blackwood.login.LoginActivity.class);
+        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        appContext.startActivity(intent);
+
+        // Mostrar Toast
+        new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+            android.widget.Toast.makeText(appContext, "Sesión vencida. Vuelve a ingresar por favor", android.widget.Toast.LENGTH_LONG).show();
+            synchronized (RetrofitClient.class) {
+                isRedirecting = false;
+            }
+        });
+    }
+
     public static Retrofit getClient() {
         if (retrofit == null) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -132,7 +170,11 @@ public class RetrofitClient {
                     }
 
                     Request request = requestBuilder.build();
-                    return chain.proceed(request);
+                    Response response = chain.proceed(request);
+                    if (response.code() == 401 && token != null) {
+                        manejarSesionVencida();
+                    }
+                    return response;
                 }
             });
 

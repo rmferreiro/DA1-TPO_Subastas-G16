@@ -17,7 +17,7 @@
         android:layout_height="64dp"
         android:orientation="horizontal">
 
-        <!-- TAB 1: SUBASTAS (indicator dot above text) -->
+        <!-- TAB 1: SUBASTAS -->
         <LinearLayout
             android:id="@+id/tab_subastas"
             android:layout_width="0dp"
@@ -77,7 +77,37 @@
 
         </LinearLayout>
 
-        <!-- TAB 3: PERFIL -->
+        <!-- TAB 3: MIS ARTÍCULOS -->
+        <LinearLayout
+            android:id="@+id/tab_mis_articulos"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!-- Dot indicador activo -->
+            <View
+                android:id="@+id/tab_articulos_dot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/circle_gold"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tab_articulos_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mis artículos"
+                android:textColor="#6B6B6B"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <!-- TAB 4: PERFIL -->
         <LinearLayout
             android:id="@+id/tab_perfil"
             android:layout_width="0dp"

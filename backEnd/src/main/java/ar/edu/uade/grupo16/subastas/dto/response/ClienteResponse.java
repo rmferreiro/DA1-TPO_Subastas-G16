@@ -18,4 +18,5 @@ public class ClienteResponse {
     private String estado;
     private boolean tieneMedioPagoVerificado;
     private String ultimoMedioPago;
+    private boolean esAdmin;
 }

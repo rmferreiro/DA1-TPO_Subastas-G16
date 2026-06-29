@@ -8,6 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import tpo.g16.blackwood.network.models.PujaRequest;
 import tpo.g16.blackwood.network.models.SubastaResponse;
@@ -75,4 +76,22 @@ public interface SubastasApiService {
 
     @GET("api/clientes/metricas")
     Call<Map<String, Object>> getMetricas();
+
+    @GET("api/productos/mis-productos")
+    Call<List<Map<String, Object>>> getMisProductos();
+
+    @POST("api/productos/solicitar")
+    Call<Map<String, Object>> solicitarProducto(@Body Map<String, Object> request);
+
+    @GET("api/productos/{id}")
+    Call<Map<String, Object>> getProductoDetalle(@Path("id") int id);
+
+    @GET("api/productos/pendientes")
+    Call<List<Map<String, Object>>> getProductosPendientes();
+
+    @PUT("api/productos/{id}/revisar")
+    Call<Map<String, Object>> revisarProducto(@Path("id") int id, @Body Map<String, Object> request);
+
+    @PUT("api/productos/{id}/condiciones-duenio")
+    Call<Map<String, Object>> responderCondiciones(@Path("id") int id, @Body Map<String, Object> request);
 }

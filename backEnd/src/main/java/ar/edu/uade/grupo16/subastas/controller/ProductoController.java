@@ -32,8 +32,11 @@ public class ProductoController {
     @PostMapping("/solicitar")
     @Operation(summary = "Solicitar ingreso de producto para subasta",
                description = "Un dueño solicita que su producto sea evaluado para ser subastado.")
-    public ResponseEntity<Map<String, Object>> solicitar(@RequestBody Map<String, Object> request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoService.solicitarProducto(request));
+    public ResponseEntity<Map<String, Object>> solicitar(
+            @RequestBody Map<String, Object> request,
+            java.security.Principal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productoService.solicitarProducto(request, principal.getName()));
     }
 
     @GetMapping("/pendientes")

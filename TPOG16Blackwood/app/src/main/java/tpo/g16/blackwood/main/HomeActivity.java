@@ -20,9 +20,9 @@ import tpo.g16.blackwood.PerfilFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private LinearLayout tabSubastas, tabMisPujas, tabPerfil;
-    private TextView labelSubastas, labelMisPujas, labelPerfil;
-    private View dotSubastas, dotMisPujas, dotPerfil;
+    private LinearLayout tabSubastas, tabMisPujas, tabPerfil, tabMisArticulos;
+    private TextView labelSubastas, labelMisPujas, labelPerfil, labelMisArticulos;
+    private View dotSubastas, dotMisPujas, dotPerfil, dotMisArticulos;
     private TextView homeHeaderSubtitle;
 
     @Override
@@ -36,20 +36,24 @@ public class HomeActivity extends AppCompatActivity {
         tabSubastas = findViewById(R.id.tab_subastas);
         tabMisPujas = findViewById(R.id.tab_mis_pujas);
         tabPerfil   = findViewById(R.id.tab_perfil);
+        tabMisArticulos = findViewById(R.id.tab_mis_articulos);
 
         labelSubastas = findViewById(R.id.tab_subastas_label);
         labelMisPujas = findViewById(R.id.tab_pujas_label);
         labelPerfil   = findViewById(R.id.tab_perfil_label);
+        labelMisArticulos = findViewById(R.id.tab_articulos_label);
 
         dotSubastas = findViewById(R.id.tab_subastas_dot);
         dotMisPujas = findViewById(R.id.tab_pujas_dot);
         dotPerfil   = findViewById(R.id.tab_perfil_dot);
+        dotMisArticulos = findViewById(R.id.tab_articulos_dot);
 
         homeHeaderSubtitle = findViewById(R.id.home_header_subtitle);
 
         tabSubastas.setOnClickListener(v -> selectTab(0));
         tabMisPujas.setOnClickListener(v -> selectTab(1));
-        tabPerfil.setOnClickListener(v -> selectTab(2));
+        tabPerfil.setOnClickListener(v -> selectTab(3));
+        tabMisArticulos.setOnClickListener(v -> selectTab(2));
 
         // Aplicar padding dinámico por la barra de estado y de navegación
         View rootView = findViewById(R.id.home_root);
@@ -81,14 +85,17 @@ public class HomeActivity extends AppCompatActivity {
         labelSubastas.setTextColor(Color.parseColor("#6B6B6B"));
         labelMisPujas.setTextColor(Color.parseColor("#6B6B6B"));
         labelPerfil.setTextColor(Color.parseColor("#6B6B6B"));
+        labelMisArticulos.setTextColor(Color.parseColor("#6B6B6B"));
 
         labelSubastas.setTypeface(null, Typeface.NORMAL);
         labelMisPujas.setTypeface(null, Typeface.NORMAL);
         labelPerfil.setTypeface(null, Typeface.NORMAL);
+        labelMisArticulos.setTypeface(null, Typeface.NORMAL);
 
         dotSubastas.setVisibility(View.INVISIBLE);
         dotMisPujas.setVisibility(View.INVISIBLE);
         dotPerfil.setVisibility(View.INVISIBLE);
+        dotMisArticulos.setVisibility(View.INVISIBLE);
 
         Fragment selectedFragment = null;
 
@@ -111,7 +118,16 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 selectedFragment = new MisPujasFragment();
                 break;
-            case 2: // Perfil
+            case 2: // Mis Artículos
+                labelMisArticulos.setTextColor(Color.parseColor("#1C2A21"));
+                labelMisArticulos.setTypeface(null, Typeface.BOLD);
+                dotMisArticulos.setVisibility(View.VISIBLE);
+                if (homeHeaderSubtitle != null) {
+                    homeHeaderSubtitle.setText("Artículos para subastar");
+                }
+                selectedFragment = new tpo.g16.blackwood.main.MisArticulosFragment();
+                break;
+            case 3: // Perfil
                 labelPerfil.setTextColor(Color.parseColor("#1C2A21"));
                 labelPerfil.setTypeface(null, Typeface.BOLD);
                 dotPerfil.setVisibility(View.VISIBLE);

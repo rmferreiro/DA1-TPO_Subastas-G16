@@ -11,6 +11,7 @@ public class ClienteResponse {
     private String estado;
     private boolean tieneMedioPagoVerificado;
     private String ultimoMedioPago;
+    private boolean esAdmin;
 
     public Integer getId() { return id; }
     public String getNombre() { return nombre; }
@@ -22,4 +23,5 @@ public class ClienteResponse {
     public String getEstado() { return estado; }
     public boolean isTieneMedioPagoVerificado() { return tieneMedioPagoVerificado; }
     public String getUltimoMedioPago() { return ultimoMedioPago; }
+    public boolean isEsAdmin() { return esAdmin; }
 }

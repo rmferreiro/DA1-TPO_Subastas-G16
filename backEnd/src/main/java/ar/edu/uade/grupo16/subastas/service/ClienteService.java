@@ -22,17 +22,20 @@ public class ClienteService {
     private final MedioPagoRepository medioPagoRepository;
     private final PujoRepository pujoRepository;
     private final ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository;
+    private final ar.edu.uade.grupo16.subastas.repository.EmpleadoRepository empleadoRepository;
 
     public ClienteService(ClienteRepository clienteRepository,
                           UsuarioAuthRepository usuarioAuthRepository,
                           MedioPagoRepository medioPagoRepository,
                           PujoRepository pujoRepository,
-                          ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository) {
+                          ar.edu.uade.grupo16.subastas.repository.AsistenteRepository asistenteRepository,
+                          ar.edu.uade.grupo16.subastas.repository.EmpleadoRepository empleadoRepository) {
         this.clienteRepository = clienteRepository;
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.medioPagoRepository = medioPagoRepository;
         this.pujoRepository = pujoRepository;
         this.asistenteRepository = asistenteRepository;
+        this.empleadoRepository = empleadoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +63,14 @@ public class ClienteService {
             }
         }
 
+        boolean esAdmin = false;
+        if (auth.getPersona() != null) {
+            ar.edu.uade.grupo16.subastas.entity.Empleado emp = empleadoRepository.findById(auth.getPersona().getIdentificador()).orElse(null);
+            if (emp != null && "ADMINISTRADOR".equalsIgnoreCase(emp.getCargo())) {
+                esAdmin = true;
+            }
+        }
+
         return ClienteResponse.builder()
                 .id(cliente.getIdentificador())
                 .nombre(auth.getPersona().getNombre())
@@ -71,6 +82,7 @@ public class ClienteService {
                 .estado(auth.getEstado().name())
                 .tieneMedioPagoVerificado(tieneMedioPago)
                 .ultimoMedioPago(ultimoMedioPagoText)
+                .esAdmin(esAdmin)
                 .build();
     }
 

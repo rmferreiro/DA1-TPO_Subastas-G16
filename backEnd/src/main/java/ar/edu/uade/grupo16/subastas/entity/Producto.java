@@ -67,6 +67,8 @@ public class Producto {
     @Column(name = "comision_propuesta", precision = 18, scale = 2)
     private BigDecimal comisionPropuesta;
 
+    @Column(name = "moneda", length = 10)
+    private String moneda; // "ARS" o "USD"
 
     // Ubicación en depósito
     @Column(name = "ubicacion_deposito", length = 200)

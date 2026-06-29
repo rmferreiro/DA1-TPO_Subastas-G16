@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA"
+    android:importantForAutofill="noExcludeDescendants">
+
+    <!-- HEADER REUTILIZABLE -->
+    <include
+        android:id="@+id/include_header"
+        layout="@layout/view_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- TÍTULO Y SUBTÍTULO DEL LOTE -->
+            <TextView
+                android:id="@+id/txt_titulo_lote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juego de té antiguo"
+                android:textColor="#1C2A21"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_subtitulo_lote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="18 piezas · Porcelana"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- CARD STEPPER DE PROGRESO -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- PASO 1: ENVIADO A LA EMPRESA -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+                        <View
+                            android:id="@+id/step_dot_1"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/circle_gold"
+                            android:layout_marginEnd="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enviado a la empresa"
+                            android:textColor="#1C2A21"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- PASO 2: EN INSPECCIÓN -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+                        <View
+                            android:id="@+id/step_dot_2"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/circle_gold"
+                            android:layout_marginEnd="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="En inspección"
+                            android:textColor="#1C2A21"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- PASO 3: PENDIENTE DECISIÓN -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <View
+                            android:id="@+id/step_dot_3"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/circle_gold"
+                            android:backgroundTint="#9E9E9E"
+                            android:layout_marginEnd="16dp" />
+                        <TextView
+                            android:id="@+id/txt_step_3_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pendiente decisión"
+                            android:textColor="#757575"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- CARD SEGURO DEL BIEN -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_seguro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Seguro del bien"
+                        android:textColor="#1C2A21"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cobertura basada en el valor estimado. Proximamente añadiremos los datos para que puedas contactarte con la aseguradora asignada."
+                        android:textColor="#757575"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- CARD UBICACIÓN ACTUAL -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_ubicacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ubicación actual"
+                        android:textColor="#1C2A21"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/txt_ubicacion_lote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="En posesion del usuario, preparando envío hacía depósito central en caso de aprobación."
+                        android:textColor="#757575"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- CARD MOTIVOS RECHAZO (GONE POR DEFECTO) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_motivos_rechazo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Motivos de la administración"
+                        android:textColor="#1C2A21"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/txt_motivos_rechazo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="#555555"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- CARD PROPUESTA DUEÑO (GONE POR DEFECTO) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_propuesta_duenio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Monto inicial de subasta"
+                        android:textColor="#1C2A21"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/txt_monto_propuesto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ARS 0.00"
+                        android:textColor="#C6A75E"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_propuesta_aceptar"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Aceptar"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="#4CAF50"
+                            app:cornerRadius="8dp"
+                            app:elevation="0dp"
+                            android:layout_marginEnd="8dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_propuesta_rechazar"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Rechazar"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="#F44336"
+                            app:cornerRadius="8dp"
+                            app:elevation="0dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- BOTÓN CONTACTAR SOPORTE -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_contactar_soporte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Contactar soporte"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="#1C2A21"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
