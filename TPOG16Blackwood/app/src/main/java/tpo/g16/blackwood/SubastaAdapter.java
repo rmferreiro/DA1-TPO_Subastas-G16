@@ -43,33 +43,49 @@ public class SubastaAdapter extends RecyclerView.Adapter<SubastaAdapter.SubastaV
         holder.tvUbicacion.setText(subasta.getUbicacion() != null ? subasta.getUbicacion() : "Desconocido");
         holder.tvRematador.setText("Rematador: " + (subasta.getSubastadorNombre() != null ? subasta.getSubastadorNombre() : "Pendiente"));
         
-        // Capacidad / Asistentes (aproximado a Lotes para encajar en el diseño anterior)
-        holder.tvCapacidad.setText("Capacidad: " + subasta.getCapacidadAsistentes());
+        // Moneda (reemplaza Capacidad)
+        String moneda = subasta.getMoneda() != null ? subasta.getMoneda().toUpperCase() : "ARS";
+        holder.tvMoneda.setText("Moneda: " + moneda);
         
         // Descripción / Estimación
         holder.tvDescripcion.setText(subasta.getDescripcion() != null ? subasta.getDescripcion() : "Sin descripción");
 
-        // Estado
-        if ("ABIERTA".equalsIgnoreCase(subasta.getEstado()) || "EN_CURSO".equalsIgnoreCase(subasta.getEstado())) {
+        // Estado: Planificada (azul) | En sala (verde) | Finalizada (gris)
+        String estado = subasta.getEstado() != null ? subasta.getEstado().toUpperCase() : "";
+        if ("PLANIFICADA".equals(estado) || "PROGRAMADA".equals(estado)) {
+            holder.tvEstado.setText("Planificada");
+            int azul = Color.parseColor("#1565C0"); // Azul fuerte
+            holder.tvEstado.setTextColor(azul);
+            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(azul));
+        } else if ("ABIERTA".equals(estado) || "EN_CURSO".equals(estado)) {
             holder.tvEstado.setText("En sala");
-            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#5C7A65"))); // Verde
-        } else if ("PROGRAMADA".equalsIgnoreCase(subasta.getEstado())) {
-            holder.tvEstado.setText("Próxima sesión");
-            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#6E2C2C"))); // Rojo oscuro
+            int verde = Color.parseColor("#1B7A3E"); // Verde fuerte
+            holder.tvEstado.setTextColor(verde);
+            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(verde));
+        } else if ("FINALIZADA".equals(estado) || "CERRADA".equals(estado)) {
+            holder.tvEstado.setText("Finalizada");
+            int gris = Color.parseColor("#757575"); // Gris
+            holder.tvEstado.setTextColor(gris);
+            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(gris));
         } else {
             holder.tvEstado.setText(subasta.getEstado());
-            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#A7A9AC"))); // Gris
+            int gris = Color.parseColor("#A7A9AC");
+            holder.tvEstado.setTextColor(gris);
+            holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(gris));
         }
 
         // Categoría Color
-        if ("ORO".equalsIgnoreCase(subasta.getCategoria())) {
+        String cat = subasta.getCategoria() != null ? subasta.getCategoria().toUpperCase() : "";
+        if ("ORO".equals(cat)) {
             holder.tvCategoria.setTextColor(Color.parseColor("#C6A75E"));
-        } else if ("PLATINO".equalsIgnoreCase(subasta.getCategoria())) {
-            holder.tvCategoria.setTextColor(Color.parseColor("#A7A9AC"));
-        } else if ("DIAMANTE".equalsIgnoreCase(subasta.getCategoria())) {
-            holder.tvCategoria.setTextColor(Color.parseColor("#2C3E50"));
+        } else if ("PLATINO".equals(cat)) {
+            holder.tvCategoria.setTextColor(Color.parseColor("#808080")); // Platino / Gris oscuro
+        } else if ("PLATA".equals(cat)) {
+            holder.tvCategoria.setTextColor(Color.parseColor("#A0A0A0")); // Plata
+        } else if ("ESPECIAL".equals(cat)) {
+            holder.tvCategoria.setTextColor(Color.parseColor("#4A90E2")); // Especial / Azul
         } else {
-            holder.tvCategoria.setTextColor(Color.parseColor("#6B6B6B"));
+            holder.tvCategoria.setTextColor(Color.parseColor("#6B6B6B")); // Comun
         }
 
         // Clic en la tarjeta
@@ -92,7 +108,7 @@ public class SubastaAdapter extends RecyclerView.Adapter<SubastaAdapter.SubastaV
 
     static class SubastaViewHolder extends RecyclerView.ViewHolder {
         View dotEstado;
-        TextView tvEstado, tvCategoria, tvFechaHora, tvUbicacion, tvRematador, tvCapacidad, tvDescripcion;
+        TextView tvEstado, tvCategoria, tvFechaHora, tvUbicacion, tvRematador, tvMoneda, tvDescripcion;
 
         public SubastaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,7 +118,7 @@ public class SubastaAdapter extends RecyclerView.Adapter<SubastaAdapter.SubastaV
             tvFechaHora = itemView.findViewById(R.id.tv_fecha_hora);
             tvUbicacion = itemView.findViewById(R.id.tv_ubicacion);
             tvRematador = itemView.findViewById(R.id.tv_rematador);
-            tvCapacidad = itemView.findViewById(R.id.tv_capacidad);
+            tvMoneda = itemView.findViewById(R.id.tv_moneda);
             tvDescripcion = itemView.findViewById(R.id.tv_descripcion);
         }
     }

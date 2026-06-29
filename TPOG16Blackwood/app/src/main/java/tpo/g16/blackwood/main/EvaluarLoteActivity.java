@@ -41,12 +41,14 @@ public class EvaluarLoteActivity extends AppCompatActivity {
     private LinearLayout containerAceptar, containerRechazar;
     
     private TextView btnEvalMonedaArs, btnEvalMonedaUsd;
+    private TextView btnComision0, btnComision5, btnComision10, btnComision15, btnComision20;
     private EditText etDecidePrecio, etDecideMotivos;
     private MaterialButton btnEnviar;
 
     private int productoId;
     private String decisionSeleccionada = "ACEPTADO";
     private String monedaSeleccionada = "ARS";
+    private double comisionSeleccionada = 0.05; // 5% por defecto
     private double precioOriginal = 0.0;
 
     @Override
@@ -84,6 +86,12 @@ public class EvaluarLoteActivity extends AppCompatActivity {
         btnEvalMonedaArs = findViewById(R.id.btn_eval_moneda_ars);
         btnEvalMonedaUsd = findViewById(R.id.btn_eval_moneda_usd);
         
+        btnComision0 = findViewById(R.id.btn_comision_0);
+        btnComision5 = findViewById(R.id.btn_comision_5);
+        btnComision10 = findViewById(R.id.btn_comision_10);
+        btnComision15 = findViewById(R.id.btn_comision_15);
+        btnComision20 = findViewById(R.id.btn_comision_20);
+
         etDecidePrecio = findViewById(R.id.et_decide_precio);
         etDecideMotivos = findViewById(R.id.et_decide_motivos);
         btnEnviar = findViewById(R.id.btn_enviar_decision);
@@ -97,6 +105,14 @@ public class EvaluarLoteActivity extends AppCompatActivity {
         btnEvalMonedaArs.setOnClickListener(v -> seleccionarMoneda("ARS"));
         btnEvalMonedaUsd.setOnClickListener(v -> seleccionarMoneda("USD"));
         seleccionarMoneda("ARS"); // Default
+
+        // Configurar selector de comisión
+        btnComision0.setOnClickListener(v -> seleccionarComision(0.00));
+        btnComision5.setOnClickListener(v -> seleccionarComision(0.05));
+        btnComision10.setOnClickListener(v -> seleccionarComision(0.10));
+        btnComision15.setOnClickListener(v -> seleccionarComision(0.15));
+        btnComision20.setOnClickListener(v -> seleccionarComision(0.20));
+        seleccionarComision(0.05); // Default 5%
 
         btnEnviar.setOnClickListener(v -> enviarDecision());
 
@@ -140,6 +156,40 @@ public class EvaluarLoteActivity extends AppCompatActivity {
             btnEvalMonedaUsd.setTextColor(Color.WHITE);
             btnEvalMonedaArs.setBackgroundColor(Color.TRANSPARENT);
             btnEvalMonedaArs.setTextColor(Color.parseColor("#1C2A21"));
+        }
+    }
+
+    private void seleccionarComision(double valor) {
+        comisionSeleccionada = valor;
+        
+        // Resetear todos los botones a transparentes y texto oscuro
+        btnComision0.setBackgroundColor(Color.TRANSPARENT);
+        btnComision0.setTextColor(Color.parseColor("#1C2A21"));
+        btnComision5.setBackgroundColor(Color.TRANSPARENT);
+        btnComision5.setTextColor(Color.parseColor("#1C2A21"));
+        btnComision10.setBackgroundColor(Color.TRANSPARENT);
+        btnComision10.setTextColor(Color.parseColor("#1C2A21"));
+        btnComision15.setBackgroundColor(Color.TRANSPARENT);
+        btnComision15.setTextColor(Color.parseColor("#1C2A21"));
+        btnComision20.setBackgroundColor(Color.TRANSPARENT);
+        btnComision20.setTextColor(Color.parseColor("#1C2A21"));
+
+        // Pintar el botón seleccionado con segment_active_bg y texto blanco
+        if (valor == 0.00) {
+            btnComision0.setBackgroundResource(R.drawable.segment_active_bg);
+            btnComision0.setTextColor(Color.WHITE);
+        } else if (valor == 0.05) {
+            btnComision5.setBackgroundResource(R.drawable.segment_active_bg);
+            btnComision5.setTextColor(Color.WHITE);
+        } else if (valor == 0.10) {
+            btnComision10.setBackgroundResource(R.drawable.segment_active_bg);
+            btnComision10.setTextColor(Color.WHITE);
+        } else if (valor == 0.15) {
+            btnComision15.setBackgroundResource(R.drawable.segment_active_bg);
+            btnComision15.setTextColor(Color.WHITE);
+        } else if (valor == 0.20) {
+            btnComision20.setBackgroundResource(R.drawable.segment_active_bg);
+            btnComision20.setTextColor(Color.WHITE);
         }
     }
 
@@ -233,7 +283,7 @@ public class EvaluarLoteActivity extends AppCompatActivity {
                 return;
             }
             request.put("precioBase", Double.parseDouble(precioStr));
-            request.put("comision", 0.00); // comision por defecto requerida por backend
+            request.put("comision", comisionSeleccionada);
             request.put("moneda", monedaSeleccionada); // Moneda seleccionada por el Admin
         } else {
             String motivos = etDecideMotivos.getText().toString().trim();

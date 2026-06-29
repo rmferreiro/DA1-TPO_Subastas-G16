@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4F1EA">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:background="#1C2A21"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:layout_marginEnd="12dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_logo_diamond"
+                android:contentDescription="Logo Blackwood" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blackwood Fine Sales"
+                android:textColor="#F4F1EA"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/header_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crear nueva subasta"
+                android:textColor="#C6A75E"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- FECHA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha de inicio"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_subasta_fecha"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Seleccionar fecha"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:focusable="false"
+                android:clickable="true"
+                android:layout_marginBottom="16dp" />
+
+            <!-- HORA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora de inicio"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_subasta_hora"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Seleccionar hora"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:focusable="false"
+                android:clickable="true"
+                android:layout_marginBottom="16dp" />
+
+            <!-- MONEDA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Moneda"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <LinearLayout
+                android:layout_width="140dp"
+                android:layout_height="55dp"
+                android:background="@drawable/input_bg"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:layout_marginBottom="16dp">
+                <TextView
+                    android:id="@+id/btn_subasta_moneda_ars"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="ARS"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/segment_active_bg"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <TextView
+                    android:id="@+id/btn_subasta_moneda_usd"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="USD"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#1C2A21"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- UBICACION -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ubicación física / depósito"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_subasta_ubicacion"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Ej: Salón San Martín, CABA"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:inputType="text"
+                android:layout_marginBottom="16dp" />
+
+            <!-- REMATADOR -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del rematador"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_subasta_rematador"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Ej: Juan Carlos Remates"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:inputType="text"
+                android:layout_marginBottom="16dp" />
+
+            <!-- DESCRIPCION -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripción de la subasta"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <EditText
+                android:id="@+id/et_subasta_descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Ej: Gran subasta de fin de año"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="14sp"
+                android:textColor="#1C2A21"
+                android:inputType="text"
+                android:layout_marginBottom="16dp" />
+
+            <!-- CATEGORIA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoría de acceso"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+            <Spinner
+                android:id="@+id/sp_subasta_categoria"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:spinnerMode="dropdown" />
+
+            <!-- SELECCIONAR LOTES -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_seleccionar_lotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar lotes participantes"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                app:backgroundTint="#1C2A21"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- LISTA DE LOTES SELECCIONADOS -->
+            <TextView
+                android:id="@+id/txt_lotes_seleccionados_titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lotes participantes:"
+                android:textColor="#1C2A21"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:layout_marginBottom="4dp" />
+            <LinearLayout
+                android:id="@+id/layout_lotes_seleccionados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp" />
+
+            <!-- BOTON CREAR SUBASTA -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_crear_subasta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Crear subasta"
+                android:textAllCaps="false"
+                android:textColor="#757575"
+                android:textSize="15sp"
+                app:backgroundTint="#BDBDBD"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:enabled="false" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

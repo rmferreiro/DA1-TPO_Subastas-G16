@@ -87,6 +87,11 @@
             android:exported="false" />
 
         <activity
+            android:name=".main.CrearSubastaActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+
+        <activity
             android:name=".register.SeguimientoLoteActivity"
             android:exported="false" />
 

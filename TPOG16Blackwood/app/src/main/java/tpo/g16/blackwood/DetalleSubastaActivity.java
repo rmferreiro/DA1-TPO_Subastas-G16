@@ -1,92 +1,278 @@
 package tpo.g16.blackwood;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import tpo.g16.blackwood.network.RetrofitClient;
+import tpo.g16.blackwood.network.models.SubastaResponse;
+
 public class DetalleSubastaActivity extends AppCompatActivity {
+
+    private int subastaId = -1;
+    private String estadoSubasta = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_subasta);
 
-        int subastaId = getIntent().getIntExtra("SUBASTA_ID", -1);
+        subastaId = getIntent().getIntExtra("SUBASTA_ID", -1);
 
-        // Back button
-        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
-        // Botón ingresar → Subasta en vivo (Llamada API unirse)
-        findViewById(R.id.btn_ingresar).setOnClickListener(v -> {
+        // Deshabilitar el botón hasta saber el estado
+        MaterialButton btnIngresar = findViewById(R.id.btn_ingresar);
+        btnIngresar.setEnabled(false);
+        btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BDBDBD")));
+        btnIngresar.setTextColor(Color.parseColor("#757575"));
+
+        // Botón ingresar → Subasta en vivo
+        btnIngresar.setOnClickListener(v -> {
             if (subastaId == -1) return;
-            
-            tpo.g16.blackwood.network.RetrofitClient.getApiService().unirseSubasta(subastaId)
-                .enqueue(new retrofit2.Callback<java.util.Map<String, Object>>() {
+            RetrofitClient.getApiService().unirseSubasta(subastaId)
+                .enqueue(new Callback<Map<String, Object>>() {
                     @Override
-                    public void onResponse(retrofit2.Call<java.util.Map<String, Object>> call, retrofit2.Response<java.util.Map<String, Object>> response) {
+                    public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                         if (response.isSuccessful()) {
                             Intent intent = new Intent(DetalleSubastaActivity.this, SubastaEnVivoActivity.class);
                             intent.putExtra("SUBASTA_ID", subastaId);
                             startActivity(intent);
                         } else {
                             try {
-                                String errorStr = response.errorBody() != null ? response.errorBody().string() : "Error desconocido";
-                                android.widget.Toast.makeText(DetalleSubastaActivity.this, "No se pudo unir: " + errorStr, android.widget.Toast.LENGTH_LONG).show();
+                                String err = response.errorBody() != null ? response.errorBody().string() : "Error desconocido";
+                                android.widget.Toast.makeText(DetalleSubastaActivity.this, "No se pudo unir: " + err, android.widget.Toast.LENGTH_LONG).show();
                             } catch (Exception e) {
                                 android.widget.Toast.makeText(DetalleSubastaActivity.this, "Error al unirse a la subasta", android.widget.Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
-
                     @Override
-                    public void onFailure(retrofit2.Call<java.util.Map<String, Object>> call, Throwable t) {
+                    public void onFailure(Call<Map<String, Object>> call, Throwable t) {
                         android.widget.Toast.makeText(DetalleSubastaActivity.this, "Error de red: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
                     }
                 });
         });
 
-        // Los listeners de las cards de lotes se configuran después de cargar el catálogo
-
-        cargarItems(subastaId);
-
-        // Bottom nav
+        cargarDetalle();
+        cargarCatalogo();
         configurarBottomNav();
     }
 
-    private void cargarItems(int subastaId) {
+    private void cargarDetalle() {
         if (subastaId == -1) return;
-        tpo.g16.blackwood.network.RetrofitClient.getApiService().getCatalogo(subastaId).enqueue(new retrofit2.Callback<java.util.List<java.util.Map<String, Object>>>() {
+        RetrofitClient.getApiService().getSubastaById(subastaId).enqueue(new Callback<SubastaResponse>() {
             @Override
-            public void onResponse(retrofit2.Call<java.util.List<java.util.Map<String, Object>>> call, retrofit2.Response<java.util.List<java.util.Map<String, Object>>> response) {
-                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    java.util.List<java.util.Map<String, Object>> items = response.body();
-                    
-                    if (items.size() > 0 && items.get(0) != null && items.get(0).get("itemId") != null) {
-                        int id1 = ((Number) items.get(0).get("itemId")).intValue();
-                        View card = findViewById(R.id.card_lote_1);
-                        if (card != null) card.setOnClickListener(v -> abrirDetalle(id1));
-                    }
-                    if (items.size() > 1 && items.get(1) != null && items.get(1).get("itemId") != null) {
-                        int id2 = ((Number) items.get(1).get("itemId")).intValue();
-                        View card = findViewById(R.id.card_lote_2);
-                        if (card != null) card.setOnClickListener(v -> abrirDetalle(id2));
-                    }
-                    if (items.size() > 2 && items.get(2) != null && items.get(2).get("itemId") != null) {
-                        int id3 = ((Number) items.get(2).get("itemId")).intValue();
-                        View card = findViewById(R.id.card_lote_3);
-                        if (card != null) card.setOnClickListener(v -> abrirDetalle(id3));
-                    }
+            public void onResponse(Call<SubastaResponse> call, Response<SubastaResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    poblarUI(response.body());
                 }
             }
-
             @Override
-            public void onFailure(retrofit2.Call<java.util.List<java.util.Map<String, Object>>> call, Throwable t) {
-                // error
-            }
+            public void onFailure(Call<SubastaResponse> call, Throwable t) {}
         });
+    }
+
+    private void poblarUI(SubastaResponse s) {
+        estadoSubasta = s.getEstado() != null ? s.getEstado().toUpperCase() : "";
+
+        // --- Strip de estado ---
+        View dotEstado = findViewById(R.id.dot_estado_detalle);
+        TextView tvEstadoStrip = findViewById(R.id.tv_estado_strip);
+        TextView tvCategoriaStrip = findViewById(R.id.tv_categoria_strip);
+
+        String textoEstado;
+        int colorEstado;
+        if ("PLANIFICADA".equals(estadoSubasta) || "PROGRAMADA".equals(estadoSubasta)) {
+            textoEstado = "Planificada";
+            colorEstado = Color.parseColor("#1565C0"); // Azul
+        } else if ("ABIERTA".equals(estadoSubasta) || "EN_CURSO".equals(estadoSubasta)) {
+            textoEstado = "En sala · Activa";
+            colorEstado = Color.parseColor("#1B7A3E"); // Verde
+        } else if ("FINALIZADA".equals(estadoSubasta) || "CERRADA".equals(estadoSubasta)) {
+            textoEstado = "Finalizada";
+            colorEstado = Color.parseColor("#757575"); // Gris
+        } else {
+            textoEstado = estadoSubasta;
+            colorEstado = Color.parseColor("#A7A9AC");
+        }
+        if (tvEstadoStrip != null) tvEstadoStrip.setText(textoEstado);
+        if (dotEstado != null) dotEstado.setBackgroundTintList(ColorStateList.valueOf(colorEstado));
+
+        // Categoría en negrita y color dorado/plateado según tipo
+        if (tvCategoriaStrip != null) {
+            String cat = s.getCategoria() != null ? s.getCategoria().toUpperCase() : "—";
+            tvCategoriaStrip.setText(cat);
+            switch (cat) {
+                case "ORO":      tvCategoriaStrip.setTextColor(Color.parseColor("#C6A75E")); break;
+                case "PLATINO":  tvCategoriaStrip.setTextColor(Color.parseColor("#808080")); break;
+                case "PLATA":    tvCategoriaStrip.setTextColor(Color.parseColor("#A0A0A0")); break;
+                case "ESPECIAL": tvCategoriaStrip.setTextColor(Color.parseColor("#4A90E2")); break;
+                default:         tvCategoriaStrip.setTextColor(Color.parseColor("#6B6B6B")); break;
+            }
+        }
+
+        // --- Fecha y hora ---
+        TextView tvFechaHora = findViewById(R.id.tv_fecha_hora_detalle);
+        if (tvFechaHora != null) {
+            String fecha = s.getFecha() != null ? s.getFecha() : "—";
+            String hora  = s.getHora()  != null ? s.getHora()  : "—";
+            tvFechaHora.setText(fecha + " · " + hora);
+        }
+
+        // --- Ubicación ---
+        TextView tvUbicacion = findViewById(R.id.tv_ubicacion_detalle);
+        if (tvUbicacion != null)
+            tvUbicacion.setText("Ubicación: " + (s.getUbicacion() != null ? s.getUbicacion() : "—"));
+
+        // --- Rematador ---
+        TextView tvRematador = findViewById(R.id.tv_rematador_detalle);
+        if (tvRematador != null)
+            tvRematador.setText("Rematador: " + (s.getSubastadorNombre() != null ? s.getSubastadorNombre() : "—"));
+
+        // --- Moneda ---
+        TextView tvMoneda = findViewById(R.id.tv_moneda_detalle);
+        if (tvMoneda != null) {
+            String moneda = s.getMoneda() != null ? s.getMoneda().toUpperCase() : "ARS";
+            tvMoneda.setText("Moneda: " + moneda);
+        }
+
+        // --- Incremento mínimo según categoría (1% para normal, 20% para Oro y Platino) ---
+        TextView tvIncremento = findViewById(R.id.tv_incremento);
+        if (tvIncremento != null) {
+            String cat = s.getCategoria() != null ? s.getCategoria().toUpperCase() : "";
+            if ("ORO".equals(cat) || "PLATINO".equals(cat)) {
+                tvIncremento.setText("Incremento mínimo: 20% del precio base");
+            } else {
+                tvIncremento.setText("Incremento mínimo: 1% del precio base");
+            }
+        }
+
+        // --- Habilitar botón sólo si la sala está activa ---
+        MaterialButton btnIngresar = findViewById(R.id.btn_ingresar);
+        if (btnIngresar != null) {
+            boolean activa = "ABIERTA".equals(estadoSubasta) || "EN_CURSO".equals(estadoSubasta);
+            btnIngresar.setEnabled(activa);
+            if (activa) {
+                btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#C0A062")));
+                btnIngresar.setTextColor(Color.parseColor("#1C2A21"));
+            } else {
+                btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BDBDBD")));
+                btnIngresar.setTextColor(Color.parseColor("#757575"));
+            }
+        }
+    }
+
+    private void cargarCatalogo() {
+        if (subastaId == -1) return;
+        RetrofitClient.getApiService().getCatalogo(subastaId).enqueue(new Callback<List<Map<String, Object>>>() {
+            @Override
+            public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    poblarLotes(response.body());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {}
+        });
+    }
+
+    private void poblarLotes(List<Map<String, Object>> items) {
+        LinearLayout container = findViewById(R.id.layout_lotes_container);
+        TextView tvNumLotes = findViewById(R.id.tv_num_lotes);
+        if (container == null) return;
+
+        // Actualizar cantidad de lotes
+        if (tvNumLotes != null) {
+            int n = items.size();
+            tvNumLotes.setText(n + (n == 1 ? " lote" : " lotes"));
+        }
+
+        container.removeAllViews();
+
+        for (int i = 0; i < items.size(); i++) {
+            Map<String, Object> item = items.get(i);
+            if (item == null) continue;
+
+            // Obtener campos del item del catálogo
+            // Obtener campos del item del catálogo
+            int itemId = 0;
+            if (item.get("itemId") != null) {
+                try { itemId = ((Number) item.get("itemId")).intValue(); } catch (Exception ignored) {}
+            }
+            String descripcion = item.get("descripcion") != null ? (String) item.get("descripcion") : "Sin descripción";
+            Object precioObj = item.get("precioBase");
+            String precio = precioObj != null ? String.format("%.2f", ((Number) precioObj).doubleValue()) : "—";
+
+            // Card del lote
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setPadding(dpToPx(14), dpToPx(12), dpToPx(14), dpToPx(12));
+            card.setBackground(getResources().getDrawable(R.drawable.card_white, null));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 0, 0, dpToPx(10));
+            card.setLayoutParams(lp);
+            card.setClickable(true);
+            card.setFocusable(true);
+
+            // Número de lote (itemId)
+            TextView tvNumLote = new TextView(this);
+            tvNumLote.setText(String.format("Lote #%03d", itemId));
+            tvNumLote.setTextColor(Color.parseColor("#C6A75E"));
+            tvNumLote.setTextSize(10f);
+            card.addView(tvNumLote);
+
+            // Nombre del lote
+            TextView tvNombre = new TextView(this);
+            tvNombre.setText(descripcion);
+            tvNombre.setTextColor(Color.parseColor("#1A1A1A"));
+            tvNombre.setTextSize(13f);
+            LinearLayout.LayoutParams lpNombre = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lpNombre.setMargins(0, dpToPx(3), 0, 0);
+            tvNombre.setLayoutParams(lpNombre);
+            card.addView(tvNombre);
+
+            // Precio base
+            TextView tvPrecio = new TextView(this);
+            tvPrecio.setText("Precio base: " + precio);
+            tvPrecio.setTextColor(Color.parseColor("#6B6B6B"));
+            tvPrecio.setTextSize(11f);
+            LinearLayout.LayoutParams lpPrecio = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lpPrecio.setMargins(0, dpToPx(4), 0, 0);
+            tvPrecio.setLayoutParams(lpPrecio);
+            card.addView(tvPrecio);
+
+            // Click listener
+            if (item.get("itemId") != null) {
+                final int finalItemId = itemId;
+                card.setOnClickListener(v -> abrirDetalle(finalItemId));
+            }
+
+            container.addView(card);
+        }
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     private void abrirDetalle(int itemId) {
@@ -108,37 +294,31 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         View dotMisPujas = findViewById(R.id.tab_pujas_dot);
         View dotPerfil   = findViewById(R.id.tab_perfil_dot);
 
-        if (labelSubastas != null) labelSubastas.setTextColor(android.graphics.Color.parseColor("#1C2A21"));
-        if (labelMisPujas != null) labelMisPujas.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
-        if (labelPerfil != null) labelPerfil.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
+        if (labelSubastas != null) labelSubastas.setTextColor(Color.parseColor("#1C2A21"));
+        if (labelMisPujas != null) labelMisPujas.setTextColor(Color.parseColor("#6B6B6B"));
+        if (labelPerfil   != null) labelPerfil.setTextColor(Color.parseColor("#6B6B6B"));
 
         if (dotSubastas != null) dotSubastas.setVisibility(View.VISIBLE);
         if (dotMisPujas != null) dotMisPujas.setVisibility(View.INVISIBLE);
-        if (dotPerfil != null) dotPerfil.setVisibility(View.INVISIBLE);
+        if (dotPerfil   != null) dotPerfil.setVisibility(View.INVISIBLE);
 
-        if (tabSubastas != null) {
-            tabSubastas.setOnClickListener(v -> {
-                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
-                intent.putExtra("TAB_INDEX", 0);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            });
-        }
-        if (tabPujas != null) {
-            tabPujas.setOnClickListener(v -> {
-                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
-                intent.putExtra("TAB_INDEX", 1);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            });
-        }
-        if (tabPerfil != null) {
-            tabPerfil.setOnClickListener(v -> {
-                Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
-                intent.putExtra("TAB_INDEX", 2);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            });
-        }
+        if (tabSubastas != null) tabSubastas.setOnClickListener(v -> {
+            Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
+            intent.putExtra("TAB_INDEX", 0);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+        if (tabPujas != null) tabPujas.setOnClickListener(v -> {
+            Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
+            intent.putExtra("TAB_INDEX", 1);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+        if (tabPerfil != null) tabPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(this, tpo.g16.blackwood.main.HomeActivity.class);
+            intent.putExtra("TAB_INDEX", 2);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
     }
 }

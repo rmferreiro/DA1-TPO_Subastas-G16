@@ -1,10 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- BOTÓN ADMINISTRADOR: NUEVA SUBASTA (GONE POR DEFECTO) -->
+    <LinearLayout
+        android:id="@+id/layout_admin_nueva_subasta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp"
+        android:background="#F4F1EA"
+        android:visibility="gone">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_nueva_subasta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+ Nueva subasta"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            app:backgroundTint="#C6A75E"
+            app:cornerRadius="8dp"
+            app:elevation="0dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" />
+    </LinearLayout>
 
     <!-- CHIPS ROW (h=60dp) -->
     <HorizontalScrollView
@@ -45,6 +71,30 @@
                 android:textColor="#6B6B6B"
                 android:textSize="12sp" />
 
+            <!-- Chip "Especial" -->
+            <TextView
+                android:id="@+id/chip_especial"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/chip_outline_gold_border"
+                android:gravity="center"
+                android:text="Especial"
+                android:textColor="#6B6B6B"
+                android:textSize="12sp" />
+
+            <!-- Chip "Plata" -->
+            <TextView
+                android:id="@+id/chip_plata"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/chip_outline_gold_border"
+                android:gravity="center"
+                android:text="Plata"
+                android:textColor="#6B6B6B"
+                android:textSize="12sp" />
+
             <!-- Chip "Oro" -->
             <TextView
                 android:id="@+id/chip_oro"
@@ -62,37 +112,33 @@
                 android:id="@+id/chip_platino"
                 android:layout_width="70dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="10dp"
                 android:background="@drawable/chip_outline_gold_border"
                 android:gravity="center"
                 android:text="Platino"
                 android:textColor="#6B6B6B"
                 android:textSize="12sp" />
 
-            <!-- Chip "Diamante" -->
-            <TextView
-                android:id="@+id/chip_diamante"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:background="@drawable/chip_outline_gold_border"
-                android:gravity="center"
-                android:text="Diamante"
-                android:textColor="#6B6B6B"
-                android:textSize="12sp" />
-
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- CONTENIDO SCROLLEABLE -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_subastas"
+    <!-- CONTENIDO SCROLLEABLE CON PULL-TO-REFRESH -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_subastas"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#F4F1EA"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:clipToPadding="false" />
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_subastas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F4F1EA"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:clipToPadding="false" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </LinearLayout>

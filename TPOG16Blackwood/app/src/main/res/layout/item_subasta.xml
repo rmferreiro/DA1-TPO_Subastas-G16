@@ -97,11 +97,11 @@
                 android:textSize="11sp" />
         </LinearLayout>
         <TextView
-            android:id="@+id/tv_capacidad"
+            android:id="@+id/tv_moneda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="24 lotes"
+            android:text="Moneda: ARS"
             android:textColor="#6B6B6B"
             android:textSize="11sp" />
     </LinearLayout>

@@ -57,6 +57,8 @@ public class MisArticulosAdapter extends RecyclerView.Adapter<MisArticulosAdapte
             estadoDisplay = "Rechazado";
         } else if ("ACEPTADO_DUENIO".equals(estadoRaw) || "ACEPTADO".equals(estadoRaw)) {
             estadoDisplay = "Aceptado para subasta";
+        } else if ("SUBASTANDO".equals(estadoRaw) || "EN_SUBASTA".equals(estadoRaw)) {
+            estadoDisplay = "En subasta";
         }
         
         holder.txtEstado.setText("Estado: " + estadoDisplay);

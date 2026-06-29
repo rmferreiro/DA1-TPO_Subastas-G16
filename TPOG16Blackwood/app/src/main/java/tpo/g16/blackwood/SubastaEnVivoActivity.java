@@ -54,6 +54,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
     private TextView tvPrecio, tvMiPuja, tvOferta, tvBtnPujar, tvTiempo;
     private TextView tvLoteNumero, tvLoteTitulo, tvLoteDescripcion;
     private TextView tvAvatarIniciales, tvNombrePostor, tvParticipantesCount;
+    private TextView tvTituloPuja, tvBadgeLider;
+    private Long limiteFinalizacionEpoch = null;
 
     private StompClient stompClient;
     private CompositeDisposable compositeDisposable;
@@ -93,6 +95,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         tvAvatarIniciales = findViewById(R.id.tv_avatar_iniciales);
         tvNombrePostor = findViewById(R.id.tv_nombre_postor);
         tvParticipantesCount = findViewById(R.id.tv_participantes_count);
+        tvTituloPuja = findViewById(R.id.tv_titulo_puja);
+        tvBadgeLider = findViewById(R.id.tv_badge_lider);
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
@@ -187,9 +191,9 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
             public void onResponse(Call<List<Map<String, Object>>> call, Response<List<Map<String, Object>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().isEmpty()) {
-                        Toast.makeText(SubastaEnVivoActivity.this, "Subasta finalizada. No hay más lotes.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubastaEnVivoActivity.this, "La subasta ha finalizado", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SubastaEnVivoActivity.this, tpo.g16.blackwood.main.HomeActivity.class);
-                        intent.putExtra("TAB_INDEX", 1);
+                        intent.putExtra("TAB_INDEX", 0);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                         finish();
@@ -256,12 +260,30 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                     if (body.containsKey("precioBase") && body.get("precioBase") != null) {
                         precioBaseValue = ((Number) body.get("precioBase")).intValue();
                     }
+
+                    // Extraer límite de finalización
+                    if (body.containsKey("limiteFinalizacionEpoch") && body.get("limiteFinalizacionEpoch") != null) {
+                        try {
+                            limiteFinalizacionEpoch = ((Number) body.get("limiteFinalizacionEpoch")).longValue();
+                        } catch (Exception ignored) {}
+                    }
+
+                    // Extraer postor actual
+                    String nombrePostor = "Blackwood Subastas";
+                    int numeroPostor = 999;
+                    if (body.containsKey("nombrePostor") && body.get("nombrePostor") != null) {
+                        nombrePostor = (String) body.get("nombrePostor");
+                    }
+                    if (body.containsKey("numeroPostor") && body.get("numeroPostor") != null) {
+                        numeroPostor = ((Number) body.get("numeroPostor")).intValue();
+                    }
+                    actualizarUIConPostor(nombrePostor, numeroPostor);
                     
                     int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
                     miPuja = precioActual + incrementoMinimo;
                     actualizarUITextos();
                     
-                    // Iniciar timer inmediatamente (por si el WS tarda o falla)
+                    // Iniciar timer inmediatamente con el epoch
                     iniciarTimer();
                     
                     // Conectar a WebSockets después de inicializar
@@ -280,7 +302,19 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
-        countDownTimer = new CountDownTimer(TIEMPO_SUBASTA_MS, 1000) {
+
+        long ahora = System.currentTimeMillis();
+        long tiempoRestanteMs = 300000; // 5 minutos por defecto si no hay epoch
+        if (limiteFinalizacionEpoch != null) {
+            tiempoRestanteMs = limiteFinalizacionEpoch - ahora;
+            if (tiempoRestanteMs < 0) {
+                tiempoRestanteMs = 0;
+            }
+        }
+
+        final long totalDurationMs = 300000; // El total de la barra de progreso (5 minutos)
+
+        countDownTimer = new CountDownTimer(tiempoRestanteMs, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (tvTiempo != null) {
@@ -289,8 +323,8 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                     tvTiempo.setText(String.format("%02d:%02d", minutos, segundos));
                 }
                 if (progressPuja != null) {
-                    int pct = (int) ((millisUntilFinished * 100) / TIEMPO_SUBASTA_MS);
-                    progressPuja.setProgress(pct);
+                    int pct = (int) ((millisUntilFinished * 100) / totalDurationMs);
+                    progressPuja.setProgress(Math.min(100, Math.max(0, pct)));
                 }
             }
 
@@ -298,16 +332,6 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
             public void onFinish() {
                 if (tvTiempo != null) tvTiempo.setText("00:00");
                 if (progressPuja != null) progressPuja.setProgress(0);
-                Toast.makeText(SubastaEnVivoActivity.this, "Subasta finalizada", Toast.LENGTH_LONG).show();
-                
-                LinearLayout btnPujar = findViewById(R.id.btn_pujar);
-                if (btnPujar != null) {
-                    btnPujar.setEnabled(false);
-                    btnPujar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.GRAY));
-                }
-                if (tvBtnPujar != null) {
-                    tvBtnPujar.setText("Finalizada");
-                }
                 
                 // Llamar al backend para cerrar el item y declarar ganador oficial
                 if (currentItemId != -1) {
@@ -407,17 +431,23 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                             int incrementoMinimo = Math.max(1, (int)(precioBaseValue * 0.01));
                             miPuja = precioActual + incrementoMinimo;
                             
-                            String nombrePostor = json.has("nombrePostor") ? json.get("nombrePostor").getAsString() : "Postor Anonimo";
-                            if (tvNombrePostor != null) tvNombrePostor.setText(nombrePostor);
-                            if (tvAvatarIniciales != null && nombrePostor.length() > 0) {
-                                tvAvatarIniciales.setText(nombrePostor.substring(0, 1).toUpperCase());
+                            // Extraer límite de finalización
+                            if (json.has("limiteFinalizacionEpoch") && !json.get("limiteFinalizacionEpoch").isJsonNull()) {
+                                try {
+                                    limiteFinalizacionEpoch = json.get("limiteFinalizacionEpoch").getAsLong();
+                                } catch (Exception ignored) {}
                             }
+
+                            // Extraer postor actual
+                            String nombrePostor = json.has("nombrePostor") ? json.get("nombrePostor").getAsString() : "Blackwood Subastas";
+                            int numeroPostor = json.has("numeroPostor") ? json.get("numeroPostor").getAsInt() : 999;
+                            actualizarUIConPostor(nombrePostor, numeroPostor);
                             
                             // Reiniciar el timer con cada nueva puja para dar tiempo a otros
                             iniciarTimer();
                             
                             actualizarUITextos();
-                            Toast.makeText(this, "¡Nueva puja de $" + precioActual + "!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SubastaEnVivoActivity.this, "¡Nueva puja de $" + precioActual + "!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, throwable -> {
@@ -528,6 +558,37 @@ public class SubastaEnVivoActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             });
+        }
+    }
+
+    private void actualizarUIConPostor(String nombrePostor, int numeroPostor) {
+        if (tvNombrePostor != null) {
+            tvNombrePostor.setText(nombrePostor != null ? nombrePostor : "Blackwood Subastas");
+        }
+        if (tvAvatarIniciales != null) {
+            if (nombrePostor != null && nombrePostor.length() > 0) {
+                if (nombrePostor.equalsIgnoreCase("Blackwood Subastas") || numeroPostor == 999) {
+                    tvAvatarIniciales.setText("BS");
+                } else {
+                    tvAvatarIniciales.setText(nombrePostor.substring(0, Math.min(2, nombrePostor.length())).toUpperCase());
+                }
+            } else {
+                tvAvatarIniciales.setText("BS");
+            }
+        }
+        if (tvTituloPuja != null) {
+            if (numeroPostor == 999 || "Blackwood Subastas".equalsIgnoreCase(nombrePostor)) {
+                tvTituloPuja.setText("PUJA INICIAL");
+            } else {
+                tvTituloPuja.setText("PUJA MÁS ALTA");
+            }
+        }
+        if (tvBadgeLider != null) {
+            if (numeroPostor == 999 || "Blackwood Subastas".equalsIgnoreCase(nombrePostor)) {
+                tvBadgeLider.setVisibility(android.view.View.GONE);
+            } else {
+                tvBadgeLider.setVisibility(android.view.View.VISIBLE);
+            }
         }
     }
 }

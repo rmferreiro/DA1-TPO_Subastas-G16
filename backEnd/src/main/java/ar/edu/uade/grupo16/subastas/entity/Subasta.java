@@ -60,4 +60,7 @@ public class Subasta {
     // Item que se está subastando actualmente (para tracking en vivo)
     @Column(name = "item_actual_id")
     private Integer itemActualId;
+
+    @Column(name = "limite_finalizacion_epoch")
+    private Long limiteFinalizacionEpoch;
 }

@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import tpo.g16.blackwood.network.models.SubastaResponse;
 public class ListaSubastasFragment extends Fragment {
 
     private RecyclerView recyclerSubastas;
+    private SwipeRefreshLayout swipeRefresh;
     private SubastaAdapter adapter;
     private List<SubastaResponse> todasLasSubastas = new ArrayList<>();
 
@@ -35,9 +37,39 @@ public class ListaSubastasFragment extends Fragment {
 
         recyclerSubastas = view.findViewById(R.id.recycler_subastas);
         recyclerSubastas.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         adapter = new SubastaAdapter(new ArrayList<>());
         recyclerSubastas.setAdapter(adapter);
+
+        // Pull-to-refresh con colores de la app
+        swipeRefresh = view.findViewById(R.id.swipe_refresh_subastas);
+        swipeRefresh.setColorSchemeColors(
+                android.graphics.Color.parseColor("#C6A75E"),  // Dorado
+                android.graphics.Color.parseColor("#2D5A3D")   // Verde botella
+        );
+        swipeRefresh.setOnRefreshListener(this::cargarSubastas);
+
+        View layoutAdmin = view.findViewById(R.id.layout_admin_nueva_subasta);
+        View btnNuevaSubasta = view.findViewById(R.id.btn_nueva_subasta);
+        if (btnNuevaSubasta != null && layoutAdmin != null) {
+            RetrofitClient.getApiService().getPerfil().enqueue(new Callback<tpo.g16.blackwood.network.models.ClienteResponse>() {
+                @Override
+                public void onResponse(Call<tpo.g16.blackwood.network.models.ClienteResponse> call, Response<tpo.g16.blackwood.network.models.ClienteResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (response.body().isEsAdmin()) {
+                            layoutAdmin.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<tpo.g16.blackwood.network.models.ClienteResponse> call, Throwable t) {}
+            });
+
+            btnNuevaSubasta.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), tpo.g16.blackwood.main.CrearSubastaActivity.class);
+                startActivity(intent);
+            });
+        }
 
         configurarFiltros(view);
 
@@ -54,22 +86,30 @@ public class ListaSubastasFragment extends Fragment {
         android.widget.TextView chipTodas = view.findViewById(R.id.chip_todas);
         android.widget.TextView chipOro = view.findViewById(R.id.chip_oro);
         android.widget.TextView chipPlatino = view.findViewById(R.id.chip_platino);
-        android.widget.TextView chipDiamante = view.findViewById(R.id.chip_diamante);
+        android.widget.TextView chipEspecial = view.findViewById(R.id.chip_especial);
+        android.widget.TextView chipPlata = view.findViewById(R.id.chip_plata);
         android.widget.TextView chipComun = view.findViewById(R.id.chip_comun);
 
         View.OnClickListener filterListener = v -> {
             // Reset styles
             chipTodas.setBackgroundResource(R.drawable.chip_outline_gold_border);
             chipTodas.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
-            
+
             chipOro.setBackgroundResource(R.drawable.chip_outline_gold_border);
             chipOro.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
 
             chipPlatino.setBackgroundResource(R.drawable.chip_outline_gold_border);
             chipPlatino.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
 
-            chipDiamante.setBackgroundResource(R.drawable.chip_outline_gold_border);
-            chipDiamante.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
+            if (chipEspecial != null) {
+                chipEspecial.setBackgroundResource(R.drawable.chip_outline_gold_border);
+                chipEspecial.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
+            }
+
+            if (chipPlata != null) {
+                chipPlata.setBackgroundResource(R.drawable.chip_outline_gold_border);
+                chipPlata.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
+            }
 
             chipComun.setBackgroundResource(R.drawable.chip_outline_gold_border);
             chipComun.setTextColor(android.graphics.Color.parseColor("#6B6B6B"));
@@ -84,8 +124,7 @@ public class ListaSubastasFragment extends Fragment {
             if ("TODAS".equals(filter)) {
                 adapter.updateData(todasLasSubastas);
             } else {
-                // Support exact match, handling accent mapping manually if needed
-                String filterValue = filter.equals("COMÚN") ? "COMUN" : filter;
+                String filterValue = filter.equals("COMÚN") ? "COMUN" : filter.equals("ESPECIAL") ? "ESPECIAL" : filter.equals("PLATA") ? "PLATA" : filter;
                 List<SubastaResponse> filtered = new ArrayList<>();
                 for (SubastaResponse subasta : todasLasSubastas) {
                     if (subasta.getCategoria() != null && filterValue.equals(subasta.getCategoria().toUpperCase())) {
@@ -99,14 +138,17 @@ public class ListaSubastasFragment extends Fragment {
         chipTodas.setOnClickListener(filterListener);
         chipOro.setOnClickListener(filterListener);
         chipPlatino.setOnClickListener(filterListener);
-        chipDiamante.setOnClickListener(filterListener);
+        if (chipEspecial != null) chipEspecial.setOnClickListener(filterListener);
+        if (chipPlata != null) chipPlata.setOnClickListener(filterListener);
         chipComun.setOnClickListener(filterListener);
     }
 
     private void cargarSubastas() {
+        if (swipeRefresh != null) swipeRefresh.setRefreshing(true);
         RetrofitClient.getApiService().getSubastasDisponibles().enqueue(new Callback<List<SubastaResponse>>() {
             @Override
             public void onResponse(Call<List<SubastaResponse>> call, Response<List<SubastaResponse>> response) {
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
                     todasLasSubastas = response.body();
                     adapter.updateData(todasLasSubastas);
@@ -117,6 +159,7 @@ public class ListaSubastasFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<SubastaResponse>> call, Throwable t) {
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

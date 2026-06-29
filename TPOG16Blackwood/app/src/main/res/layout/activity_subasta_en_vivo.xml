@@ -117,14 +117,6 @@
                         android:background="#E0DEDA"
                         android:src="@drawable/logo_blackwood" />
 
-                    <!-- Placeholder texto imagen -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Imagen del lote"
-                        android:textColor="#6B6B6B"
-                        android:textSize="14sp" />
 
                     <!-- Badge LOTE #007 -->
                     <TextView
@@ -188,6 +180,7 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/tv_titulo_puja"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PUJA MÁS ALTA"
@@ -248,6 +241,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_badge_lider"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/chip_outline_gold_border"

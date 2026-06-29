@@ -46,9 +46,9 @@ public class ProductoController {
     }
 
     @GetMapping("/aprobados")
-    @Operation(summary = "Listar productos aprobados para subastar")
+    @Operation(summary = "[ADMIN] Listar todos los productos aprobados por el dueño listos para subastar")
     public ResponseEntity<List<Map<String, Object>>> listarAprobados() {
-        return ResponseEntity.ok(productoService.listarPorEstado("aprobado"));
+        return ResponseEntity.ok(productoService.listarProductosAprobados());
     }
 
     @GetMapping("/{id}")

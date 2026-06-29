@@ -12,4 +12,5 @@ public interface ItemCatalogoRepository extends JpaRepository<ItemCatalogo, Inte
     List<ItemCatalogo> findBySubastado(String subastado);
     List<ItemCatalogo> findByCatalogoSubastaIdentificadorAndSubastado(Integer subastaId, String subastado);
     boolean existsByProductoIdentificadorAndCatalogoSubastaIdentificador(Integer productoId, Integer subastaId);
+    boolean existsByProductoIdentificador(Integer productoId);
 }

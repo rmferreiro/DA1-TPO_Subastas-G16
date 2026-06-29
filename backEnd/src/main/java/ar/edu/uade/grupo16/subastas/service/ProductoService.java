@@ -27,6 +27,7 @@ public class ProductoService {
     private final UsuarioAuthRepository usuarioAuthRepository;
     private final MedioPagoRepository medioPagoRepository;
     private final ProductoObraArteRepository productoObraArteRepository;
+    private final ItemCatalogoRepository itemCatalogoRepository;
 
     public ProductoService(ProductoRepository productoRepository,
                            DuenioRepository duenioRepository,
@@ -37,7 +38,8 @@ public class ProductoService {
                            ClienteRepository clienteRepository,
                            UsuarioAuthRepository usuarioAuthRepository,
                            MedioPagoRepository medioPagoRepository,
-                           ProductoObraArteRepository productoObraArteRepository) {
+                           ProductoObraArteRepository productoObraArteRepository,
+                           ItemCatalogoRepository itemCatalogoRepository) {
         this.productoRepository = productoRepository;
         this.duenioRepository = duenioRepository;
         this.fotoRepository = fotoRepository;
@@ -48,6 +50,7 @@ public class ProductoService {
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.medioPagoRepository = medioPagoRepository;
         this.productoObraArteRepository = productoObraArteRepository;
+        this.itemCatalogoRepository = itemCatalogoRepository;
     }
 
     /**
@@ -328,6 +331,7 @@ public class ProductoService {
         map.put("tipo", p.getTipoProducto() != null ? p.getTipoProducto() : "ESTANDAR");
         map.put("precioEstimado", p.getPrecioBasePropuesto() != null ? p.getPrecioBasePropuesto() : java.math.BigDecimal.ZERO);
         map.put("precioBasePropuesto", p.getPrecioBasePropuesto() != null ? p.getPrecioBasePropuesto() : java.math.BigDecimal.ZERO);
+        map.put("comisionPropuesta", p.getComisionPropuesta() != null ? p.getComisionPropuesta() : java.math.BigDecimal.ZERO);
         map.put("moneda", p.getMoneda() != null ? p.getMoneda() : "ARS");
         map.put("ubicacionDeposito", p.getUbicacionDeposito() != null ? p.getUbicacionDeposito() : "");
         map.put("motivoRechazo", p.getMotivoRechazo() != null ? p.getMotivoRechazo() : "");
@@ -447,5 +451,30 @@ public class ProductoService {
                 "nuevoMontoCubierto", seguro.getMontoCubierto(),
                 "diferenciaAbonada", montoAdicional
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> listarProductosAprobados() {
+        return productoRepository.findAll().stream()
+                .filter(p -> ("ACEPTADO_DUENIO".equals(p.getEstadoRevision()) || "ACEPTADO".equals(p.getEstadoRevision())))
+                .filter(p -> !itemCatalogoRepository.existsByProductoIdentificador(p.getIdentificador()))
+                .map(p -> {
+                    Map<String, Object> map = new java.util.HashMap<>();
+                    map.put("id", p.getIdentificador());
+                    map.put("descripcion", p.getDescripcionCompleta() != null ? p.getDescripcionCompleta() : "");
+                    
+                    // Extraer subtítulo
+                    String rawCat = p.getDescripcionCatalogo() != null ? p.getDescripcionCatalogo() : "";
+                    String subtitulo = rawCat;
+                    int separatorIdx = rawCat.indexOf(" · ");
+                    if (separatorIdx != -1) {
+                        subtitulo = rawCat.substring(0, separatorIdx);
+                    }
+                    map.put("subtitulo", subtitulo);
+                    map.put("precioBasePropuesto", p.getPrecioBasePropuesto() != null ? p.getPrecioBasePropuesto() : java.math.BigDecimal.ZERO);
+                    map.put("moneda", p.getMoneda() != null ? p.getMoneda() : "ARS");
+                    return map;
+                })
+                .collect(Collectors.toList());
     }
 }

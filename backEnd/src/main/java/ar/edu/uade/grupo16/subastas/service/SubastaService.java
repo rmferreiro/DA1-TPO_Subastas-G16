@@ -4,6 +4,7 @@ import ar.edu.uade.grupo16.subastas.dto.response.EstadoVivoResponse;
 import ar.edu.uade.grupo16.subastas.dto.response.SubastaResponse;
 import ar.edu.uade.grupo16.subastas.entity.*;
 import ar.edu.uade.grupo16.subastas.enums.CategoriaUsuario;
+import ar.edu.uade.grupo16.subastas.enums.Moneda;
 import ar.edu.uade.grupo16.subastas.exception.RecursoNoEncontradoException;
 import ar.edu.uade.grupo16.subastas.exception.SubastaNoDisponibleException;
 import ar.edu.uade.grupo16.subastas.repository.*;
@@ -11,6 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +34,12 @@ public class SubastaService {
     private final MultaRepository multaRepository;
     private final ItemCatalogoRepository itemCatalogoRepository;
     private final PujoRepository pujoRepository;
+    private final SubastadorRepository subastadorRepository;
+    private final CatalogoRepository catalogoRepository;
+    private final EmpleadoRepository empleadoRepository;
+    private final ProductoRepository productoRepository;
+    private final PersonaRepository personaRepository;
+    private final jakarta.persistence.EntityManager entityManager;
 
     public SubastaService(SubastaRepository subastaRepository,
                           AsistenteRepository asistenteRepository,
@@ -37,7 +49,13 @@ public class SubastaService {
                           MedioPagoRepository medioPagoRepository,
                           MultaRepository multaRepository,
                           ItemCatalogoRepository itemCatalogoRepository,
-                          PujoRepository pujoRepository) {
+                          PujoRepository pujoRepository,
+                          SubastadorRepository subastadorRepository,
+                          CatalogoRepository catalogoRepository,
+                          EmpleadoRepository empleadoRepository,
+                          ProductoRepository productoRepository,
+                          PersonaRepository personaRepository,
+                          jakarta.persistence.EntityManager entityManager) {
         this.subastaRepository = subastaRepository;
         this.asistenteRepository = asistenteRepository;
         this.clienteRepository = clienteRepository;
@@ -47,6 +65,12 @@ public class SubastaService {
         this.multaRepository = multaRepository;
         this.itemCatalogoRepository = itemCatalogoRepository;
         this.pujoRepository = pujoRepository;
+        this.subastadorRepository = subastadorRepository;
+        this.catalogoRepository = catalogoRepository;
+        this.empleadoRepository = empleadoRepository;
+        this.productoRepository = productoRepository;
+        this.personaRepository = personaRepository;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -189,6 +213,7 @@ public class SubastaService {
                 .categoria(subasta.getCategoria())
                 .itemsRestantes(pendientes.size())
                 .itemsSubastados(vendidos.size())
+                .limiteFinalizacionEpoch(subasta.getLimiteFinalizacionEpoch())
                 .itemActual(itemInfo)
                 .ultimasPujas(ultimasPujas)
                 .build();
@@ -327,5 +352,110 @@ public class SubastaService {
                 .tieneDeposito("si".equalsIgnoreCase(s.getTieneDeposito()))
                 .seguridadPropia("si".equalsIgnoreCase(s.getSeguridadPropia()))
                 .build();
+    }
+
+    @Transactional
+    public Subasta crearSubasta(ar.edu.uade.grupo16.subastas.dto.request.SubastaRequest request) {
+        // 0. Validar fecha y hora futura
+        try {
+            LocalDate requestFecha = LocalDate.parse(request.getFecha());
+            LocalTime requestHora = LocalTime.parse(request.getHora());
+            LocalDateTime fechaHoraSubasta = LocalDateTime.of(requestFecha, requestHora);
+            
+            long epochSubasta = fechaHoraSubasta.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long epochActual = Instant.now().toEpochMilli();
+            
+            if (epochSubasta < epochActual) {
+                throw new ar.edu.uade.grupo16.subastas.exception.RegistroInvalidoException("La fecha es inválida, selecciona una posterior");
+            }
+        } catch (ar.edu.uade.grupo16.subastas.exception.RegistroInvalidoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ar.edu.uade.grupo16.subastas.exception.RegistroInvalidoException("El formato de fecha u hora es inválido");
+        }
+
+        // 1. Buscar o crear Subastador por nombre
+        String nombreRematador = request.getRematador().trim();
+        Subastador subastador = subastadorRepository.findAll().stream()
+                .filter(sub -> sub.getPersona() != null && nombreRematador.equalsIgnoreCase(sub.getPersona().getNombre()))
+                .findFirst()
+                .orElseGet(() -> {
+                    // Crear Persona temporal
+                    Persona p = Persona.builder()
+                            .nombre(nombreRematador)
+                            .documento(String.valueOf((int) (Math.random() * 100000000)))
+                            .direccion("Ubicación default")
+                            .estado("activo")
+                            .build();
+                    p = personaRepository.save(p);
+
+                    // Crear Subastador
+                    Subastador sub = Subastador.builder()
+                            .identificador(p.getIdentificador())
+                            .persona(p)
+                            .matricula("MAT-" + (int)(Math.random() * 9000 + 1000))
+                            .region("General")
+                            .build();
+                    entityManager.persist(sub);
+                    return sub;
+                });
+
+        // 2. Crear Subasta
+        Subasta subasta = Subasta.builder()
+                .fecha(LocalDate.parse(request.getFecha()))
+                .hora(LocalTime.parse(request.getHora()))
+                .estado("abierta")
+                .ubicacion(request.getUbicacion())
+                .moneda(Moneda.valueOf(request.getMoneda().toUpperCase()))
+                .categoria(request.getCategoria().toLowerCase())
+                .descripcion(request.getDescripcion())
+                .capacidadAsistentes(100)
+                .tieneDeposito("si")
+                .seguridadPropia("si")
+                .subastador(subastador)
+                .build();
+
+        subasta = subastaRepository.save(subasta);
+
+        // 3. Obtener Empleado para el Catálogo
+        Empleado empleado = empleadoRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new RecursoNoEncontradoException("No hay empleados registrados en el sistema para ser responsables del catálogo."));
+
+        // 4. Crear Catálogo
+        Catalogo catalogo = Catalogo.builder()
+                .subasta(subasta)
+                .responsable(empleado)
+                .descripcion("Catálogo oficial para la subasta N° " + subasta.getIdentificador())
+                .build();
+        catalogoRepository.save(catalogo);
+
+        // 5. Agregar Items al Catálogo
+        int orden = 1;
+        for (Integer productoId : request.getLotes()) {
+            Producto producto = productoRepository.findById(productoId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado: " + productoId));
+
+            BigDecimal comision = producto.getComisionPropuesta();
+            if (comision == null || comision.compareTo(BigDecimal.valueOf(0.01)) <= 0) {
+                comision = BigDecimal.valueOf(0.05); // 5% de comisión por defecto
+            }
+
+            ItemCatalogo item = ItemCatalogo.builder()
+                    .catalogo(catalogo)
+                    .producto(producto)
+                    .precioBase(producto.getPrecioBasePropuesto())
+                    .comision(comision)
+                    .subastado("no")
+                    .orden(orden++)
+                    .build();
+            itemCatalogoRepository.save(item);
+
+            // Indicar que ya no está disponible y está en subasta
+            producto.setDisponible("no");
+            producto.setEstadoRevision("SUBASTANDO");
+            productoRepository.save(producto);
+        }
+
+        return subasta;
     }
 }

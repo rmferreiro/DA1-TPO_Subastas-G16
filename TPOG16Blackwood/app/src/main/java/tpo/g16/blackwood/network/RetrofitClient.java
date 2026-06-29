@@ -58,14 +58,15 @@ public class RetrofitClient {
                     Request.Builder builder = original.newBuilder()
                             .header("Authorization", "Bearer " + token);
                     Response response = chain.proceed(builder.build());
-                    if (response.code() == 401) {
+                    // 401 = No autorizado, 403 = Prohibido (Spring Security devuelve 403 con JWT vencido)
+                    if (response.code() == 401 || response.code() == 403) {
                         manejarSesionVencida();
                     }
                     return response;
                 }
 
                 Response response = chain.proceed(original);
-                if (response.code() == 401 && prefs.getString(ApiConfig.KEY_ACCESS_TOKEN, null) != null) {
+                if ((response.code() == 401 || response.code() == 403) && prefs.getString(ApiConfig.KEY_ACCESS_TOKEN, null) != null) {
                     manejarSesionVencida();
                 }
                 return response;
@@ -171,7 +172,8 @@ public class RetrofitClient {
 
                     Request request = requestBuilder.build();
                     Response response = chain.proceed(request);
-                    if (response.code() == 401 && token != null) {
+                    // 401 = No autorizado, 403 = Prohibido (Spring Security devuelve 403 con JWT vencido)
+                    if ((response.code() == 401 || response.code() == 403) && token != null) {
                         manejarSesionVencida();
                     }
                     return response;

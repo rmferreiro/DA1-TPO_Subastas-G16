@@ -2,6 +2,7 @@ package ar.edu.uade.grupo16.subastas.controller;
 
 import ar.edu.uade.grupo16.subastas.dto.response.EstadoVivoResponse;
 import ar.edu.uade.grupo16.subastas.dto.response.SubastaResponse;
+import ar.edu.uade.grupo16.subastas.entity.Subasta;
 import ar.edu.uade.grupo16.subastas.service.SubastaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -73,5 +74,16 @@ public class SubastaController {
     @Operation(summary = "[ADMIN] Listar todas las subastas")
     public ResponseEntity<List<SubastaResponse>> listarTodas() {
         return ResponseEntity.ok(subastaService.listarTodas());
+    }
+
+    @PostMapping
+    @Operation(summary = "[ADMIN] Crear una nueva subasta")
+    public ResponseEntity<Map<String, Object>> crearSubasta(
+            @jakarta.validation.Valid @RequestBody ar.edu.uade.grupo16.subastas.dto.request.SubastaRequest request) {
+        Subasta creada = subastaService.crearSubasta(request);
+        Map<String, Object> map = new java.util.HashMap<>();
+        map.put("subastaId", creada.getIdentificador());
+        map.put("mensaje", "Subasta creada con éxito");
+        return ResponseEntity.ok(map);
     }
 }

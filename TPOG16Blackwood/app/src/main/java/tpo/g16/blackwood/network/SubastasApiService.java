@@ -94,4 +94,10 @@ public interface SubastasApiService {
 
     @PUT("api/productos/{id}/condiciones-duenio")
     Call<Map<String, Object>> responderCondiciones(@Path("id") int id, @Body Map<String, Object> request);
+
+    @POST("api/subastas")
+    Call<Map<String, Object>> crearSubasta(@Body Map<String, Object> request);
+
+    @GET("api/productos/aprobados")
+    Call<List<Map<String, Object>>> getProductosAprobados();
 }

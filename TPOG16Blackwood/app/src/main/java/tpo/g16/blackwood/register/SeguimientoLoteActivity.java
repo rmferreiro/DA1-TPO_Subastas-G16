@@ -119,8 +119,16 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
 
                                 Double precioBase = (Double) data.get("precioBasePropuesto");
                                 String moneda = (String) data.get("moneda");
-                                txtMontoPropuesto.setText((moneda != null ? moneda : "ARS") + " " + String.format("%.2f", precioBase != null ? precioBase : 0.0));
-                            } else if ("ACEPTADO_DUENIO".equals(estado)) {
+                                Double comisionProp = (Double) data.get("comisionPropuesta");
+                                
+                                int comisionPct = 5; // Fallback por defecto 5%
+                                if (comisionProp != null) {
+                                    comisionPct = (int) Math.round(comisionProp * 100);
+                                }
+                                String textoPropuesta = (moneda != null ? moneda : "ARS") + " " + String.format("%.2f", precioBase != null ? precioBase : 0.0)
+                                        + " (Comisión: " + comisionPct + "%)";
+                                txtMontoPropuesto.setText(textoPropuesta);
+                            } else if ("ACEPTADO_DUENIO".equals(estado) || "SUBASTANDO".equals(estado) || "EN_SUBASTA".equals(estado)) {
                                 cardSeguro.setVisibility(View.VISIBLE);
                                 cardUbicacion.setVisibility(View.VISIBLE);
                                 cardMotivosRechazo.setVisibility(View.GONE);
@@ -200,6 +208,12 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
             stepDot3.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gold)));
             txtStep3Label.setTextColor(getResources().getColor(R.color.gold));
             txtStep3Label.setText("Aceptado para subasta");
+        } else if ("SUBASTANDO".equals(estado) || "EN_SUBASTA".equals(estado)) {
+            stepDot2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gold)));
+            
+            stepDot3.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gold)));
+            txtStep3Label.setTextColor(getResources().getColor(R.color.gold));
+            txtStep3Label.setText("En subasta");
         } else if ("RECHAZADO_EMPRESA".equals(estado) || "RECHAZADO_DUENIO".equals(estado) || "RECHAZADO".equals(estado)) {
             // Decisión tomada: Rechazado
             stepDot2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gold)));

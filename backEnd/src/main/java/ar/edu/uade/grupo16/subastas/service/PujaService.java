@@ -104,17 +104,20 @@ public class PujaService {
         // Incrementos reglamentarios: 1% y 20% del precio base
         BigDecimal unPorciento     = precioBase.multiply(new BigDecimal("0.01"));
         BigDecimal veintePorciento = precioBase.multiply(new BigDecimal("0.20"));
+        
+        // El incremento mínimo depende de la categoría de la sala (20% para Oro y Platino, 1% para otras)
+        BigDecimal incrementoMinimo = (catSubasta.equals("oro") || catSubasta.equals("platino")) ? veintePorciento : unPorciento;
 
         if (mejorPujaActual.isPresent()) {
             BigDecimal mejorOferta = mejorPujaActual.get().getImporte();
-            BigDecimal minimoRequerido = mejorOferta.add(unPorciento);
+            BigDecimal minimoRequerido = mejorOferta.add(incrementoMinimo);
             BigDecimal maximoPermitido = mejorOferta.add(veintePorciento);
 
-            // Validar mínimo (aplica a todas las categorías)
+            // Validar mínimo
             if (request.getImporte().compareTo(minimoRequerido) < 0) {
                 throw new PujaInvalidaException(String.format(
-                        "La puja mínima es $%.2f (mejor oferta $%.2f + 1%% del precio base $%.2f)",
-                        minimoRequerido, mejorOferta, precioBase));
+                        "La puja mínima es $%.2f (mejor oferta $%.2f + incremento mínimo requerido $%.2f)",
+                        minimoRequerido, mejorOferta, incrementoMinimo));
             }
 
             // Validar máximo (solo para categorías comun, especial, plata)
@@ -191,6 +194,10 @@ public class PujaService {
             }
         }
 
+        // 8. Extender el límite de finalización de la subasta a 5 minutos en el futuro
+        subasta.setLimiteFinalizacionEpoch(java.time.Instant.now().toEpochMilli() + 300000);
+        subastaRepository.save(subasta);
+
         log.info("Puja aceptada — Item: {} | Postor: {} | Importe: {} | Anterior: {}",
                 item.getIdentificador(), emailPostor, request.getImporte(), importeAnterior);
 
@@ -210,6 +217,7 @@ public class PujaService {
                 .siguientePujaMinima(request.getImporte().add(unPorciento))
                 .siguientePujaMaxima(sinLimiteMaximo ? null : request.getImporte().add(veintePorciento))
                 .sinLimiteMaximo(sinLimiteMaximo)
+                .limiteFinalizacionEpoch(subasta.getLimiteFinalizacionEpoch())
                 .build();
 
     }

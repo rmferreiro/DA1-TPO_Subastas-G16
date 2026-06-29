@@ -48,7 +48,9 @@ INSERT INTO personas (identificador, nombre, documento, direccion, pais) VALUES
 -- Dueños de bienes
 (30, 'Galería de Arte Borges',  '30444555', 'Recoleta 77, CABA',               1),
 (31, 'Casa Subastas del Sur',   '28666777', 'San Martín 333, Buenos Aires',    1),
-(32, 'Colección Privada Smith', '99888777', '5th Avenue 100, New York',        11);
+(32, 'Colección Privada Smith', '99888777', '5th Avenue 100, New York',        11),
+-- Blackwood Subastas (Para Puja Original, sin login, categoria platino)
+(9999, 'Blackwood Subastas',    'BLACKWOOD_SUBASTAS', 'Sede Central',           1);
 
 -- ============================================================
 -- CLIENTES
@@ -61,7 +63,9 @@ INSERT INTO clientes (identificador, pais, categoria, admitido, verificador) VAL
 (5, 1, 'plata',        'si', 10),  -- Roberto
 (6, 1, 'comun',        'no', 10),  -- Valentina - pendiente de aprobación
 (7, 1, 'oro',          'si', 10),  -- Diego - GOLD
-(8, 1, 'platino',      'si', 10);  -- Laura - PLATINUM (mayor nivel)
+(8, 1, 'platino',      'si', 10),  -- Laura - PLATINUM (mayor nivel)
+-- Blackwood Subastas (Para Puja Original, sin login, categoria platino)
+(9999, 1, 'platino',   'si', 10);
 
 -- ============================================================
 -- EMPLEADOS
@@ -187,14 +191,14 @@ UPDATE seguros SET producto = 5 WHERE numero_poliza = 'SEG-2024-005';
 INSERT INTO subastas (identificador, fecha, hora, estado, categoria, ubicacion, moneda,
                        descripcion, subastador, capacidad_asistentes, tiene_deposito, seguridad_propia) VALUES
 -- Subasta ABIERTA (en curso)
-(1, CURDATE(), '19:00:00', 'abierta', 'comun',
+(1, CURDATE(), '19:00:00', 'cerrada', 'comun',
    'Av. Corrientes 1346 Piso 3, CABA',
    'ARS',
    'Subasta de bienes preciados — Lote de marzo 2024. Relojes, arte y antigüedades.',
    20, 50, 'no', 'no'),
 
--- Subasta PROGRAMADA (futura)
-(2, DATE_ADD(CURDATE(), INTERVAL 7 DAY), '18:00:00', 'programada', 'oro',
+-- Subasta PROGRAMADA (ahora cerrada por requerimiento del seed inicial)
+(2, DATE_ADD(CURDATE(), INTERVAL 7 DAY), '18:00:00', 'cerrada', 'oro',
    'Palacio Paz — Florida 1000, CABA',
    'ARS',
    'Subasta Premium — Arte y obras históricas. Solo para clientes categoría Oro y superior.',
