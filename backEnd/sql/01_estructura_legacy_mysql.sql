@@ -5,11 +5,11 @@
 -- ============================================================
 
 -- Crear la base de datos si no existe
-CREATE DATABASE IF NOT EXISTS subastas_bd
+CREATE DATABASE IF NOT EXISTS defaultdb
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE subastas_bd;
+USE defaultdb;
 
 -- ============================================================
 -- TABLA: paises (catálogo de países)
@@ -265,3 +265,4 @@ CREATE TABLE IF NOT EXISTS registroDeSubasta (
     CONSTRAINT fk_registroDeSubasta_producto FOREIGN KEY (producto) REFERENCES productos(identificador),
     CONSTRAINT fk_registroDeSubasta_cliente FOREIGN KEY (cliente) REFERENCES clientes(identificador)
 ) ENGINE=InnoDB;
+

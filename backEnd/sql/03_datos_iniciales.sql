@@ -3,7 +3,7 @@
 -- Ejecutar DESPUÉS de 01 y 02
 -- ============================================================
 
-USE subastas_bd;
+USE defaultdb;
 
 -- ============================================================
 -- Empleado del sistema (necesario como verificador por defecto)
@@ -45,3 +45,4 @@ INSERT INTO paises (descripcion, gentilicio, idiomas) VALUES
 ('Países Bajos', 'Neerlandés/a', 'Neerlandés'),
 ('Portugal', 'Portugués/a', 'Portugués'),
 ('Corea del Sur', 'Surcoreano/a', 'Coreano');
+

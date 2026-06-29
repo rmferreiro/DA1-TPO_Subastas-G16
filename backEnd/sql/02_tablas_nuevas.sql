@@ -3,7 +3,7 @@
 -- Ejecutar DESPUÉS de 01_estructura_legacy_mysql.sql
 -- ============================================================
 
-USE subastas_bd;
+USE defaultdb;
 
 -- ============================================================
 -- TABLA: usuarios_auth (credenciales de login)
@@ -113,3 +113,4 @@ CREATE TABLE IF NOT EXISTS productos_obra_arte (
 -- MODIFICACIONES A TABLAS LEGACY
 -- ============================================================
 ALTER TABLE itemsCatalogo ADD COLUMN orden INT DEFAULT 1;
+

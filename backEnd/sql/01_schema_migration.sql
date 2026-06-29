@@ -5,13 +5,13 @@
 -- ============================================================
 
 -- ---- 0. Crear y usar la base (limpia) ----
-DROP DATABASE IF EXISTS subastas_bd;
+DROP DATABASE IF EXISTS defaultdb;
 
-CREATE DATABASE subastas_bd
+CREATE DATABASE defaultdb
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE subastas_bd;
+USE defaultdb;
 
 -- Desactivar FK checks durante la carga
 SET FOREIGN_KEY_CHECKS = 0;
@@ -349,3 +349,4 @@ CREATE TABLE IF NOT EXISTS notificaciones (
 -- REACTIVAR FK checks
 -- ============================================================
 SET FOREIGN_KEY_CHECKS = 1;
+

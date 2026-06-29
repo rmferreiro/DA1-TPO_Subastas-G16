@@ -106,5 +106,28 @@
             android:name=".EmpleadoControlPujasActivity" />
         <activity
             android:name=".EmpleadoCrearSubastaActivity" />
+
+        <!-- VENDEDOR - Gestión de lotes -->
+        <activity
+            android:name=".vendedor.GestionArticulosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.NuevoLoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.SeguimientoSoporteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.SeguimientoAseguradoraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.SubastaAsignadaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.RechazarPropuestaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vendedor.PostAprobacionActivity"
+            android:exported="false" />
     </application>
 </manifest>

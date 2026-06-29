@@ -3,7 +3,7 @@
 -- Ejecutar DESPUÉS de 01_schema_migration.sql
 -- ============================================================
 
-USE subastas_bd;
+USE defaultdb;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ============================================================
@@ -313,5 +313,6 @@ SET FOREIGN_KEY_CHECKS = 1;
 SELECT '✅ Base de datos cargada exitosamente!' AS resultado;
 SELECT TABLE_NAME, TABLE_ROWS
 FROM information_schema.tables
-WHERE table_schema = 'subastas_bd'
+WHERE table_schema = 'defaultdb'
 ORDER BY TABLE_NAME;
+
