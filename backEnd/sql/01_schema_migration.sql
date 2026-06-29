@@ -178,18 +178,20 @@ CREATE TABLE IF NOT EXISTS productos_obra_arte (
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS subastas (
-    identificador           INT AUTO_INCREMENT PRIMARY KEY,
-    fecha                   DATE,
-    hora                    TIME,
-    estado                  VARCHAR(20)  DEFAULT 'abierta',
-    categoria               VARCHAR(20),
-    ubicacion               VARCHAR(300),
-    moneda                  VARCHAR(3)   DEFAULT 'ARS',
-    descripcion             VARCHAR(500),
-    subastador              INT,
-    capacidad_asistentes    INT,
-    tiene_deposito          VARCHAR(2)   DEFAULT 'no',
-    seguridad_propia        VARCHAR(2)   DEFAULT 'no',
+    identificador               INT AUTO_INCREMENT PRIMARY KEY,
+    fecha                       DATE,
+    hora                        TIME,
+    estado                      VARCHAR(20)  DEFAULT 'PENDIENTE',
+    categoria                   VARCHAR(20),
+    ubicacion                   VARCHAR(300),
+    moneda                      VARCHAR(3)   DEFAULT 'ARS',
+    descripcion                 VARCHAR(500),
+    subastador                  INT,
+    capacidad_asistentes        INT,
+    tiene_deposito              VARCHAR(2)   DEFAULT 'no',
+    seguridad_propia            VARCHAR(2)   DEFAULT 'no',
+    item_actual_id              INT          NULL,
+    limite_finalizacion_epoch   BIGINT       NULL,
     CONSTRAINT fk_sub_subastador FOREIGN KEY (subastador) REFERENCES subastadores(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -287,6 +289,7 @@ CREATE TABLE IF NOT EXISTS medios_pago (
     activo              BOOLEAN DEFAULT TRUE,
     fecha_registro      DATETIME DEFAULT CURRENT_TIMESTAMP,
     monto_reservado     DECIMAL(18,2) DEFAULT 0.00,
+    monto_utilizado     DECIMAL(18,2) DEFAULT 0.00,
     CONSTRAINT fk_mp_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(identificador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -302,7 +305,11 @@ CREATE TABLE IF NOT EXISTS registrosSubasta (
     cliente         INT NOT NULL,
     importe         DECIMAL(18,2) NOT NULL,
     comision        DECIMAL(18,2) DEFAULT 0.00,
-    fecha_registro  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    costo_envio     DECIMAL(18,2) DEFAULT 0.00,
+    compra_empresa  TINYINT(1)   NOT NULL DEFAULT 0,
+    pagado          TINYINT(1)   NOT NULL DEFAULT 0,
+    fecha_registro  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    fecha_creacion  DATETIME     DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_reg_subasta  FOREIGN KEY (subasta)  REFERENCES subastas(identificador),
     CONSTRAINT fk_reg_duenio   FOREIGN KEY (duenio)   REFERENCES duenios(identificador),
     CONSTRAINT fk_reg_producto FOREIGN KEY (producto) REFERENCES productos(identificador),

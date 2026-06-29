@@ -2,9 +2,11 @@ package tpo.g16.blackwood;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,90 +38,75 @@ public class MisPujasAdapter extends RecyclerView.Adapter<MisPujasAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MiPuja puja = pujas.get(position);
+        String estado = puja.getEstado();
 
         holder.tvProductoDesc.setText(puja.getProductoDesc());
         holder.tvSubastaDesc.setText(puja.getSubastaDesc());
-        holder.tvMiPuja.setText(String.format("Mi puja máxima: $%,.0f", puja.getMiPuja()));
 
-        String estado = puja.getEstado();
-        if ("GANANDO".equals(estado)) {
-            holder.tvBadgeEstado.setText("● En vivo");
-            holder.tvBadgeEstado.setBackgroundColor(Color.parseColor("#1C2A21"));
-            holder.tvBadgeEstado.setTextColor(Color.parseColor("#C6A75E"));
-            
-            holder.tvResultadoEstado.setText("Lote adjudicado (Ganando)");
-            holder.tvResultadoEstado.setTextColor(Color.parseColor("#1C2A21"));
-            holder.tvMiPuja.setTextColor(Color.parseColor("#C6A75E"));
-            
-        } else if ("PERDIENDO".equals(estado)) {
-            holder.tvBadgeEstado.setText("● En vivo");
-            holder.tvBadgeEstado.setBackgroundColor(Color.parseColor("#EAE6DF"));
-            holder.tvBadgeEstado.setTextColor(Color.parseColor("#6B6B6B"));
-            
-            holder.tvResultadoEstado.setText("No ganando");
-            holder.tvResultadoEstado.setTextColor(Color.parseColor("#6B6B6B"));
-            holder.tvMiPuja.setTextColor(Color.parseColor("#6B6B6B"));
-            
-        } else if ("GANADA".equals(estado)) {
-            holder.tvBadgeEstado.setText("★ Ganada");
-            holder.tvBadgeEstado.setBackgroundColor(Color.parseColor("#1C2A21"));
-            holder.tvBadgeEstado.setTextColor(Color.parseColor("#C6A75E"));
-            
-            holder.tvResultadoEstado.setText("¡Ganaste!");
-            holder.tvResultadoEstado.setTextColor(Color.parseColor("#1C2A21"));
-            holder.tvMiPuja.setTextColor(Color.parseColor("#C6A75E"));
-            
-        } else if ("PERDIDA".equals(estado)) {
-            holder.tvBadgeEstado.setText("Finalizada");
-            holder.tvBadgeEstado.setBackgroundColor(Color.parseColor("#EAE6DF"));
-            holder.tvBadgeEstado.setTextColor(Color.parseColor("#6B6B6B"));
-            
-            holder.tvResultadoEstado.setText("No ganado");
-            holder.tvResultadoEstado.setTextColor(Color.parseColor("#6B6B6B"));
-            holder.tvMiPuja.setTextColor(Color.parseColor("#6B6B6B"));
-        } else if ("PAGADA".equals(estado)) {
-            holder.tvBadgeEstado.setText("★ Pagada");
-            holder.tvBadgeEstado.setBackgroundColor(Color.parseColor("#1C2A21"));
-            holder.tvBadgeEstado.setTextColor(Color.parseColor("#C6A75E"));
-            
-            holder.tvResultadoEstado.setText("Pago Confirmado");
-            holder.tvResultadoEstado.setTextColor(Color.parseColor("#1C2A21"));
-            holder.tvMiPuja.setTextColor(Color.parseColor("#C6A75E"));
-            holder.btnPagarItem.setVisibility(View.GONE);
+        // Poblar dinámicamente la lista de ofertas
+        holder.llBidsContainer.removeAllViews();
+        List<Double> todasPujas = puja.getTodasMisPujas();
+        if (todasPujas != null && !todasPujas.isEmpty()) {
+            for (Double monto : todasPujas) {
+                TextView tvOferta = new TextView(context);
+                tvOferta.setText(String.format("Ofertaste $%,.0f", monto));
+                tvOferta.setTextColor(Color.parseColor("#C6A75E"));
+                tvOferta.setTextSize(13f);
+                tvOferta.setTypeface(null, Typeface.BOLD);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 4);
+                tvOferta.setLayoutParams(params);
+                holder.llBidsContainer.addView(tvOferta);
+            }
+        } else {
+            // Fallback: mostrar miPuja si no hay lista detallada
+            TextView tvOferta = new TextView(context);
+            tvOferta.setText(String.format("Ofertaste $%,.0f", puja.getMiPuja()));
+            tvOferta.setTextColor(Color.parseColor("#C6A75E"));
+            tvOferta.setTextSize(13f);
+            tvOferta.setTypeface(null, Typeface.BOLD);
+            holder.llBidsContainer.addView(tvOferta);
         }
 
+        // Resultado del lote
+        if ("GANADA".equals(estado)) {
+            holder.tvResultadoEstado.setText("Ganaste este lote");
+            holder.tvResultadoEstado.setTextColor(Color.parseColor("#1B5E20"));
+        } else if ("PAGADA".equals(estado)) {
+            holder.tvResultadoEstado.setText("Ganaste este lote · Pago confirmado");
+            holder.tvResultadoEstado.setTextColor(Color.parseColor("#1B5E20"));
+        } else if ("PERDIDA".equals(estado)) {
+            holder.tvResultadoEstado.setText("No ganaste este lote");
+            holder.tvResultadoEstado.setTextColor(Color.parseColor("#B71C1C"));
+        } else if ("GANANDO".equals(estado)) {
+            holder.tvResultadoEstado.setText("● Subasta en curso — vas ganando");
+            holder.tvResultadoEstado.setTextColor(Color.parseColor("#1B5E20"));
+        } else if ("PERDIENDO".equals(estado)) {
+            holder.tvResultadoEstado.setText("● Subasta en curso — no vas ganando");
+            holder.tvResultadoEstado.setTextColor(Color.parseColor("#B71C1C"));
+        } else {
+            holder.tvResultadoEstado.setText("");
+        }
+
+        // Botón "Pagar ahora" solo para GANADA (no pagada aún)
         if ("GANADA".equals(estado)) {
             holder.btnPagarItem.setVisibility(View.VISIBLE);
             holder.btnPagarItem.setOnClickListener(v -> {
                 android.content.Intent intent = new android.content.Intent(context, ConfirmarPagoActivity.class);
                 intent.putExtra("ITEM_ID", puja.getItemId());
                 intent.putExtra("OFERTA", puja.getMiPuja());
+                intent.putExtra("COMISION", puja.getComision());
+                intent.putExtra("COSTO_ENVIO", puja.getCostoEnvio());
+                intent.putExtra("TOTAL_A_PAGAR", puja.getTotalAPagar() > 0
+                        ? puja.getTotalAPagar() : puja.getMiPuja());
                 intent.putExtra("DESCRIPCION", puja.getProductoDesc());
                 context.startActivity(intent);
             });
         } else {
             holder.btnPagarItem.setVisibility(View.GONE);
         }
-        
-        holder.itemView.setOnClickListener(v -> {
-            if ("GANADA".equals(estado) || "PAGADA".equals(estado)) {
-                android.content.Intent intent = new android.content.Intent(context, NotificacionGanadorActivity.class);
-                intent.putExtra("productoDesc", puja.getProductoDesc());
-                intent.putExtra("subastaDesc", puja.getSubastaDesc());
-                intent.putExtra("precio", puja.getMiPuja());
-                context.startActivity(intent);
-            } else if ("PERDIDA".equals(estado)) {
-                android.content.Intent intent = new android.content.Intent(context, NotificacionPerdedorActivity.class);
-                intent.putExtra("productoDesc", puja.getProductoDesc());
-                intent.putExtra("subastaDesc", puja.getSubastaDesc());
-                intent.putExtra("precio", puja.getMiPuja());
-                context.startActivity(intent);
-            } else {
-                android.content.Intent intent = new android.content.Intent(context, SubastaEnVivoActivity.class);
-                intent.putExtra("SUBASTA_ID", puja.getSubastaId());
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -128,16 +115,16 @@ public class MisPujasAdapter extends RecyclerView.Adapter<MisPujasAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvProductoDesc, tvBadgeEstado, tvSubastaDesc, tvMiPuja, tvResultadoEstado, btnPagarItem;
+        TextView tvProductoDesc, tvSubastaDesc, tvResultadoEstado, btnPagarItem;
+        LinearLayout llBidsContainer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvProductoDesc = itemView.findViewById(R.id.tv_producto_desc);
-            tvBadgeEstado = itemView.findViewById(R.id.tv_badge_estado);
-            tvSubastaDesc = itemView.findViewById(R.id.tv_subasta_desc);
-            tvMiPuja = itemView.findViewById(R.id.tv_mi_puja);
+            tvProductoDesc   = itemView.findViewById(R.id.tv_producto_desc);
+            tvSubastaDesc    = itemView.findViewById(R.id.tv_subasta_desc);
+            llBidsContainer  = itemView.findViewById(R.id.ll_bids_container);
             tvResultadoEstado = itemView.findViewById(R.id.tv_resultado_estado);
-            btnPagarItem = itemView.findViewById(R.id.btn_pagar_item);
+            btnPagarItem     = itemView.findViewById(R.id.btn_pagar_item);
         }
     }
 }

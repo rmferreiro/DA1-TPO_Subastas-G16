@@ -38,7 +38,7 @@ public class SecurityConfig {
                 // Swagger
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // WebSocket
-                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/ws/**", "/ws-auction/**").permitAll()
                 // Fotos de productos públicas para carga rápida (Glide)
                 .requestMatchers("/api/productos/*/foto").permitAll()
                 // Endpoint para pruebas (reset de base de datos) — SOLO en entorno de desarrollo

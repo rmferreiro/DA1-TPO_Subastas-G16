@@ -1,8 +1,9 @@
 package ar.edu.uade.grupo16.subastas.enums;
 
 public enum EstadoSubasta {
-    ABIERTA("abierta"),
-    CERRADA("cerrada");
+    PENDIENTE("PENDIENTE"),
+    ACTIVA("ACTIVA"),
+    FINALIZADA("FINALIZADA");
 
     private final String valor;
 

@@ -10,7 +10,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import tpo.g16.blackwood.network.models.PujaRequest;
 import tpo.g16.blackwood.network.models.SubastaResponse;
 import tpo.g16.blackwood.network.models.LoginRequest;
 import tpo.g16.blackwood.network.models.AuthResponse;
@@ -26,20 +25,15 @@ public interface SubastasApiService {
     @GET("api/subastas/{id}")
     Call<SubastaResponse> getSubastaById(@Path("id") int id);
 
+    /** Estado completo de la subasta en vivo: item activo, mejor oferta, límites. */
+    @GET("api/subastas/{id}/estado-vivo")
+    Call<Map<String, Object>> getEstadoVivo(@Path("id") int id);
+
     @POST("api/subastas/{id}/unirse")
     Call<Map<String, Object>> unirseSubasta(@Path("id") int id);
 
     @DELETE("api/subastas/{id}/salir")
     Call<Map<String, Object>> salirSubasta(@Path("id") int id);
-
-    @POST("api/subastas/{subastaId}/pujas")
-    Call<Map<String, Object>> pujar(@Path("subastaId") int subastaId, @Body PujaRequest request);
-
-    @GET("api/subastas/{subastaId}/pujas/items/{itemId}/mejor")
-    Call<Map<String, Object>> getMejorPuja(@Path("subastaId") int subastaId, @Path("itemId") int itemId);
-
-    @GET("api/subastas/{subastaId}/pujas/items/{itemId}/historial")
-    Call<List<Map<String, Object>>> getHistorialPujas(@Path("subastaId") int subastaId, @Path("itemId") int itemId);
 
     @GET("api/productos/catalogo/{subastaId}")
     Call<List<Map<String, Object>>> getCatalogo(@Path("subastaId") int subastaId);
@@ -50,9 +44,6 @@ public interface SubastasApiService {
     @GET("api/productos/catalogo/items/{itemId}")
     Call<Map<String, Object>> getItemDetalle(@Path("itemId") int itemId);
 
-    @GET("api/subastas/{subastaId}/pujas/items/{itemId}/resultado")
-    Call<tpo.g16.blackwood.network.models.ItemResultadoResponse> getItemResultado(@Path("subastaId") int subastaId, @Path("itemId") int itemId);
-
     @POST("api/pujas/items/{itemId}/pagar")
     Call<Map<String, Object>> pagarItemGanado(@Path("itemId") int itemId, @Body Map<String, Object> request);
 
@@ -62,11 +53,11 @@ public interface SubastasApiService {
     @POST("api/medios-pago")
     Call<Map<String, Object>> agregarMedioPago(@Body Map<String, Object> request);
 
+    @PUT("api/medios-pago/{id}")
+    Call<Map<String, Object>> actualizarMedioPago(@Path("id") Long id, @Body Map<String, Object> request);
+
     @DELETE("api/medios-pago/{id}")
     Call<Map<String, Object>> eliminarMedioPago(@Path("id") Long id);
-
-    @POST("api/subastas/{subastaId}/pujas/items/{itemId}/cerrar")
-    Call<tpo.g16.blackwood.network.models.PujaResponse> cerrarItem(@Path("subastaId") int subastaId, @Path("itemId") int itemId);
 
     @GET("api/pujas/mis-pujas")
     Call<List<tpo.g16.blackwood.network.models.MiPuja>> getMisPujas();
@@ -100,4 +91,18 @@ public interface SubastasApiService {
 
     @GET("api/productos/aprobados")
     Call<List<Map<String, Object>>> getProductosAprobados();
+
+    // ── Multas ──────────────────────────────────────────────────────────────
+
+    /** Multas pendientes de pago del usuario autenticado. */
+    @GET("api/multas/pendientes")
+    Call<List<Map<String, Object>>> getMultasPendientes();
+
+    /** Todas las multas (pagas y pendientes) del usuario autenticado. */
+    @GET("api/multas")
+    Call<List<Map<String, Object>>> getTodasMultas();
+
+    /** Pagar una multa por su id. */
+    @POST("api/multas/{id}/pagar")
+    Call<Map<String, Object>> pagarMulta(@Path("id") long id);
 }

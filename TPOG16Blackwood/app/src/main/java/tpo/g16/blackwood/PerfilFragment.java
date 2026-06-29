@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -26,54 +29,47 @@ public class PerfilFragment extends Fragment {
     private TextView tvNombre;
     private TextView tvCategoria;
     private TextView tvGanadas;
-    private TextView tvParticipaciones;
+    private TextView tvOfertado;
+    private TextView tvPagado;
     private TextView tvTarjeta;
-    private TextView tvOfertadoPagado;
-    private View cardParticipaciones;
-    private View cardHistorial;
     private View cardMediosPago;
+    private View btnAdminMediosPago;
+    private View btnAdminUsuarios;
+    private View cardMisMultas;
+    private TextView tvMultasResumen;
+    private TextView tvMultasBadge;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        tvNombre = view.findViewById(R.id.tv_perfil_nombre);
-        tvCategoria = view.findViewById(R.id.tv_perfil_categoria);
-        tvGanadas = view.findViewById(R.id.tv_perfil_ganadas);
-        tvParticipaciones = view.findViewById(R.id.tv_perfil_participaciones);
-        tvTarjeta = view.findViewById(R.id.tv_perfil_tarjeta);
-        tvOfertadoPagado = view.findViewById(R.id.tv_perfil_ofertado_pagado);
-        
-        cardParticipaciones = view.findViewById(R.id.card_participaciones);
-        cardHistorial = view.findViewById(R.id.card_historial);
+        tvNombre       = view.findViewById(R.id.tv_perfil_nombre);
+        tvCategoria    = view.findViewById(R.id.tv_perfil_categoria);
+        tvGanadas      = view.findViewById(R.id.tv_perfil_ganadas);
+        tvOfertado     = view.findViewById(R.id.tv_perfil_ofertado);
+        tvPagado       = view.findViewById(R.id.tv_perfil_pagado);
+        tvTarjeta      = view.findViewById(R.id.tv_perfil_tarjeta);
         cardMediosPago = view.findViewById(R.id.card_medios_pago);
+        btnAdminMediosPago = view.findViewById(R.id.btn_admin_medios_pago);
+        btnAdminUsuarios   = view.findViewById(R.id.btn_admin_usuarios);
+        cardMisMultas      = view.findViewById(R.id.card_mis_multas);
+        tvMultasResumen    = view.findViewById(R.id.tv_multas_resumen);
+        tvMultasBadge      = view.findViewById(R.id.tv_multas_badge);
 
-        cardParticipaciones.setOnClickListener(v -> {
-            if (getActivity() != null && getActivity() instanceof HomeActivity) {
-                ((HomeActivity) getActivity()).selectTab(1); // Va a "Mis Pujas"
-            }
-        });
+        cardMediosPago.setOnClickListener(v -> abrirFragment(new MediosPagoFragment()));
 
-        cardHistorial.setOnClickListener(v -> {
-            if (getActivity() != null && getActivity() instanceof HomeActivity) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new HistorialFragment())
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-        
-        cardMediosPago.setOnClickListener(v -> {
-            if (getActivity() != null && getActivity() instanceof HomeActivity) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new MediosPagoFragment())
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        if (btnAdminMediosPago != null) {
+            btnAdminMediosPago.setOnClickListener(v -> abrirFragment(new AdminMediosPagoFragment()));
+        }
+
+        if (btnAdminUsuarios != null) {
+            btnAdminUsuarios.setOnClickListener(v -> abrirFragment(new AdminUsuariosFragment()));
+        }
+
+        if (cardMisMultas != null) {
+            cardMisMultas.setOnClickListener(v -> abrirFragment(new MisMultasFragment()));
+        }
 
         View btnCerrarSesion = view.findViewById(R.id.btn_cerrar_sesion);
         if (btnCerrarSesion != null) {
@@ -82,8 +78,19 @@ public class PerfilFragment extends Fragment {
 
         cargarPerfil();
         cargarMetricas();
+        cargarResumenMultas();
 
         return view;
+    }
+
+    private void abrirFragment(Fragment fragment) {
+        if (getActivity() instanceof HomeActivity) {
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private void cerrarSesion() {
@@ -136,6 +143,15 @@ public class PerfilFragment extends Fragment {
                     } else {
                         tvTarjeta.setText("Sin verificar");
                     }
+                    
+                    if (cliente.isEsAdmin()) {
+                        if (btnAdminMediosPago != null) {
+                            btnAdminMediosPago.setVisibility(View.VISIBLE);
+                        }
+                        if (btnAdminUsuarios != null) {
+                            btnAdminUsuarios.setVisibility(View.VISIBLE);
+                        }
+                    }
                 } else {
                     Toast.makeText(getContext(), "Error al cargar perfil", Toast.LENGTH_SHORT).show();
                 }
@@ -154,29 +170,25 @@ public class PerfilFragment extends Fragment {
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Map<String, Object> metricas = response.body();
-                    
+
                     Object victoriasObj = metricas.get("totalVictorias");
-                    Object participacionesObj = metricas.get("subastasParticipadas");
-                    Object ofertadoObj = metricas.get("totalOfertado");
-                    Object pagadoObj = metricas.get("totalPagado");
-                    
-                    if (victoriasObj != null) {
+                    if (tvGanadas != null && victoriasObj != null) {
                         tvGanadas.setText(String.valueOf(((Number) victoriasObj).intValue()));
                     }
-                    if (participacionesObj != null) {
-                        int participaciones = ((Number) participacionesObj).intValue();
-                        if (participaciones == 1) {
-                            tvParticipaciones.setText("1 finalizada");
-                        } else if (participaciones == 0) {
-                            tvParticipaciones.setText("Sin participaciones aún");
-                        } else {
-                            tvParticipaciones.setText(participaciones + " finalizadas");
-                        }
+
+                    Object ofertadoObj = metricas.get("totalOfertado");
+                    if (tvOfertado != null) {
+                        long ofertado = ofertadoObj instanceof Number
+                                ? ((Number) ofertadoObj).longValue() : 0L;
+                        tvOfertado.setText(formatMonto(ofertado));
                     }
-                    
-                    int ofertado = ofertadoObj != null ? ((Number) ofertadoObj).intValue() : 0;
-                    int pagado = pagadoObj != null ? ((Number) pagadoObj).intValue() : 0;
-                    tvOfertadoPagado.setText("$" + ofertado + " / $" + pagado);
+
+                    Object pagadoObj = metricas.get("totalPagado");
+                    if (tvPagado != null) {
+                        long pagado = pagadoObj instanceof Number
+                                ? ((Number) pagadoObj).longValue() : 0L;
+                        tvPagado.setText(formatMonto(pagado));
+                    }
                 }
             }
 
@@ -185,5 +197,50 @@ public class PerfilFragment extends Fragment {
                 Log.e("PerfilFragment", "Error métricas: ", t);
             }
         });
+    }
+
+    private String formatMonto(long monto) {
+        NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "AR"));
+        return "$ " + nf.format(monto);
+    }
+
+    /**
+     * Consulta las multas pendientes para mostrar el resumen en la card y el badge
+     * de alerta. Si hay multas pendientes el badge es visible con su cantidad.
+     */
+    private void cargarResumenMultas() {
+        if (tvMultasResumen == null) return;
+        tvMultasResumen.setText("Cargando...");
+
+        RetrofitClient.getApiService().getMultasPendientes()
+                .enqueue(new Callback<java.util.List<Map<String, Object>>>() {
+                    @Override
+                    public void onResponse(Call<java.util.List<Map<String, Object>>> call,
+                                           Response<java.util.List<Map<String, Object>>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            int pendientes = response.body().size();
+                            if (tvMultasResumen != null) {
+                                tvMultasResumen.setText(pendientes > 0
+                                        ? pendientes + " multa(s) pendiente(s) de pago"
+                                        : "Sin multas pendientes");
+                            }
+                            if (tvMultasBadge != null) {
+                                if (pendientes > 0) {
+                                    tvMultasBadge.setText(String.valueOf(pendientes));
+                                    tvMultasBadge.setVisibility(View.VISIBLE);
+                                } else {
+                                    tvMultasBadge.setVisibility(View.GONE);
+                                }
+                            }
+                        } else {
+                            if (tvMultasResumen != null) tvMultasResumen.setText("Ver historial de multas");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<java.util.List<Map<String, Object>>> call, Throwable t) {
+                        if (tvMultasResumen != null) tvMultasResumen.setText("Ver historial de multas");
+                    }
+                });
     }
 }

@@ -30,6 +30,10 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
     private TextView txtMotivosRechazo, txtMontoPropuesto;
     private View btnPropuestaAceptar, btnPropuestaRechazar;
 
+    // Card VENDIDO y nuevo dueño
+    private View cardVendido;
+    private TextView txtNuevoDuenio;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +56,14 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
         txtMontoPropuesto = findViewById(R.id.txt_monto_propuesto);
         btnPropuestaAceptar = findViewById(R.id.btn_propuesta_aceptar);
         btnPropuestaRechazar = findViewById(R.id.btn_propuesta_rechazar);
+        cardVendido = findViewById(R.id.card_vendido);
+        txtNuevoDuenio = findViewById(R.id.txt_nuevo_duenio);
 
         productoId = getIntent().getIntExtra("productoId", 0);
 
         TextView headerSubtitle = findViewById(R.id.header_subtitle);
         if (headerSubtitle != null) {
-            headerSubtitle.setText("Lote pendiente");
+            headerSubtitle.setText("Detalles de lote");
         }
 
         findViewById(R.id.btn_contactar_soporte).setOnClickListener(v -> 
@@ -94,6 +100,29 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
                                 txtUbicacion.setText("Depósito central · Buenos Aires");
                             }
 
+                            // Verificar si el producto fue VENDIDO
+                            Object vendidoObj = data.get("vendido");
+                            boolean vendido = vendidoObj instanceof Boolean && (Boolean) vendidoObj;
+                            String nuevoDuenoNombre = (String) data.get("nuevoDuenoNombre");
+
+                            if (cardVendido != null) {
+                                if (vendido) {
+                                    cardVendido.setVisibility(View.VISIBLE);
+                                    if (txtNuevoDuenio != null && nuevoDuenoNombre != null) {
+                                        txtNuevoDuenio.setText(nuevoDuenoNombre);
+                                    }
+                                    // Ocultar todas las demás cards cuando está vendido
+                                    cardSeguro.setVisibility(View.GONE);
+                                    cardUbicacion.setVisibility(View.GONE);
+                                    cardMotivosRechazo.setVisibility(View.GONE);
+                                    cardPropuestaDuenio.setVisibility(View.GONE);
+                                    actualizarStepper("VENDIDO");
+                                    return;
+                                } else {
+                                    cardVendido.setVisibility(View.GONE);
+                                }
+                            }
+
                             // Configurar visibilidad de tarjetas según estado
                             if ("PENDIENTE".equals(estado)) {
                                 cardSeguro.setVisibility(View.VISIBLE);
@@ -121,7 +150,7 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
                                 String moneda = (String) data.get("moneda");
                                 Double comisionProp = (Double) data.get("comisionPropuesta");
                                 
-                                int comisionPct = 5; // Fallback por defecto 5%
+                                int comisionPct = 5;
                                 if (comisionProp != null) {
                                     comisionPct = (int) Math.round(comisionProp * 100);
                                 }
@@ -215,12 +244,15 @@ public class SeguimientoLoteActivity extends AppCompatActivity {
             txtStep3Label.setTextColor(getResources().getColor(R.color.gold));
             txtStep3Label.setText("En subasta");
         } else if ("RECHAZADO_EMPRESA".equals(estado) || "RECHAZADO_DUENIO".equals(estado) || "RECHAZADO".equals(estado)) {
-            // Decisión tomada: Rechazado
             stepDot2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gold)));
-            
-            stepDot3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F44336"))); // Rojo
+            stepDot3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F44336")));
             txtStep3Label.setTextColor(Color.parseColor("#F44336"));
             txtStep3Label.setText("Rechazado");
+        } else if ("VENDIDO".equals(estado)) {
+            stepDot2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gold)));
+            stepDot3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1B5E20")));
+            txtStep3Label.setTextColor(Color.parseColor("#1B5E20"));
+            txtStep3Label.setText("VENDIDO");
         }
     }
 }

@@ -25,8 +25,8 @@ public class ChequeCertificadoStrategy implements MedioPagoStrategy {
 
     @Override
     public boolean puedeOperarEnMoneda(MedioPago medioPago, Moneda moneda) {
-        // Cheques certificados solo operan en ARS
-        return moneda == Moneda.ARS;
+        // El cheque opera en la moneda en que fue emitido
+        return medioPago.getMoneda() == moneda;
     }
 
     @Override

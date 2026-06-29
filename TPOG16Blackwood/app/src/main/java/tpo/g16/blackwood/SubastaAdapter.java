@@ -50,19 +50,19 @@ public class SubastaAdapter extends RecyclerView.Adapter<SubastaAdapter.SubastaV
         // Descripción / Estimación
         holder.tvDescripcion.setText(subasta.getDescripcion() != null ? subasta.getDescripcion() : "Sin descripción");
 
-        // Estado: Planificada (azul) | En sala (verde) | Finalizada (gris)
+        // Estado: Pendiente (azul) | Activa (verde) | Finalizada (gris)
         String estado = subasta.getEstado() != null ? subasta.getEstado().toUpperCase() : "";
-        if ("PLANIFICADA".equals(estado) || "PROGRAMADA".equals(estado)) {
-            holder.tvEstado.setText("Planificada");
+        if ("PENDIENTE".equals(estado)) {
+            holder.tvEstado.setText("Pendiente");
             int azul = Color.parseColor("#1565C0"); // Azul fuerte
             holder.tvEstado.setTextColor(azul);
             holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(azul));
-        } else if ("ABIERTA".equals(estado) || "EN_CURSO".equals(estado)) {
-            holder.tvEstado.setText("En sala");
+        } else if ("ACTIVA".equals(estado)) {
+            holder.tvEstado.setText("Activa");
             int verde = Color.parseColor("#1B7A3E"); // Verde fuerte
             holder.tvEstado.setTextColor(verde);
             holder.dotEstado.setBackgroundTintList(android.content.res.ColorStateList.valueOf(verde));
-        } else if ("FINALIZADA".equals(estado) || "CERRADA".equals(estado)) {
+        } else if ("FINALIZADA".equals(estado)) {
             holder.tvEstado.setText("Finalizada");
             int gris = Color.parseColor("#757575"); // Gris
             holder.tvEstado.setTextColor(gris);

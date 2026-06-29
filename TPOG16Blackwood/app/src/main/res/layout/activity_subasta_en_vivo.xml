@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -25,7 +26,20 @@
             android:layout_marginEnd="4dp"
             android:text="←"
             android:textColor="#F4F1EA"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:layout_marginEnd="12dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_logo_diamond"
+                android:contentDescription="Logo Blackwood" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -77,6 +91,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/tv_header_calidad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ORO"
@@ -118,8 +133,8 @@
                         android:src="@drawable/logo_blackwood" />
 
 
-                    <!-- Badge LOTE #007 -->
                     <TextView
+                        android:id="@+id/tv_lote_badge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="12dp"
@@ -169,6 +184,48 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- CARD OBRA DE ARTE (solo visible para OBRA_ARTE) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_vivo_obra_arte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E5E0D8"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Artista" android:textColor="#6B6B6B" android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tv_vivo_obra_artista"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:textColor="#1C2A21" android:textStyle="bold" android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_vivo_obra_historia"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:textColor="#6B6B6B" android:textSize="11sp"
+                        android:layout_marginTop="6dp"
+                        android:maxLines="3"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- CARD PUJA MAS ALTA -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,19 +261,15 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <!-- Circulo avatar -->
                     <TextView
                         android:id="@+id/tv_avatar_iniciales"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:background="@drawable/circle_black"
-                        android:backgroundTint="#1C2A21"
+                        android:background="@drawable/circle_black_gold_border"
                         android:gravity="center"
                         android:text="MR"
                         android:textColor="#C6A75E"
                         android:textSize="12sp" />
-
-                    <!-- Circular border over avatar workaround: we use standard circle_gold if needed but fine for now -->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -232,12 +285,6 @@
                             android:textColor="#F4F1EA"
                             android:textSize="12sp"
                             android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="hace 23 seg"
-                            android:textColor="#6B6B6B"
-                            android:textSize="10sp" />
                     </LinearLayout>
 
                     <TextView
@@ -314,6 +361,7 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/tv_realizar_puja_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Realizar una puja"
@@ -354,13 +402,18 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:background="#F4F1EA"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp">
                         
-                        <TextView
-                            android:id="@+id/tv_oferta_input"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/et_oferta_input"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="$ 3.210"
+                            android:background="@android:color/transparent"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:text="3210"
                             android:textColor="#1A1A1A"
                             android:textSize="16sp" />
                             
@@ -400,9 +453,20 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/button_primary"
                     android:backgroundTint="#C0A062"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ProgressBar
+                        android:id="@+id/progress_bid"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        android:indeterminateTint="#1C2A21"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_btn_pujar"
@@ -454,6 +518,7 @@
 
                 <!-- Avatars -->
                 <LinearLayout
+                    android:id="@+id/layout_avatars"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -531,7 +596,5 @@
 
     </ScrollView>
 
-    <!-- BOTTOM NAV -->
-    <include layout="@layout/bottom_nav" />
 
 </LinearLayout>

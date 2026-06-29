@@ -5,6 +5,7 @@ import ar.edu.uade.grupo16.subastas.enums.TipoNotificacion;
 import ar.edu.uade.grupo16.subastas.exception.RecursoNoEncontradoException;
 import ar.edu.uade.grupo16.subastas.exception.RegistroInvalidoException;
 import ar.edu.uade.grupo16.subastas.repository.*;
+import java.util.Collections;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class ProductoService {
     private final MedioPagoRepository medioPagoRepository;
     private final ProductoObraArteRepository productoObraArteRepository;
     private final ItemCatalogoRepository itemCatalogoRepository;
+    private final RegistroSubastaRepository registroSubastaRepository;
 
     public ProductoService(ProductoRepository productoRepository,
                            DuenioRepository duenioRepository,
@@ -39,7 +41,8 @@ public class ProductoService {
                            UsuarioAuthRepository usuarioAuthRepository,
                            MedioPagoRepository medioPagoRepository,
                            ProductoObraArteRepository productoObraArteRepository,
-                           ItemCatalogoRepository itemCatalogoRepository) {
+                           ItemCatalogoRepository itemCatalogoRepository,
+                           RegistroSubastaRepository registroSubastaRepository) {
         this.productoRepository = productoRepository;
         this.duenioRepository = duenioRepository;
         this.fotoRepository = fotoRepository;
@@ -51,6 +54,7 @@ public class ProductoService {
         this.medioPagoRepository = medioPagoRepository;
         this.productoObraArteRepository = productoObraArteRepository;
         this.itemCatalogoRepository = itemCatalogoRepository;
+        this.registroSubastaRepository = registroSubastaRepository;
     }
 
     /**
@@ -336,6 +340,21 @@ public class ProductoService {
         map.put("ubicacionDeposito", p.getUbicacionDeposito() != null ? p.getUbicacionDeposito() : "");
         map.put("motivoRechazo", p.getMotivoRechazo() != null ? p.getMotivoRechazo() : "");
 
+        // Información de venta: ¿fue vendido? ¿quién es el nuevo dueño?
+        java.util.List<RegistroSubasta> regsVenta = registroSubastaRepository
+                .findByProductoIdentificadorOrderByIdentificadorDesc(productoId);
+        boolean vendido = !regsVenta.isEmpty();
+        map.put("vendido", vendido);
+        if (vendido) {
+            RegistroSubasta ultimaVenta = regsVenta.get(0);
+            String nombreNuevoDuenio = ultimaVenta.getCliente() != null
+                    && ultimaVenta.getCliente().getPersona() != null
+                    ? ultimaVenta.getCliente().getPersona().getNombre() : "Blackwood Subastas";
+            map.put("nuevoDuenoNombre", nombreNuevoDuenio);
+        } else {
+            map.put("nuevoDuenoNombre", null);
+        }
+
         java.util.List<String> fotosBase64 = fotoRepository.findByProductoIdentificador(productoId).stream()
                 .map(f -> java.util.Base64.getEncoder().encodeToString(f.getFoto()))
                 .collect(java.util.stream.Collectors.toList());
@@ -384,6 +403,10 @@ public class ProductoService {
                     map.put("motivoRechazo", p.getMotivoRechazo() != null ? p.getMotivoRechazo() : "");
                     map.put("cuentaCobroConfigurada", p.getCuentaCobro() != null);
                     map.put("tieneSeguro", seguroRepository.existsByProductoIdentificadorAndVigente(p.getIdentificador(), true));
+                    // Indicar si el producto ya fue vendido en subasta
+                    java.util.List<RegistroSubasta> regs = registroSubastaRepository
+                            .findByProductoIdentificadorOrderByIdentificadorDesc(p.getIdentificador());
+                    map.put("vendido", !regs.isEmpty());
                     return map;
                 })
                 .collect(Collectors.toList());

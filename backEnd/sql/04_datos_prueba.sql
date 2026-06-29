@@ -7,13 +7,17 @@ INSERT INTO personas (identificador, documento, nombre, direccion, estado) VALUE
 (1, '30111222', 'Juan Pablo Rodríguez', 'Av. Corrientes 1234, CABA', 'activo'),
 (2, '26777888', 'Fernando García', 'Av. de Mayo 1000, CABA', 'activo'),
 (3, '30444555', 'Galería de Arte Borges', 'Recoleta 77, CABA', 'activo'),
-(4, '23111222', 'Licenciado Andrés Castro', 'Florida 123, CABA', 'activo');
+(4, '23111222', 'Licenciado Andrés Castro', 'Florida 123, CABA', 'activo'),
+(9999, 'BLACKWOOD_SUBASTAS', 'Blackwood Subastas', 'Sede Central', 'activo');
 
 INSERT INTO empleados (identificador, cargo, sector) VALUES
-(2, 'Revisor', NULL);
+(2, 'Revisor', NULL),
+(999, 'ADMINISTRADOR', NULL);
 
 INSERT INTO clientes (identificador, numeroPais, admitido, categoria, verificador) VALUES
-(1, 1, 'si', 'comun', 2);
+(1, 1, 'si', 'comun', 2),
+(9999, 1, 'si', 'platino', 2),
+(999, 1, 'si', 'platino', 2);
 
 INSERT INTO duenios (identificador, numeroPais, verificacionFinanciera, verificacionJudicial, calificacionRiesgo, verificador) VALUES
 (3, 1, 'si', 'si', 1, 2);
@@ -22,7 +26,8 @@ INSERT INTO subastadores (identificador, matricula, region) VALUES
 (4, 'MAT-001', 'CABA');
 
 INSERT INTO usuarios_auth (id, persona_id, email, password_hash, uuid, estado) VALUES
-(1, 1, 'juan.rodriguez@email.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHOC', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'APROBADO');
+(1, 1, 'juan.rodriguez@email.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHOC', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'APROBADO'),
+(999, 999, 'admin@gmail.com', '$2a$10$n2vYn9o5an8EPUG84bKlW.9CfMslF66VsBsbGUAY4XLgGOWUfX8N2', 'c3d4e5f6-a789-01bc-def1-234567890abc', 'APROBADO');
 
 INSERT INTO seguros (nroPoliza, compania, polizaCombinada, importe) VALUES
 ('SEG-2024-001', 'La Buenos Aires Seguros', 'no', 50000.00);
@@ -32,7 +37,7 @@ INSERT INTO productos (identificador, fecha, disponible, descripcionCatalogo, de
 (2, '2024-02-10', 'si', 'Cuadro al óleo', 'Pintura clásica de paisaje siglo XIX', 2, 3, 'SEG-2024-001', 'ESTANDAR', 1, 'ACEPTADO', 'Depósito B');
 
 INSERT INTO subastas (identificador, fecha, hora, estado, subastador, ubicacion, capacidadAsistentes, tieneDeposito, seguridadPropia, categoria, moneda, descripcion) VALUES
-(1, CURDATE(), '19:00:00', 'abierta', 4, 'Av. Corrientes 1346', 50, 'no', 'no', 'comun', 'ARS', 'Subasta de prueba');
+(1, CURDATE(), '19:00:00', 'PLANIFICADA', 4, 'Av. Corrientes 1346', 50, 'no', 'no', 'comun', 'ARS', 'Subasta de prueba');
 
 INSERT INTO catalogos (identificador, descripcion, subasta, responsable) VALUES
 (1, 'Catálogo Principal', 1, 2);
@@ -45,7 +50,9 @@ INSERT INTO asistentes (identificador, numeroPostor, cliente, subasta) VALUES
 (1, 101, 1, 1);
 
 INSERT INTO medios_pago (id, cliente_id, tipo, banco, numero_cuenta, moneda, verificado, activo, monto_reservado) VALUES
-(1, 1, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', 'ARS', 1, 1, 0.00);
+(1, 1, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', 'ARS', 1, 1, 0.00),
+(99, 999, 'CUENTA_BANCARIA', 'Banco Galicia', '0000123456789', 'ARS', 1, 1, 0.00),
+(100, 999, 'TARJETA_CREDITO', 'Visa', '4517660011223344', 'USD', 1, 1, 0.00);
 
 SET FOREIGN_KEY_CHECKS = 1;
 

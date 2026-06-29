@@ -151,15 +151,25 @@ public class CatalogoService {
     }
 
     /**
-     * Lista todos los items no subastados de la subasta (los que aún están disponibles).
+     * Lista todos los items no subastados de la subasta, ordenados por su campo
+     * {@code orden} (y por identificador como desempate) para garantizar que el
+     * primer elemento sea siempre el lote activo/siguiente correcto.
      */
     @Transactional(readOnly = true)
     public List<Map<String, Object>> getItemsDisponibles(Integer subastaId) {
-        return itemCatalogoRepository.findByCatalogoSubastaIdentificadorAndSubastado(subastaId, "no")
+        Catalogo catalogo = catalogoRepository.findBySubastaIdentificador(subastaId)
+                .stream().findFirst().orElse(null);
+
+        return itemCatalogoRepository
+                .findByCatalogoSubastaIdentificadorAndSubastado(subastaId, "no")
                 .stream()
-                .map(item -> buildItemResponse(item,
-                        catalogoRepository.findBySubastaIdentificador(subastaId)
-                                .stream().findFirst().orElse(null)))
+                .sorted((a, b) -> {
+                    int ordenA = a.getOrden() != null ? a.getOrden() : Integer.MAX_VALUE;
+                    int ordenB = b.getOrden() != null ? b.getOrden() : Integer.MAX_VALUE;
+                    int cmp = Integer.compare(ordenA, ordenB);
+                    return cmp != 0 ? cmp : Integer.compare(a.getIdentificador(), b.getIdentificador());
+                })
+                .map(item -> buildItemResponse(item, catalogo))
                 .collect(Collectors.toList());
     }
 
@@ -170,6 +180,8 @@ public class CatalogoService {
                 "productoId", item.getProducto().getIdentificador(),
                 "descripcion", item.getProducto().getDescripcionCompleta() != null
                         ? item.getProducto().getDescripcionCompleta() : "",
+                "descripcionCatalogo", item.getProducto().getDescripcionCatalogo() != null
+                        ? item.getProducto().getDescripcionCatalogo() : "",
                 "precioBase", item.getPrecioBase(),
                 "comision", item.getComision() != null ? item.getComision() : BigDecimal.ZERO,
                 "orden", item.getOrden() != null ? item.getOrden() : 0,
@@ -185,9 +197,22 @@ public class CatalogoService {
         Duenio duenio = producto.getDuenio();
         
         java.util.Optional<Pujo> mejorPujaActual = pujoRepository.findMejorPujaByItem(item.getIdentificador());
-        BigDecimal pujaMinima = mejorPujaActual
-                .map(p -> p.getImporte().add(BigDecimal.ONE))
-                .orElse(item.getPrecioBase());
+
+        // Respetar regla del enunciado: mínimo = oferta + 1% del precio base.
+        // Para subastas Oro/Platino no hay mínimo real; se indica +1 simbólico.
+        String catSubasta = item.getCatalogo().getSubasta().getCategoria();
+        boolean sinLimites = "oro".equalsIgnoreCase(catSubasta) || "platino".equalsIgnoreCase(catSubasta);
+        BigDecimal unPorciento = item.getPrecioBase().multiply(new BigDecimal("0.01"));
+
+        BigDecimal pujaMinima;
+        if (mejorPujaActual.isPresent()) {
+            BigDecimal mejor = mejorPujaActual.get().getImporte();
+            pujaMinima = sinLimites
+                    ? mejor.add(BigDecimal.ONE)
+                    : mejor.add(unPorciento);
+        } else {
+            pujaMinima = item.getPrecioBase();
+        }
 
         java.util.Map<String, Object> response = new java.util.HashMap<>();
         response.put("itemId", item.getIdentificador());
@@ -201,6 +226,7 @@ public class CatalogoService {
         response.put("duenioActual", duenio != null && duenio.getPersona() != null ? duenio.getPersona().getNombre() : "Desconocido");
         response.put("subastado", item.getSubastado());
         response.put("categoria", item.getCatalogo().getSubasta().getCategoria() != null ? item.getCatalogo().getSubasta().getCategoria() : "COMUN");
+        response.put("moneda", item.getCatalogo().getSubasta().getMoneda() != null ? item.getCatalogo().getSubasta().getMoneda().name() : "ARS");
         
         return response;
     }

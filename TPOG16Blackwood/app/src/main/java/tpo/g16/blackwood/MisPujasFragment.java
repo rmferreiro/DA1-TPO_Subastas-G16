@@ -5,13 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -25,60 +24,75 @@ public class MisPujasFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private MisPujasAdapter adapter;
-    private TextView tvParticipaciones;
+    private View layoutSinParticipaciones;
+    private View scrollMisPujas;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_mis_pujas, container, false);
 
-        // Ocultar el bottom_nav incluido en el layout, ya que HomeActivity tiene el suyo
-        View bottomNav = view.findViewById(R.id.bottom_nav_include);
-        if (bottomNav != null) {
-            bottomNav.setVisibility(View.GONE);
-        } else {
-            // Intento por si no tiene el ID explícito
-            View tab = view.findViewById(R.id.tab_subastas);
-            if (tab != null && tab.getParent() != null && tab.getParent() instanceof ViewGroup) {
-                View parent = (View) tab.getParent();
-                if (parent.getParent() != null && parent.getParent() instanceof ViewGroup) {
-                    ((View) parent.getParent()).setVisibility(View.GONE);
-                }
-            }
-        }
-
-        tvParticipaciones = view.findViewById(R.id.tv_participaciones);
+        layoutSinParticipaciones = view.findViewById(R.id.layout_sin_participaciones);
+        scrollMisPujas = view.findViewById(R.id.scroll_mis_pujas);
         recyclerView = view.findViewById(R.id.rv_mis_pujas);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         adapter = new MisPujasAdapter(getContext());
         recyclerView.setAdapter(adapter);
+
+        swipeRefresh = view.findViewById(R.id.swipe_refresh_mis_pujas);
+        swipeRefresh.setColorSchemeColors(
+                android.graphics.Color.parseColor("#C6A75E"),
+                android.graphics.Color.parseColor("#2D5A3D")
+        );
+        swipeRefresh.setOnRefreshListener(this::cargarMisPujas);
 
         cargarMisPujas();
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargarMisPujas();
+    }
+
     private void cargarMisPujas() {
         RetrofitClient.getApiService().getMisPujas().enqueue(new Callback<List<MiPuja>>() {
             @Override
             public void onResponse(Call<List<MiPuja>> call, Response<List<MiPuja>> response) {
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
                     List<MiPuja> pujas = response.body();
-                    adapter.setPujas(pujas);
-                    if (tvParticipaciones != null) {
-                        tvParticipaciones.setText("Participaste en " + pujas.size() + " subastas");
+                    if (pujas.isEmpty()) {
+                        mostrarEstadoVacio();
+                    } else {
+                        mostrarLista(pujas);
                     }
                 } else {
-                    if (tvParticipaciones != null) tvParticipaciones.setText("Error al cargar");
+                    mostrarEstadoVacio();
                 }
             }
 
             @Override
             public void onFailure(Call<List<MiPuja>> call, Throwable t) {
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 Log.e("MisPujas", "Error: ", t);
-                if (tvParticipaciones != null) tvParticipaciones.setText("Error de red");
+                mostrarEstadoVacio();
             }
         });
+    }
+
+    private void mostrarEstadoVacio() {
+        if (layoutSinParticipaciones != null) layoutSinParticipaciones.setVisibility(View.VISIBLE);
+        if (scrollMisPujas != null) scrollMisPujas.setVisibility(View.GONE);
+    }
+
+    private void mostrarLista(List<MiPuja> pujas) {
+        if (layoutSinParticipaciones != null) layoutSinParticipaciones.setVisibility(View.GONE);
+        if (scrollMisPujas != null) scrollMisPujas.setVisibility(View.VISIBLE);
+        adapter.setPujas(pujas);
     }
 }

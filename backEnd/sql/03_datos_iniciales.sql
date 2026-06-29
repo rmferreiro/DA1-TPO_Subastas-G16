@@ -14,7 +14,7 @@ INSERT INTO personas (identificador, documento, nombre, direccion, estado) VALUE
 SET @sistema_id = 999;
 
 INSERT INTO empleados (identificador, cargo, sector) VALUES
-(@sistema_id, 'Administrador del Sistema', NULL);
+(@sistema_id, 'ADMINISTRADOR', NULL);
 
 -- ============================================================
 -- Países (lista hardcodeada)

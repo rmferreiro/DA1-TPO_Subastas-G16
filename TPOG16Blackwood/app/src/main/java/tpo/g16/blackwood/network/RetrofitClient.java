@@ -14,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import tpo.g16.blackwood.network.api.AuthApiService;
+import tpo.g16.blackwood.network.api.ClienteApiService;
 import tpo.g16.blackwood.network.api.MedioPagoApiService;
 
 public class RetrofitClient {
@@ -104,6 +105,10 @@ public class RetrofitClient {
 
     public MedioPagoApiService getMedioPagoApiService() {
         return retrofitAuth.create(MedioPagoApiService.class);
+    }
+
+    public ClienteApiService getClienteApiService() {
+        return retrofitAuth.create(ClienteApiService.class);
     }
 
     // ============================================

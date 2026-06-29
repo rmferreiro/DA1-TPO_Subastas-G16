@@ -23,6 +23,7 @@ public class EstadoVivoResponse {
     private String categoria;           // categoría de la subasta
     private int itemsRestantes;         // items aún no subastados
     private int itemsSubastados;        // items ya cerrados
+    private Long limiteFinalizacionEpoch;
 
     // -- Item actualmente en subasta --
     /** null si no hay más items pendientes */
@@ -37,6 +38,8 @@ public class EstadoVivoResponse {
     public static class ItemActivoInfo {
         private Integer itemId;
         private Integer productoId;
+        /** Número de orden de presentación en el catálogo (1, 2, 3…). Usar para mostrar "Lote #N" en la UI. */
+        private Integer orden;
         private String descripcion;
         private String descripcionCompleta;
         private BigDecimal precioBase;

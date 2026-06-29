@@ -228,25 +228,12 @@
 
                     </FrameLayout>
 
-                    <!-- Link: ¿Olvidaste tu contraseña? -->
-                    <TextView
-                        android:id="@+id/login_forgot_password"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="20dp"
-                        android:text="@string/login_forgot_password"
-                        android:textColor="@color/gold"
-                        android:textSize="@dimen/text_size_small"
-                        android:clickable="true"
-                        android:focusable="true"/>
-
                     <!-- Botón principal: Ingresar -->
                     <Button
                         android:id="@+id/login_btn_ingresar"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
+                        android:layout_marginTop="20dp"
                         android:background="@drawable/button_primary"
                         app:backgroundTint="@null"
                         android:text="@string/login_btn_ingresar"

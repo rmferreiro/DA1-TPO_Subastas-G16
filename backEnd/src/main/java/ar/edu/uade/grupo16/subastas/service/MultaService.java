@@ -30,19 +30,22 @@ public class MultaService {
     private final ClienteRepository clienteRepository;
     private final NotificacionService notificacionService;
     private final MailService mailService;
+    private final ItemCatalogoRepository itemCatalogoRepository;
 
     public MultaService(MultaRepository multaRepository,
                         RegistroSubastaRepository registroSubastaRepository,
                         UsuarioAuthRepository usuarioAuthRepository,
                         ClienteRepository clienteRepository,
                         NotificacionService notificacionService,
-                        MailService mailService) {
+                        MailService mailService,
+                        ItemCatalogoRepository itemCatalogoRepository) {
         this.multaRepository = multaRepository;
         this.registroSubastaRepository = registroSubastaRepository;
         this.usuarioAuthRepository = usuarioAuthRepository;
         this.clienteRepository = clienteRepository;
         this.notificacionService = notificacionService;
         this.mailService = mailService;
+        this.itemCatalogoRepository = itemCatalogoRepository;
     }
 
     /**
@@ -154,6 +157,46 @@ public class MultaService {
                         "derivadoJusticia", m.getDerivadoJusticia()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Job programado: ejecuta cada 2 minutos y detecta lotes ganados sin pago
+     * cuya ventana de 30 minutos ya expiró → genera multa automáticamente.
+     */
+    @Scheduled(fixedDelay = 120000) // cada 2 minutos
+    @Transactional
+    public void verificarPagosVencidos() {
+        LocalDateTime limite = LocalDateTime.now().minusMinutes(30);
+        java.util.List<RegistroSubasta> vencidos = registroSubastaRepository
+                .findByPagadoFalseAndCompraEmpresaFalseAndFechaCreacionBefore(limite);
+
+        for (RegistroSubasta reg : vencidos) {
+            Integer clienteId = reg.getCliente().getIdentificador();
+            Integer subastaId = reg.getSubasta().getIdentificador();
+            // Buscar el item del catálogo a través del producto
+            Integer itemId = null;
+            try {
+                var items = itemCatalogoRepository.findByProductoIdentificador(reg.getProducto().getIdentificador());
+                if (!items.isEmpty()) itemId = items.get(0).getIdentificador();
+            } catch (Exception e) {
+                log.warn("No se pudo encontrar el item para el producto {}", reg.getProducto().getIdentificador());
+            }
+
+            if (itemId == null) continue;
+
+            // Verificar que no tenga ya una multa por este item
+            final Integer finalItemId = itemId;
+            boolean yaMultado = multaRepository.findByClienteIdentificador(clienteId).stream()
+                    .anyMatch(m -> m.getItem() != null && m.getItem().getIdentificador().equals(finalItemId));
+            if (yaMultado) continue;
+
+            try {
+                generarMulta(clienteId, subastaId, itemId, reg.getImporte());
+                log.info("Multa automática generada — Cliente: {} | Item: {} | 30min sin pago", clienteId, itemId);
+            } catch (Exception e) {
+                log.error("Error al generar multa automática para cliente {} item {}: {}", clienteId, itemId, e.getMessage());
+            }
+        }
     }
 
     /**

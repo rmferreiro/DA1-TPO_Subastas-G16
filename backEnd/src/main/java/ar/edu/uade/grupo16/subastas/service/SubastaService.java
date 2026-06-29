@@ -158,10 +158,19 @@ public class SubastaService {
                     .map(p -> p.getAsistente().getCliente().getPersona().getNombre())
                     .orElse(null);
 
-            // Límites para la siguiente puja
-            BigDecimal baseCalculo = mejorOferta != null ? mejorOferta : precioBase;
-            BigDecimal siguienteMin = baseCalculo.add(unPorciento);
-            BigDecimal siguienteMax = sinLimiteMaximo ? null : baseCalculo.add(veintePorciento);
+            // Límites para la siguiente puja (Oro/Platino no tienen restricciones)
+            BigDecimal siguienteMin;
+            BigDecimal siguienteMax;
+            if (sinLimiteMaximo) {
+                siguienteMin = mejorOferta != null
+                        ? mejorOferta.add(BigDecimal.ONE)
+                        : precioBase;
+                siguienteMax = null;
+            } else {
+                BigDecimal baseCalculo = mejorOferta != null ? mejorOferta : precioBase;
+                siguienteMin = baseCalculo.add(unPorciento);
+                siguienteMax = baseCalculo.add(veintePorciento);
+            }
 
             // Datos de obra de arte (si aplica)
             String artista = null;
@@ -178,6 +187,7 @@ public class SubastaService {
             itemInfo = EstadoVivoResponse.ItemActivoInfo.builder()
                     .itemId(item.getIdentificador())
                     .productoId(item.getProducto().getIdentificador())
+                    .orden(item.getOrden())
                     .descripcion(item.getProducto().getDescripcionCatalogo())
                     .descripcionCompleta(item.getProducto().getDescripcionCompleta())
                     .precioBase(precioBase)
@@ -230,7 +240,7 @@ public class SubastaService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Subasta no encontrada"));
 
         // Verificar que esté abierta
-        if (!"abierta".equalsIgnoreCase(subasta.getEstado())) {
+        if (!"ACTIVA".equalsIgnoreCase(subasta.getEstado())) {
             throw new SubastaNoDisponibleException("La subasta no está abierta");
         }
 
@@ -259,22 +269,29 @@ public class SubastaService {
         }
 
         // Verificar que no esté ya en otra subasta activa (1 subasta a la vez)
-        if (sesionSubastaRepository.existsByClienteIdentificador(cliente.getIdentificador())) {
-            SesionSubasta sesionActual = sesionSubastaRepository
-                    .findByClienteIdentificador(cliente.getIdentificador()).get();
-            if (!sesionActual.getSubasta().getIdentificador().equals(subastaId)) {
-                throw new SubastaNoDisponibleException(
-                        "Ya estás conectado a otra subasta. Salí primero de esa sala.");
+        Optional<SesionSubasta> sesionExistente = sesionSubastaRepository
+                .findByClienteIdentificador(cliente.getIdentificador());
+        if (sesionExistente.isPresent()) {
+            SesionSubasta sesionActual = sesionExistente.get();
+            if (sesionActual.getSubasta().getIdentificador().equals(subastaId)) {
+                // Ya está en esta misma subasta — devolver su estado actual
+                return Map.of(
+                        "mensaje", "Ya estás en esta subasta",
+                        "subastaId", subastaId,
+                        "numeroPostor", asistenteRepository
+                                .findByClienteIdentificadorAndSubastaIdentificador(
+                                        cliente.getIdentificador(), subastaId)
+                                .map(Asistente::getNumeroPostor).orElse(0)
+                );
             }
-            // Ya está en esta subasta
-            return Map.of(
-                    "mensaje", "Ya estás en esta subasta",
-                    "subastaId", subastaId,
-                    "numeroPostor", asistenteRepository
-                            .findByClienteIdentificadorAndSubastaIdentificador(
-                                    cliente.getIdentificador(), subastaId)
-                            .map(Asistente::getNumeroPostor).orElse(0)
-            );
+            // La sesión es de otra subasta: verificar si esa subasta sigue ACTIVA
+            String estadoAnterior = sesionActual.getSubasta().getEstado();
+            if ("ACTIVA".equalsIgnoreCase(estadoAnterior)) {
+                throw new SubastaNoDisponibleException(
+                        "Ya estás en vivo en otra subasta. Salí primero de esa sala.");
+            }
+            // La subasta anterior ya finalizó o está pendiente → limpiar sesión obsoleta
+            sesionSubastaRepository.deleteByClienteIdentificador(cliente.getIdentificador());
         }
 
         // Verificar que no sea ya asistente
@@ -400,11 +417,10 @@ public class SubastaService {
                     return sub;
                 });
 
-        // 2. Crear Subasta
         Subasta subasta = Subasta.builder()
                 .fecha(LocalDate.parse(request.getFecha()))
                 .hora(LocalTime.parse(request.getHora()))
-                .estado("abierta")
+                .estado("PENDIENTE")
                 .ubicacion(request.getUbicacion())
                 .moneda(Moneda.valueOf(request.getMoneda().toUpperCase()))
                 .categoria(request.getCategoria().toLowerCase())

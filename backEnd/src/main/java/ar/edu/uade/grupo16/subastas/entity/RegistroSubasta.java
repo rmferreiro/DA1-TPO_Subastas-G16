@@ -3,6 +3,7 @@ package ar.edu.uade.grupo16.subastas.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "registrosSubasta")
@@ -53,4 +54,8 @@ public class RegistroSubasta {
     @Builder.Default
     @Column(name = "compra_empresa", nullable = false)
     private Boolean compraEmpresa = false;
+
+    // Fecha en que se cerró el lote — usada para el timer de 30 min de pago
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
 }

@@ -5,92 +5,78 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:background="@drawable/info_box"
-    android:clickable="true"
-    android:focusable="true"
     android:orientation="vertical"
     android:padding="14dp">
 
-    <LinearLayout
+    <!-- Nombre del producto -->
+    <TextView
+        android:id="@+id/tv_producto_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="2dp"
+        android:text="Producto"
+        android:textColor="#1A1A1A"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_producto_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Juego de té antiguo · Lote 03"
-            android:textColor="#1A1A1A"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_badge_estado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#1C2A21"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:text="● En vivo"
-            android:textColor="#C6A75E"
-            android:textSize="11sp" />
-
-    </LinearLayout>
-
+    <!-- Descripción de la subasta -->
     <TextView
         android:id="@+id/tv_subasta_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="Subasta de Antigüedades"
-        android:textColor="#6B6B6B"
-        android:textSize="13sp" />
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginBottom="10dp"
+        android:text="Subasta"
+        android:textColor="#6B6B6B"
+        android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/tv_mi_puja"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Mi puja: $3.210"
-            android:textColor="#C6A75E"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+    <!-- Separador -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E5E0D8" />
 
-        <TextView
-            android:id="@+id/tv_resultado_estado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lote adjudicado"
-            android:textColor="#1C2A21"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+    <!-- Contenedor dinámico para cada oferta: "Ofertaste $X" -->
+    <LinearLayout
+        android:id="@+id/ll_bids_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp" />
 
-    </LinearLayout>
+    <!-- Separador -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E5E0D8" />
 
+    <!-- Resultado del lote: Ganaste / No ganaste -->
+    <TextView
+        android:id="@+id/tv_resultado_estado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Resultado"
+        android:textColor="#1C2A21"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <!-- Botón pagar (solo lotes ganados) -->
     <TextView
         android:id="@+id/btn_pagar_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:background="@drawable/btn_gold"
-        android:text="Confirmar Pago"
-        android:textColor="#1C2A21"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:paddingVertical="10dp"
-        android:gravity="center"
-        android:visibility="gone"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="Pagar ahora"
+        android:textColor="#1C2A21"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 </LinearLayout>

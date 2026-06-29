@@ -113,11 +113,14 @@ public class PujaController {
             @PathVariable Integer itemId) {
 
         ar.edu.uade.grupo16.subastas.entity.ItemCatalogo item = itemCatalogoRepository.findById(itemId).orElse(null);
-        ar.edu.uade.grupo16.subastas.entity.Subasta subasta = item != null && item.getCatalogo() != null ? item.getCatalogo().getSubasta() : null;
+        ar.edu.uade.grupo16.subastas.entity.Subasta subasta = item != null && item.getCatalogo() != null
+                ? item.getCatalogo().getSubasta() : null;
         Long limiteEpoch = subasta != null ? subasta.getLimiteFinalizacionEpoch() : null;
 
         Map<String, Object> map = new java.util.HashMap<>();
         map.put("limiteFinalizacionEpoch", limiteEpoch);
+        // precioBase siempre presente: el frontend lo necesita para calcular incrementos
+        map.put("precioBase", item != null ? item.getPrecioBase() : null);
 
         pujoRepository.findMejorPujaByItem(itemId)
                 .ifPresentOrElse(p -> {
@@ -125,10 +128,7 @@ public class PujaController {
                     map.put("numeroPostor", p.getAsistente().getNumeroPostor());
                     map.put("nombrePostor", p.getAsistente().getCliente().getPersona().getNombre());
                     map.put("fechaHora", p.getFechaHora());
-                }, () -> {
-                    map.put("mensaje", "Sin pujas aún");
-                    map.put("precioBase", item != null ? item.getPrecioBase() : null);
-                });
+                }, () -> map.put("mensaje", "Sin pujas aún"));
 
         return ResponseEntity.ok(map);
     }

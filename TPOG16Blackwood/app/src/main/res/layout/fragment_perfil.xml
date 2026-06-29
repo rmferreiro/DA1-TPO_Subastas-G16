@@ -38,7 +38,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- Card 1 -->
+            <!-- Card 1: Subastas ganadas -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,102 +53,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Subastas ganadas"
-                            android:textColor="#1A1A1A"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/tv_perfil_ganadas"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="-"
-                            android:textColor="#D8A951"
-                            android:textSize="18sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ofertado vs Pagado"
-                            android:textColor="#1A1A1A"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/tv_perfil_ofertado_pagado"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$0 / $0"
-                            android:textColor="#6B6B6B"
-                            android:textSize="12sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Card 2 -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_participaciones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E5E0D8">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Mis participaciones"
+                        android:layout_weight="1"
+                        android:text="Subastas ganadas"
                         android:textColor="#1A1A1A"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/tv_perfil_participaciones"
+                        android:id="@+id/tv_perfil_ganadas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-"
-                        android:textColor="#6B6B6B"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
+                        android:textColor="#D8A951"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 3 -->
+
+
+            <!-- Card: Total ofertado -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_historial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true"
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
@@ -158,27 +91,67 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Historial de subastas"
+                        android:layout_weight="1"
+                        android:text="Total ofertado"
                         android:textColor="#1A1A1A"
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv_perfil_ofertado"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ver detalle completo"
-                        android:textColor="#6B6B6B"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
+                        android:text="-"
+                        android:textColor="#D8A951"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 4 -->
+            <!-- Card: Total pagado -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E5E0D8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total pagado"
+                        android:textColor="#1A1A1A"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_perfil_pagado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="#D8A951"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card: Gestión de medios de pago -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_medios_pago"
                 android:layout_width="match_parent"
@@ -214,6 +187,100 @@
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card: Mis Multas -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_mis_multas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E5E0D8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mis multas"
+                            android:textColor="#1A1A1A"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_multas_resumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cargando..."
+                            android:textColor="#6B6B6B"
+                            android:textSize="12sp"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <!-- Badge de multas pendientes -->
+                    <TextView
+                        android:id="@+id/tv_multas_badge"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:gravity="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/circle_red"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botón Admin Medios Pago -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_admin_medios_pago"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Administrar medios de pago"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="#C6A75E"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone" />
+
+            <!-- Botón Admin Nuevos Usuarios -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_admin_usuarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Administrar nuevos usuarios"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="#5C7A65"
+                app:cornerRadius="8dp"
+                app:elevation="0dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone" />
 
             <!-- Botón Cerrar Sesión -->
             <com.google.android.material.button.MaterialButton

@@ -37,10 +37,19 @@ public class AuthIntegrationTest {
 
         AuthResponse registroResponse = authService.registrar(registro);
         assertNotNull(registroResponse);
-        assertNotNull(registroResponse.getAccessToken());
         assertEquals(email, registroResponse.getEmail());
+        assertEquals("PENDIENTE", registroResponse.getEstado());
 
-        // 2. Intentar Login
+        // 2. Aprobar el usuario (por el administrador)
+        authService.aprobarUsuarioExterno(email, "comun");
+
+        // 3. Completar registro (establecer contraseña)
+        AuthResponse completoResponse = authService.completarRegistro(email, password, null);
+        assertNotNull(completoResponse);
+        assertNotNull(completoResponse.getAccessToken());
+        assertEquals("APROBADO", completoResponse.getEstado());
+
+        // 4. Intentar Login
         LoginRequest login = LoginRequest.builder()
                 .email(email)
                 .password(password)

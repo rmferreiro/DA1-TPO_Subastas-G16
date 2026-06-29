@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS medios_pago (
     activo BOOLEAN DEFAULT TRUE,
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
     monto_reservado DECIMAL(18,2) DEFAULT 0.00,
+    monto_utilizado DECIMAL(18,2) DEFAULT 0.00,
     CONSTRAINT fk_mp_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(identificador)
 ) ENGINE=InnoDB;
 
@@ -110,6 +111,28 @@ CREATE TABLE IF NOT EXISTS productos_obra_arte (
 ) ENGINE=InnoDB;
 
 -- ============================================================
+-- TABLA: registrosSubasta (ventas confirmadas — reemplaza registroDeSubasta legacy)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS registrosSubasta (
+    identificador   INT AUTO_INCREMENT PRIMARY KEY,
+    subasta         INT NOT NULL,
+    duenio          INT NOT NULL,
+    producto        INT NOT NULL,
+    cliente         INT NOT NULL,
+    importe         DECIMAL(18,2) NOT NULL,
+    comision        DECIMAL(18,2) DEFAULT 0.00,
+    costo_envio     DECIMAL(18,2) DEFAULT 0.00,
+    compra_empresa  TINYINT(1)   NOT NULL DEFAULT 0,
+    pagado          TINYINT(1)   NOT NULL DEFAULT 0,
+    fecha_registro  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    fecha_creacion  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_reg_subasta  FOREIGN KEY (subasta)  REFERENCES subastas(identificador),
+    CONSTRAINT fk_reg_duenio   FOREIGN KEY (duenio)   REFERENCES duenios(identificador),
+    CONSTRAINT fk_reg_producto FOREIGN KEY (producto) REFERENCES productos(identificador),
+    CONSTRAINT fk_reg_cliente  FOREIGN KEY (cliente)  REFERENCES clientes(identificador)
+) ENGINE=InnoDB;
+
+-- ============================================================
 -- MODIFICACIONES A TABLAS LEGACY
 -- ============================================================
-ALTER TABLE itemsCatalogo ADD COLUMN orden INT DEFAULT 1;
+ALTER TABLE itemsCatalogo ADD COLUMN IF NOT EXISTS orden INT DEFAULT 1;

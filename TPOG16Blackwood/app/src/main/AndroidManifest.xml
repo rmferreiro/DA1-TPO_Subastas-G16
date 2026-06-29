@@ -68,6 +68,11 @@
         <activity android:name=".common.LoadingActivity" android:exported="false" />
 
         <activity
+            android:name=".register.RegistroCompletadoActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
             android:name=".register.RegistroPaso2Activity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />

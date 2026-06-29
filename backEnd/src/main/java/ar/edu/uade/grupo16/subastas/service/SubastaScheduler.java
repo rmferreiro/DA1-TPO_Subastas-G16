@@ -1,12 +1,14 @@
 package ar.edu.uade.grupo16.subastas.service;
 
+import ar.edu.uade.grupo16.subastas.dto.response.PujaResponse;
 import ar.edu.uade.grupo16.subastas.entity.*;
 import ar.edu.uade.grupo16.subastas.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -28,20 +30,15 @@ public class SubastaScheduler {
     private final PujoRepository pujoRepository;
     private final PujaService pujaService;
     private final UsuarioAuthRepository usuarioAuthRepository;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final TransactionTemplate transactionTemplate;
 
-    /**
-     * Tarea 1: Activar subastas programadas que ya llegaron a su hora de inicio.
-     * Se ejecuta cada 10 segundos.
-     */
     @Scheduled(fixedDelay = 10000)
-    @Transactional
     public void activarSubastas() {
         LocalDate hoy = LocalDate.now();
         LocalTime ahora = LocalTime.now();
 
-        List<Subasta> programadas = subastaRepository.findAll().stream()
-                .filter(s -> "programada".equalsIgnoreCase(s.getEstado()))
-                .toList();
+        List<Subasta> programadas = subastaRepository.findByEstado("PENDIENTE");
 
         for (Subasta subasta : programadas) {
             boolean debeIniciar = false;
@@ -52,9 +49,9 @@ public class SubastaScheduler {
             }
 
             if (debeIniciar) {
-                log.info("Activando subasta ID {} programada para {} {}", subasta.getIdentificador(), subasta.getFecha(), subasta.getHora());
+                log.info("Activando subasta ID {} ({}) programada para {} {}", subasta.getIdentificador(), subasta.getEstado(), subasta.getFecha(), subasta.getHora());
                 try {
-                    activarSubastaInterno(subasta);
+                    transactionTemplate.executeWithoutResult(status -> activarSubastaInterno(subasta));
                 } catch (Exception e) {
                     log.error("Error al activar subasta ID {}: {}", subasta.getIdentificador(), e.getMessage(), e);
                 }
@@ -81,10 +78,8 @@ public class SubastaScheduler {
                 });
 
         // 3. Registrar Puja Original para cada item del catálogo de la subasta
-        List<ItemCatalogo> items = itemCatalogoRepository.findAll().stream()
-                .filter(item -> item.getCatalogo() != null && item.getCatalogo().getSubasta() != null
-                        && item.getCatalogo().getSubasta().getIdentificador().equals(subasta.getIdentificador()))
-                .toList();
+        List<ItemCatalogo> items = itemCatalogoRepository
+                .findByCatalogoSubastaIdentificador(subasta.getIdentificador());
 
         Integer primerItemId = null;
         for (ItemCatalogo item : items) {
@@ -110,7 +105,7 @@ public class SubastaScheduler {
         }
 
         // 4. Cambiar estado y configurar tiempo límite inicial de 5 minutos
-        subasta.setEstado("abierta");
+        subasta.setEstado("ACTIVA");
         subasta.setItemActualId(primerItemId);
         subasta.setLimiteFinalizacionEpoch(Instant.now().toEpochMilli() + 300000); // 5 minutos
 
@@ -124,66 +119,165 @@ public class SubastaScheduler {
      * Se ejecuta cada 10 segundos.
      */
     @Scheduled(fixedDelay = 10000)
-    @Transactional
     public void finalizarSubastasExpiradas() {
         long ahora = Instant.now().toEpochMilli();
 
-        List<Subasta> abiertas = subastaRepository.findAll().stream()
-                .filter(s -> "abierta".equalsIgnoreCase(s.getEstado()))
-                .toList();
+        List<Subasta> abiertas = subastaRepository.findByEstado("ACTIVA");
 
         for (Subasta subasta : abiertas) {
-            if (subasta.getLimiteFinalizacionEpoch() != null && subasta.getLimiteFinalizacionEpoch() <= ahora) {
-                log.info("Lote/Subasta ID {} expiró (tiempo: {} <= ahora: {}). Procesando siguiente paso.",
-                        subasta.getIdentificador(), subasta.getLimiteFinalizacionEpoch(), ahora);
-                try {
+            try {
+                if (subasta.getLimiteFinalizacionEpoch() == null || subasta.getItemActualId() == null) {
+                    inicializarSubastaNula(subasta);
+                } else if (subasta.getLimiteFinalizacionEpoch() <= ahora) {
+                    log.info("Lote/Subasta ID {} expiró (tiempo: {} <= ahora: {}). Procesando siguiente paso.",
+                            subasta.getIdentificador(), subasta.getLimiteFinalizacionEpoch(), ahora);
                     procesarVencimientoLote(subasta);
-                } catch (Exception e) {
-                    log.error("Error al procesar vencimiento de lote para subasta ID {}: {}", subasta.getIdentificador(), e.getMessage(), e);
                 }
+            } catch (Exception e) {
+                log.error("Error al procesar vencimiento de lote para subasta ID {}: {}", subasta.getIdentificador(), e.getMessage(), e);
             }
         }
     }
 
+    private void inicializarSubastaNula(Subasta subasta) {
+        transactionTemplate.executeWithoutResult(status -> {
+            Subasta sub = subastaRepository.findById(subasta.getIdentificador()).orElse(null);
+            if (sub != null) {
+                inicializarSubastaNulaInterno(sub);
+            }
+        });
+    }
+
+    private void inicializarSubastaNulaInterno(Subasta sub) {
+        log.info("Inicializando campos de tiempo nulos para subasta abierta ID {}", sub.getIdentificador());
+        List<ItemCatalogo> items = itemCatalogoRepository
+                .findByCatalogoSubastaIdentificador(sub.getIdentificador());
+        Integer primerItemId = null;
+        for (ItemCatalogo item : items) {
+            if (item.getOrden() != null && item.getOrden() == 1) {
+                primerItemId = item.getIdentificador();
+            } else if (primerItemId == null) {
+                primerItemId = item.getIdentificador();
+            }
+        }
+        sub.setItemActualId(primerItemId);
+        sub.setLimiteFinalizacionEpoch(Instant.now().toEpochMilli() + 300000); // 5 minutos
+        subastaRepository.save(sub);
+        
+        // Forzar también registro de puja base de Blackwood si no tiene
+        if (primerItemId != null) {
+            try {
+                activarSubastaInterno(sub);
+            } catch (Exception ignored) {}
+        }
+    }
+
+    /** Resultado de procesarVencimientoLoteInterno: datos a broadcastear DESPUÉS del commit. */
+    private static class VencimientoResult {
+        final Integer auctionId;
+        /** LotChangeUpdate o AuctionFinishedUpdate, null si hubo un error no recuperable. */
+        final Object broadcast;
+
+        VencimientoResult(Integer auctionId, Object broadcast) {
+            this.auctionId = auctionId;
+            this.broadcast = broadcast;
+        }
+    }
+
     private void procesarVencimientoLote(Subasta subasta) {
+        // Holder: el broadcast se construye DENTRO de la transacción (con los datos necesarios)
+        // pero se envía DESPUÉS del commit para garantizar consistencia.
+        final VencimientoResult[] resultHolder = new VencimientoResult[1];
+
+        transactionTemplate.executeWithoutResult(status -> {
+            Subasta sub = subastaRepository.findById(subasta.getIdentificador()).orElse(null);
+            if (sub != null) {
+                resultHolder[0] = procesarVencimientoLoteInterno(sub);
+            }
+        });
+
+        // Broadcast DESPUÉS del commit — el cliente verá datos ya persistidos
+        VencimientoResult result = resultHolder[0];
+        if (result == null || result.broadcast == null) return;
+
+        String topic;
+        if (result.broadcast instanceof ar.edu.uade.grupo16.subastas.dto.websocket.LotChangeUpdate) {
+            topic = "/topic/auction." + result.auctionId + ".lot_change";
+        } else {
+            topic = "/topic/auction." + result.auctionId + ".finished";
+        }
+        try {
+            messagingTemplate.convertAndSend(topic, result.broadcast);
+            log.info("Broadcast enviado a {} para subasta {}", topic, result.auctionId);
+        } catch (Exception e) {
+            log.error("Error al broadcastear cambio de lote/fin para subasta {}: {}", result.auctionId, e.getMessage());
+        }
+    }
+
+    /**
+     * Ejecuta la transición de lote DENTRO de una transacción activa.
+     * NO broadcastea — devuelve los datos de broadcast para que el caller los envíe
+     * DESPUÉS del commit, garantizando que el cliente vea el estado ya persistido.
+     */
+    private VencimientoResult procesarVencimientoLoteInterno(Subasta subasta) {
         Integer itemActualId = subasta.getItemActualId();
 
-        // 1. Obtener el email del subastador responsable para la auditoría de cierre
+        // 1. Email del subastador para auditoría
         String emailSubastador = "admin@gmail.com";
         if (subasta.getSubastador() != null && subasta.getSubastador().getPersona() != null) {
-            emailSubastador = usuarioAuthRepository.findByPersonaIdentificador(subasta.getSubastador().getPersona().getIdentificador())
+            emailSubastador = usuarioAuthRepository
+                    .findByPersonaIdentificador(subasta.getSubastador().getPersona().getIdentificador())
                     .map(UsuarioAuth::getEmail)
                     .orElse("admin@gmail.com");
         }
 
-        // 2. Cerrar el item actual si existe y no está subastado
+        // 2. Cerrar el item actual (siempre intentar, nunca bloquear la transición)
+        String winnerName = "Nadie";
+        double finalPrice = 0.0;
+        int soldLotOrder = 0;
         if (itemActualId != null) {
             Optional<ItemCatalogo> itemOpt = itemCatalogoRepository.findById(itemActualId);
             if (itemOpt.isPresent()) {
                 ItemCatalogo itemActual = itemOpt.get();
+                soldLotOrder = itemActual.getOrden() != null ? itemActual.getOrden() : 0;
                 if (!"si".equalsIgnoreCase(itemActual.getSubastado())) {
                     try {
                         pujaService.cerrarItem(subasta.getIdentificador(), itemActual.getIdentificador(), emailSubastador);
                         log.info("Lote actual ID {} cerrado/vendido.", itemActual.getIdentificador());
                     } catch (Exception e) {
-                        log.error("Error al cerrar Item ID {} de forma automática: {}", itemActual.getIdentificador(), e.getMessage());
+                        log.warn("No se pudo cerrar formalmente el Item ID {}: {}. Se marca como subastado de todos modos.",
+                                itemActual.getIdentificador(), e.getMessage());
                     }
+                    // CRÍTICO: actualizar cache JPA del outer EntityManager SIEMPRE,
+                    // independientemente del resultado de cerrarItem (REQUIRES_NEW).
+                    // Evita que findByCatalogoSubastaIdentificador devuelva este item
+                    // como "no subastado" desde el cache de primer nivel.
+                    itemActual.setSubastado("si");
+                    itemCatalogoRepository.save(itemActual);
+                }
+
+                Optional<Pujo> ganador = pujoRepository.findGanadorByItem(itemActual.getIdentificador());
+                if (ganador.isPresent()) {
+                    winnerName = ganador.get().getAsistente().getCliente().getPersona().getNombre();
+                    finalPrice = ganador.get().getImporte().doubleValue();
+                } else {
+                    finalPrice = itemActual.getPrecioBase().doubleValue();
                 }
             }
         }
 
-        // 3. Buscar todos los items de la subasta ordenados por su orden/identificador
-        List<ItemCatalogo> items = itemCatalogoRepository.findAll().stream()
-                .filter(item -> item.getCatalogo() != null && item.getCatalogo().getSubasta() != null
-                        && item.getCatalogo().getSubasta().getIdentificador().equals(subasta.getIdentificador()))
+        // 3. Buscar todos los items ordenados por orden/identificador
+        List<ItemCatalogo> items = itemCatalogoRepository
+                .findByCatalogoSubastaIdentificador(subasta.getIdentificador())
+                .stream()
                 .sorted((a, b) -> {
-                    int ordenA = a.getOrden() != null ? a.getOrden() : a.getIdentificador();
-                    int ordenB = b.getOrden() != null ? b.getOrden() : b.getIdentificador();
-                    return Integer.compare(ordenA, ordenB);
+                    int oa = a.getOrden() != null ? a.getOrden() : a.getIdentificador();
+                    int ob = b.getOrden() != null ? b.getOrden() : b.getIdentificador();
+                    return Integer.compare(oa, ob);
                 })
                 .toList();
 
-        // 4. Encontrar el siguiente item (primer item no subastado)
+        // 4. Primer item no subastado = siguiente lote
         ItemCatalogo siguienteItem = null;
         for (ItemCatalogo item : items) {
             if (!"si".equalsIgnoreCase(item.getSubastado())) {
@@ -193,47 +287,88 @@ public class SubastaScheduler {
         }
 
         if (siguienteItem != null) {
-            // --- Caso A: Hay un lote siguiente disponible ---
-            log.info("Pasando al siguiente lote ID {} en la subasta ID {}", siguienteItem.getIdentificador(), subasta.getIdentificador());
+            // ── Caso A: hay un siguiente lote ──────────────────────────────────
+            log.info("Pasando al siguiente lote ID {} (orden {}) en la subasta ID {}",
+                    siguienteItem.getIdentificador(),
+                    siguienteItem.getOrden(),
+                    subasta.getIdentificador());
 
-            // Registrar puja inicial de Blackwood si no tiene
-            Cliente blackwood = clienteRepository.findById(9999)
-                    .orElseThrow(() -> new IllegalStateException("Cliente 'Blackwood Subastas' no encontrado en el sistema."));
-
-            Asistente asistente = asistenteRepository
-                    .findByClienteIdentificadorAndSubastaIdentificador(blackwood.getIdentificador(), subasta.getIdentificador())
-                    .orElseGet(() -> {
-                        Asistente nuevoAsistente = Asistente.builder()
-                                .cliente(blackwood)
-                                .subasta(subasta)
-                                .numeroPostor(999)
-                                .build();
-                        return asistenteRepository.save(nuevoAsistente);
-                    });
-
-            boolean tienePujas = pujoRepository.findMejorPujaByItem(siguienteItem.getIdentificador()).isPresent();
-            if (!tienePujas) {
-                Pujo pujaInicial = Pujo.builder()
-                        .asistente(asistente)
-                        .item(siguienteItem)
-                        .importe(siguienteItem.getPrecioBase())
-                        .ganador("si")
-                        .fechaHora(LocalDateTime.now())
-                        .build();
-                pujoRepository.save(pujaInicial);
-                log.info("Registrada puja inicial (Blackwood Subastas) de ${} para el siguiente Item ID {}", siguienteItem.getPrecioBase(), siguienteItem.getIdentificador());
+            // Registrar puja inicial de Blackwood para el nuevo lote (no crítico).
+            // Si falla por cualquier razón, el lote avanza igual.
+            try {
+                boolean tienePujas = pujoRepository.findMejorPujaByItem(siguienteItem.getIdentificador()).isPresent();
+                if (!tienePujas) {
+                    Cliente blackwood = clienteRepository.findById(9999)
+                            .orElseGet(() -> clienteRepository
+                                    .findByPersonaDocumento("BLACKWOOD_SUBASTAS")
+                                    .orElse(null));
+                    if (blackwood != null) {
+                        Asistente asistente = asistenteRepository
+                                .findByClienteIdentificadorAndSubastaIdentificador(
+                                        blackwood.getIdentificador(), subasta.getIdentificador())
+                                .orElseGet(() -> asistenteRepository.save(
+                                        Asistente.builder()
+                                                .cliente(blackwood)
+                                                .subasta(subasta)
+                                                .numeroPostor(999)
+                                                .build()));
+                        pujoRepository.save(Pujo.builder()
+                                .asistente(asistente)
+                                .item(siguienteItem)
+                                .importe(siguienteItem.getPrecioBase())
+                                .ganador("si")
+                                .fechaHora(LocalDateTime.now())
+                                .build());
+                        log.info("Puja inicial Blackwood ${} registrada para Item ID {}",
+                                siguienteItem.getPrecioBase(), siguienteItem.getIdentificador());
+                    } else {
+                        log.warn("Cliente Blackwood no encontrado. El lote {} avanza sin puja inicial.",
+                                siguienteItem.getIdentificador());
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("No se pudo registrar puja inicial para Item ID {}: {}. El lote avanza de todos modos.",
+                        siguienteItem.getIdentificador(), e.getMessage());
             }
 
+            // Actualizar subasta → nuevo lote, timer reiniciado
             subasta.setItemActualId(siguienteItem.getIdentificador());
-            subasta.setLimiteFinalizacionEpoch(Instant.now().toEpochMilli() + 300000); // Reiniciar 5 minutos para el nuevo lote
+            long nuevoEpoch = Instant.now().toEpochMilli() + 300_000L;
+            subasta.setLimiteFinalizacionEpoch(nuevoEpoch);
             subastaRepository.save(subasta);
+
+            ar.edu.uade.grupo16.subastas.dto.websocket.LotChangeUpdate broadcast =
+                    ar.edu.uade.grupo16.subastas.dto.websocket.LotChangeUpdate.builder()
+                            .soldLotNumber(itemActualId != null ? itemActualId : 0)
+                            .soldLotOrder(soldLotOrder)
+                            .soldLotWinnerName(winnerName)
+                            .soldLotFinalPrice(finalPrice)
+                            .newLotNumber(siguienteItem.getIdentificador())
+                            .newLotOrder(siguienteItem.getOrden() != null ? siguienteItem.getOrden() : 0)
+                            .newLotTitle(siguienteItem.getProducto().getDescripcionCompleta())
+                            .newLotDescription(siguienteItem.getProducto().getDescripcionCatalogo())
+                            .newLotImageUrl("/api/productos/" + siguienteItem.getProducto().getIdentificador() + "/foto")
+                            .newLotStartingPrice(siguienteItem.getPrecioBase().doubleValue())
+                            .newLotStartingBidder("Blackwood Subastas")
+                            .newLotEndEpochMillis(nuevoEpoch)
+                            .build();
+
+            return new VencimientoResult(subasta.getIdentificador(), broadcast);
+
         } else {
-            // --- Caso B: No hay más lotes, finaliza toda la subasta ---
-            log.info("No hay más lotes. Finalizando subasta ID {} completa.", subasta.getIdentificador());
-            subasta.setEstado("cerrada");
+            // ── Caso B: no hay más lotes, finalizar subasta ────────────────────
+            log.info("No hay más lotes disponibles. Finalizando subasta ID {}.", subasta.getIdentificador());
+            subasta.setEstado("FINALIZADA");
             subasta.setItemActualId(null);
             subasta.setLimiteFinalizacionEpoch(null);
             subastaRepository.save(subasta);
+
+            ar.edu.uade.grupo16.subastas.dto.websocket.AuctionFinishedUpdate broadcast =
+                    ar.edu.uade.grupo16.subastas.dto.websocket.AuctionFinishedUpdate.builder()
+                            .message("Subasta finalizada, gracias por participar")
+                            .build();
+
+            return new VencimientoResult(subasta.getIdentificador(), broadcast);
         }
     }
 }

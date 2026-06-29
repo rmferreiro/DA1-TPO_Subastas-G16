@@ -156,7 +156,6 @@
     <string name="login_email_label">Correo electrónico</string>
     <string name="login_email_hint">usuario@ejemplo.com</string>
     <string name="login_password_label">Contraseña</string>
-    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="login_btn_ingresar">Ingresar</string>
     <string name="login_separator">o</string>
     <string name="login_btn_crear_cuenta">Crear cuenta nueva</string>

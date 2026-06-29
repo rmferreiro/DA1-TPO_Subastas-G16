@@ -51,8 +51,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
@@ -109,14 +108,27 @@
                 android:paddingVertical="4dp"
                 android:background="@drawable/chip_outline_gold_border" />
 
-            <!-- Imagen -->
-            <ImageView
-                android:id="@+id/iv_lote"
+            <!-- Galería de imágenes con swipe -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="8dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_gallery" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_imagenes"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+                <!-- Dots indicador -->
+                <LinearLayout
+                    android:id="@+id/ll_dots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="4dp" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -376,6 +388,76 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Card Obra de Arte (visible solo para OBRA_ARTE) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_obra_arte"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E5E0D8"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Información de la obra"
+                            android:textColor="#6B6B6B"
+                            android:textSize="14sp" />
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="#E5E0D8" android:layout_marginVertical="12dp"/>
+
+                        <LinearLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:orientation="horizontal">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Artista"
+                                android:textColor="#6B6B6B" android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/tv_obra_artista"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="-" android:textColor="#1C2A21"
+                                android:textStyle="bold" android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="#E5E0D8" android:layout_marginVertical="12dp"/>
+
+                        <LinearLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:orientation="horizontal">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Fecha de creación"
+                                android:textColor="#6B6B6B" android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/tv_obra_fecha"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="-" android:textColor="#1C2A21"
+                                android:textStyle="bold" android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="#E5E0D8" android:layout_marginVertical="12dp"/>
+
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="Historia" android:textColor="#6B6B6B" android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tv_obra_historia"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="-" android:textColor="#1C2A21"
+                            android:textSize="14sp" android:lineSpacingExtra="4dp"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- Button -->
                 <TextView
                     android:id="@+id/btn_ir_sala"
@@ -394,7 +476,5 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Nav -->
-    <include layout="@layout/bottom_nav" />
 
 </LinearLayout>

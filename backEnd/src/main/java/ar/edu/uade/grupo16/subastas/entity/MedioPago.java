@@ -89,4 +89,9 @@ public class MedioPago {
     @Builder.Default
     @Column(name = "monto_reservado", precision = 18, scale = 2)
     private BigDecimal montoReservado = BigDecimal.ZERO;
+
+    // Monto ya utilizado en pagos confirmados (solo aplica para CHEQUE_CERTIFICADO)
+    @Builder.Default
+    @Column(name = "monto_utilizado", precision = 18, scale = 2)
+    private BigDecimal montoUtilizado = BigDecimal.ZERO;
 }

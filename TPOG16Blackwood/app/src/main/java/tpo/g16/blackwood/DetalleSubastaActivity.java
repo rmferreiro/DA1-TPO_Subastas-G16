@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
@@ -41,29 +43,30 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BDBDBD")));
         btnIngresar.setTextColor(Color.parseColor("#757575"));
 
-        // Botón ingresar → Subasta en vivo
+        // Botón ingresar → verifica requisitos y muestra modal si corresponde ANTES de abrir la sala
         btnIngresar.setOnClickListener(v -> {
             if (subastaId == -1) return;
+            btnIngresar.setEnabled(false);
             RetrofitClient.getApiService().unirseSubasta(subastaId)
                 .enqueue(new Callback<Map<String, Object>>() {
                     @Override
                     public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                         if (response.isSuccessful()) {
-                            Intent intent = new Intent(DetalleSubastaActivity.this, SubastaEnVivoActivity.class);
-                            intent.putExtra("SUBASTA_ID", subastaId);
-                            startActivity(intent);
+                            verificarPagoYNavegar();
                         } else {
+                            btnIngresar.setEnabled(true);
                             try {
                                 String err = response.errorBody() != null ? response.errorBody().string() : "Error desconocido";
-                                android.widget.Toast.makeText(DetalleSubastaActivity.this, "No se pudo unir: " + err, android.widget.Toast.LENGTH_LONG).show();
+                                Toast.makeText(DetalleSubastaActivity.this, "No se pudo unir: " + err, Toast.LENGTH_LONG).show();
                             } catch (Exception e) {
-                                android.widget.Toast.makeText(DetalleSubastaActivity.this, "Error al unirse a la subasta", android.widget.Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DetalleSubastaActivity.this, "Error al unirse a la subasta", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
                     @Override
                     public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                        android.widget.Toast.makeText(DetalleSubastaActivity.this, "Error de red: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                        btnIngresar.setEnabled(true);
+                        Toast.makeText(DetalleSubastaActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
         });
@@ -71,6 +74,72 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         cargarDetalle();
         cargarCatalogo();
         configurarBottomNav();
+    }
+
+    /**
+     * Llamado DESPUÉS de que unirseSubasta tiene éxito.
+     * Consulta los medios de pago y, si el usuario no tiene uno válido,
+     * muestra el diálogo de espectador ANTES de abrir la sala.
+     */
+    private void verificarPagoYNavegar() {
+        RetrofitClient.getApiService().getMediosPago()
+                .enqueue(new Callback<List<Map<String, Object>>>() {
+                    @Override
+                    public void onResponse(Call<List<Map<String, Object>>> call,
+                                           Response<List<Map<String, Object>>> response) {
+                        boolean tienePago = false;
+                        if (response.isSuccessful() && response.body() != null) {
+                            for (Map<String, Object> mp : response.body()) {
+                                if (Boolean.TRUE.equals(mp.get("verificado"))
+                                        && Boolean.TRUE.equals(mp.get("activo"))) {
+                                    tienePago = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (tienePago) {
+                            navegarASubastaEnVivo(false);
+                        } else {
+                            mostrarDialogoEspectador(
+                                    "No tenés un medio de pago verificado.\n\n¿Querés entrar como espectador?");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Map<String, Object>>> call, Throwable t) {
+                        mostrarDialogoEspectador(
+                                "No se pudo verificar tu medio de pago.\n\n¿Querés entrar como espectador?");
+                    }
+                });
+    }
+
+    private void mostrarDialogoEspectador(String mensaje) {
+        new AlertDialog.Builder(DetalleSubastaActivity.this)
+                .setTitle("Modo espectador")
+                .setMessage(mensaje)
+                .setPositiveButton("Entrar como espectador", (d, w) -> navegarASubastaEnVivo(true))
+                .setNegativeButton("Cancelar", (d, w) -> cancelarIngreso())
+                .setCancelable(false)
+                .show();
+    }
+
+    private void navegarASubastaEnVivo(boolean comoEspectador) {
+        Intent intent = new Intent(DetalleSubastaActivity.this, SubastaEnVivoActivity.class);
+        intent.putExtra("SUBASTA_ID", subastaId);
+        intent.putExtra("SPECTATOR_MODE", comoEspectador);
+        startActivity(intent);
+    }
+
+    private void cancelarIngreso() {
+        // Liberar la sesión en el backend para no dejar al usuario "pegado"
+        RetrofitClient.getApiService().salirSubasta(subastaId)
+                .enqueue(new Callback<Map<String, Object>>() {
+                    @Override public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> r) {}
+                    @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
+                });
+        MaterialButton btnIngresar = findViewById(R.id.btn_ingresar);
+        if (btnIngresar != null) btnIngresar.setEnabled(true);
     }
 
     private void cargarDetalle() {
@@ -97,13 +166,13 @@ public class DetalleSubastaActivity extends AppCompatActivity {
 
         String textoEstado;
         int colorEstado;
-        if ("PLANIFICADA".equals(estadoSubasta) || "PROGRAMADA".equals(estadoSubasta)) {
-            textoEstado = "Planificada";
+        if ("PENDIENTE".equals(estadoSubasta)) {
+            textoEstado = "Pendiente";
             colorEstado = Color.parseColor("#1565C0"); // Azul
-        } else if ("ABIERTA".equals(estadoSubasta) || "EN_CURSO".equals(estadoSubasta)) {
-            textoEstado = "En sala · Activa";
+        } else if ("ACTIVA".equals(estadoSubasta)) {
+            textoEstado = "Activa";
             colorEstado = Color.parseColor("#1B7A3E"); // Verde
-        } else if ("FINALIZADA".equals(estadoSubasta) || "CERRADA".equals(estadoSubasta)) {
+        } else if ("FINALIZADA".equals(estadoSubasta)) {
             textoEstado = "Finalizada";
             colorEstado = Color.parseColor("#757575"); // Gris
         } else {
@@ -165,7 +234,7 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         // --- Habilitar botón sólo si la sala está activa ---
         MaterialButton btnIngresar = findViewById(R.id.btn_ingresar);
         if (btnIngresar != null) {
-            boolean activa = "ABIERTA".equals(estadoSubasta) || "EN_CURSO".equals(estadoSubasta);
+            boolean activa = "ACTIVA".equals(estadoSubasta);
             btnIngresar.setEnabled(activa);
             if (activa) {
                 btnIngresar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#C0A062")));

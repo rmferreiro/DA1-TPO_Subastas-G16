@@ -12,4 +12,5 @@ public interface MedioPagoRepository extends JpaRepository<MedioPago, Long> {
     List<MedioPago> findByClienteIdentificadorAndVerificadoTrueAndActivoTrue(Integer clienteId);
     List<MedioPago> findByClienteIdentificadorAndMonedaAndVerificadoTrueAndActivoTrue(Integer clienteId, Moneda moneda);
     boolean existsByClienteIdentificadorAndVerificadoTrueAndActivoTrue(Integer clienteId);
+    List<MedioPago> findByVerificadoFalseAndActivoTrue();
 }

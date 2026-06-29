@@ -46,7 +46,7 @@ import com.google.gson.Gson;
  *  - Validación de formato de email con feedback visual en rojo.
  *  - Campo de contraseña con toggle de visibilidad (ojo) vía TextInputLayout.
  *  - "Crear cuenta nueva" navega a RegisterActivity.
- *  - Botones "Ingresar" y "¿Olvidaste tu contraseña?" clickeables (sin lógica aún).
+ *  - Botón "Ingresar" para autenticación.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextView emailError;
     private Button btnIngresar;
     private Button btnCrearCuenta;
-    private TextView forgotPassword;
     private ScrollView loginScrollView;
     private View loginHeader;
 
@@ -85,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
         emailError      = findViewById(R.id.login_email_error);
         btnIngresar     = findViewById(R.id.login_btn_ingresar);
         btnCrearCuenta  = findViewById(R.id.login_btn_crear_cuenta);
-        forgotPassword  = findViewById(R.id.login_forgot_password);
         loginScrollView = findViewById(R.id.login_scroll_view);
         loginHeader     = findViewById(R.id.login_header);
     }
@@ -217,10 +215,6 @@ public class LoginActivity extends AppCompatActivity {
         btnCrearCuenta.setOnClickListener(v ->
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class))
         );
-
-        forgotPassword.setOnClickListener(v -> {
-            // TODO: navegar a pantalla de recuperación de contraseña
-        });
     }
 
     private void intentarLogin() {

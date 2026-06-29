@@ -60,6 +60,18 @@ public class MedioPagoController {
         return ResponseEntity.ok(lista);
     }
 
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar medio de pago",
+               description = "Actualiza los campos de detalle de un medio de pago del cliente autenticado. Vuelve a estado no-verificado.")
+    public ResponseEntity<Map<String, Object>> actualizar(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id,
+            @Valid @RequestBody MedioPagoRequest request) {
+        Integer clienteId = getClienteId(userDetails);
+        MedioPago mp = medioPagoService.actualizar(id, clienteId, request);
+        return ResponseEntity.ok(medioPagoService.toResponseMap(mp));
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar medio de pago",
                description = "Desactiva (soft delete) un medio de pago del cliente autenticado.")
@@ -70,6 +82,16 @@ public class MedioPagoController {
         Integer clienteId = getClienteId(userDetails);
         medioPagoService.desactivar(id, clienteId);
         return ResponseEntity.ok(Map.of("mensaje", "Medio de pago eliminado correctamente"));
+    }
+
+    @GetMapping("/admin/no-verificados")
+    @Operation(summary = "[ADMIN] Listar medios de pago no verificados")
+    public ResponseEntity<List<Map<String, Object>>> listarNoVerificados() {
+        List<Map<String, Object>> lista = medioPagoService.listarNoVerificados()
+                .stream()
+                .map(medioPagoService::toAdminResponseMap)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 
     // --- Endpoint admin para verificar un medio de pago ---

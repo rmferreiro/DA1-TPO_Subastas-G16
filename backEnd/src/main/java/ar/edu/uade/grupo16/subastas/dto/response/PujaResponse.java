@@ -26,5 +26,6 @@ public class PujaResponse {
     private BigDecimal siguientePujaMaxima;
     /** true si la subasta es Oro o Platino (sin límite superior de puja). */
     private boolean sinLimiteMaximo;
+    private Long limiteFinalizacionEpoch;
 }
 

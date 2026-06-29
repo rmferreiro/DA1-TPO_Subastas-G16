@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh_mis_pujas"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#F4F1EA">
 
-
-
-    <!-- CONTENIDO -->
-    <ScrollView
+    <!-- Estado vacío: sin participaciones -->
+    <LinearLayout
+        android:id="@+id/layout_sin_participaciones"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#F4F1EA">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏛"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Aún no participaste de ninguna subasta"
+            android:textColor="#1A1A1A"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Cuando entres a una subasta y hagas tu primera oferta, la verás aquí."
+            android:textColor="#6B6B6B"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- Lista de pujas por lote -->
+    <ScrollView
+        android:id="@+id/scroll_mis_pujas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,15 +62,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:text="Historial de pujas"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
-
-            <!-- Lista dinámica -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_mis_pujas"
                 android:layout_width="match_parent"
@@ -41,14 +75,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="Cargando participaciones..."
+                android:text="Cargando..."
                 android:textColor="#6B6B6B"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
     </ScrollView>
 
-
-
 </LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

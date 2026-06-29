@@ -112,9 +112,6 @@ public class MedioPagoService {
                 if (request.getNumeroCheque() == null || request.getMontoCertificado() == null) {
                     throw new RegistroInvalidoException("Cheque requiere número, banco emisor y monto certificado");
                 }
-                if (moneda == Moneda.USD) {
-                    throw new RegistroInvalidoException("Los cheques certificados solo operan en ARS");
-                }
                 medioPago.setNumeroCheque(request.getNumeroCheque());
                 medioPago.setBancoEmisor(request.getBancoEmisor());
                 medioPago.setMontoCertificado(request.getMontoCertificado());
@@ -126,6 +123,10 @@ public class MedioPagoService {
 
     public List<MedioPago> listarPorCliente(Integer clienteId) {
         return medioPagoRepository.findByClienteIdentificadorAndActivoTrue(clienteId);
+    }
+
+    public List<MedioPago> listarNoVerificados() {
+        return medioPagoRepository.findByVerificadoFalseAndActivoTrue();
     }
 
     public List<MedioPago> listarVerificadosPorClienteYMoneda(Integer clienteId, Moneda moneda) {
@@ -149,6 +150,41 @@ public class MedioPagoService {
         }
         mp.setActivo(false);
         medioPagoRepository.save(mp);
+    }
+
+    /**
+     * Actualiza los campos de detalle de un medio de pago existente.
+     * No permite cambiar tipo, moneda ni cliente.
+     */
+    @Transactional
+    public MedioPago actualizar(Long medioPagoId, Integer clienteId, MedioPagoRequest request) {
+        MedioPago mp = medioPagoRepository.findById(medioPagoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Medio de pago no encontrado"));
+        if (!mp.getCliente().getIdentificador().equals(clienteId)) {
+            throw new RegistroInvalidoException("No podés editar un medio de pago que no te pertenece");
+        }
+        switch (mp.getTipo()) {
+            case CUENTA_BANCARIA -> {
+                if (request.getBanco() != null) mp.setBanco(request.getBanco());
+                if (request.getNumeroCuenta() != null) mp.setNumeroCuenta(request.getNumeroCuenta());
+                if (request.getCbuSwift() != null) mp.setCbuSwift(request.getCbuSwift());
+                if (request.getEsInternacional() != null) mp.setEsInternacional(request.getEsInternacional());
+            }
+            case TARJETA_CREDITO -> {
+                if (request.getNumeroTarjeta() != null)
+                    mp.setNumeroTarjetaHash(passwordEncoder.encode(request.getNumeroTarjeta()));
+                if (request.getTitular() != null) mp.setTitular(request.getTitular());
+                if (request.getVencimiento() != null) mp.setVencimiento(request.getVencimiento());
+                if (request.getEsTarjetaInternacional() != null) mp.setEsTarjetaInternacional(request.getEsTarjetaInternacional());
+            }
+            case CHEQUE_CERTIFICADO -> {
+                if (request.getNumeroCheque() != null) mp.setNumeroCheque(request.getNumeroCheque());
+                if (request.getBancoEmisor() != null) mp.setBancoEmisor(request.getBancoEmisor());
+                if (request.getMontoCertificado() != null) mp.setMontoCertificado(request.getMontoCertificado());
+            }
+        }
+        mp.setVerificado(false);
+        return medioPagoRepository.save(mp);
     }
 
     /**
@@ -223,6 +259,12 @@ public class MedioPagoService {
                 "montoDisponible", getStrategy(mp.getTipo()).getMontoDisponible(mp),
                 "detalle", buildDetalle(mp)
         );
+    }
+
+    public Map<String, Object> toAdminResponseMap(MedioPago mp) {
+        Map<String, Object> map = new java.util.HashMap<>(toResponseMap(mp));
+        map.put("clienteNombre", mp.getCliente().getPersona().getNombre());
+        return map;
     }
 
     private String buildDetalle(MedioPago mp) {
