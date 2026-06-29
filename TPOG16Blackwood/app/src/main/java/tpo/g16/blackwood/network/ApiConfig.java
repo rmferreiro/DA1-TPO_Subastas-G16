@@ -23,5 +23,11 @@ public final class ApiConfig {
     public static final String KEY_USER_NOMBRE    = "user_nombre";
     public static final String KEY_USER_CATEGORIA = "user_categoria";
 
+    // Claves de la máquina de estados de registro (Etapa 1 + 2)
+    public static final String KEY_REGISTRATION_STATE     = "registration_state";
+    public static final String KEY_REGISTRATION_EMAIL     = "registration_email";
+    public static final String KEY_REGISTRATION_NOMBRE    = "registration_nombre";
+    public static final String KEY_REGISTRATION_APELLIDO  = "registration_apellido";
+
     private ApiConfig() {}
 }
