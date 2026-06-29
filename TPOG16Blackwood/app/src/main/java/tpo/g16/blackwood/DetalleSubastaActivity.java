@@ -285,9 +285,8 @@ public class DetalleSubastaActivity extends AppCompatActivity {
         // --- Fecha y hora ---
         TextView tvFechaHora = findViewById(R.id.tv_fecha_hora_detalle);
         if (tvFechaHora != null) {
-            String fecha = s.getFecha() != null ? s.getFecha() : "—";
-            String hora  = s.getHora()  != null ? s.getHora()  : "—";
-            tvFechaHora.setText(fecha + " · " + hora);
+            String fechaHora = tpo.g16.blackwood.common.TimeUtils.formatUtcToLocal(s.getFecha(), s.getHora());
+            tvFechaHora.setText(fechaHora);
         }
 
         // --- Ubicación ---

@@ -35,8 +35,8 @@ public class SubastaAdapter extends RecyclerView.Adapter<SubastaAdapter.SubastaV
         // Map values
         holder.tvCategoria.setText(subasta.getCategoria() != null ? subasta.getCategoria().toUpperCase() : "GENERAL");
         
-        // Formatear Fecha y Hora
-        String fechaHora = (subasta.getFecha() != null ? subasta.getFecha() : "") + " · " + (subasta.getHora() != null ? subasta.getHora() : "");
+        // Formatear Fecha y Hora (de UTC a Local)
+        String fechaHora = tpo.g16.blackwood.common.TimeUtils.formatUtcToLocal(subasta.getFecha(), subasta.getHora());
         holder.tvFechaHora.setText(fechaHora);
         
         // Ubicacion y Rematador

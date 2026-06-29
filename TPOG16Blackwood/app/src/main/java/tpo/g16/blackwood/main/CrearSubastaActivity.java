@@ -273,8 +273,13 @@ public class CrearSubastaActivity extends AppCompatActivity {
 
         // Armar el request body
         Map<String, Object> request = new HashMap<>();
-        request.put("fecha", etFecha.getText().toString().trim());
-        request.put("hora", etHora.getText().toString().trim());
+        
+        String localFecha = etFecha.getText().toString().trim();
+        String localHora = etHora.getText().toString().trim();
+        String[] utcTime = tpo.g16.blackwood.common.TimeUtils.convertToUtc(localFecha, localHora);
+        
+        request.put("fecha", utcTime[0]);
+        request.put("hora", utcTime[1]);
         request.put("moneda", monedaSeleccionada);
         request.put("ubicacion", etUbicacion.getText().toString().trim());
         request.put("rematador", etRematador.getText().toString().trim());
