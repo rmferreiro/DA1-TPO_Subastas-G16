@@ -37,21 +37,42 @@
 
             <!-- Fotos del lote -->
             <LinearLayout
+                android:id="@+id/layoutFotos"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/outline_gold"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
                 android:layout_marginBottom="16dp">
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/layoutThumbnails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:visibility="gone" />
+                </HorizontalScrollView>
+
                 <TextView
+                    android:id="@+id/tvAddPhotoIcon"
                     android:text="+"
                     android:textSize="32sp"
                     android:textColor="#C6A75E"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" />
 
                 <TextView
+                    android:id="@+id/tvAddPhotoText"
                     android:text="Agregar fotos del lote"
                     android:textColor="#C6A75E"
                     android:textSize="12sp"
@@ -75,23 +96,7 @@
                 android:orientation="vertical"
                 android:background="@drawable/input_bg"
                 android:padding="12dp"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:text="• Tetera porcelana"
-                    android:textColor="#6B6B6B"
-                    android:textSize="13sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:text="• Taza porcelana"
-                    android:textColor="#6B6B6B"
-                    android:textSize="13sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp" />
-            </LinearLayout>
+                android:layout_marginBottom="12dp" />
 
             <Button
                 android:id="@+id/btnAgregarElemento"
